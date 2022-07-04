@@ -1,0 +1,21 @@
+{% extends 'base_home.html' %}
+{% block home_internal_styles %}
+<style type= "text/css">
+	div{ border: 0px solid red; }
+	#error500{ height: 500px; }
+
+</style>
+{% endblock home_internal_styles %}
+
+{% block home_inside_content %}
+<div container-fluid>
+<div class= "row p-5">
+	<div class= "col-6 text-center d-flex align-items-center">
+		<p><b>Oops! Something just went wrong. Our servers might be overloaded. Don't worry though, we will fix it soon! Come back later or continue browsing the rest of our site.</b></p>
+	</div>
+	<div class= "col-6 ">
+		<img src= "{{url_for('static', filename='images/gears.png')}}" alt= "detective photo" id= "error500">
+	</div>
+</div>
+</div>
+{% endblock home_inside_content %}

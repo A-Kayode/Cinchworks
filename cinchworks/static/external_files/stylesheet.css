@@ -1,0 +1,140 @@
+/* This page contains most of the styles and properties used in the site */
+/*  */
+
+
+body { font-size: 1.25em; }
+#site_name{
+	font-size: 2em;
+} /* This contains the styles for the homepage site name/logo area sha */
+
+.homesearch{
+	padding-top: 200px;
+}/* This contains the styles for the div containing site home search bar and button*/
+
+#home_searchinput{  } /* This contains the styles for the site home search bar */
+
+.allfooter{
+	font-size: 0.80em; background-color: #1c2826; 
+} /* This contains the main overall style for the footer */
+
+.navigationbar{  }/* This contains the general styles that affects all navigation bars */
+
+.navigationbar a{
+	color: #3131c1ff;
+}
+
+.homebutton, .brownbutton{
+	background-color: #f19953ff;
+
+}/* This styles the buttons on the site homepage */
+
+#home_sitedescription{
+	padding-bottom: 100px;
+	font-size: 1.31em;
+}/* This contains the styles for the row that contains site description */
+
+#home_sitedescriptioncol{
+	background-ccolor:rgba(255, 255, 255, 0.7); ccolor: #1818d7ff; color: #fff;
+}/* This contains the styles for the col that contains site description */
+
+#logincol{padding-top: 120px; padding-bottom: 152px;} /* Login form on login page */
+
+#site_faq{ min-height: 575px; } /* Used to adjust minimum height of faq */
+
+.calen_day{
+	background-color: rgba(24, 24, 215, 0.2);
+}/* This is used to style all the individual calender schedules */
+
+.welcome{
+	background-color: rgba(241, 153, 83, 0.1);
+}/* This contains the styles for the welcoming message areas*/
+
+#user_bookingcontainer{ min-height: 700px; }
+
+#user_homebookinginfo_row, .booking_category_modal{
+	background-color: rgba(49, 49, 193, 0.1);
+}/* This contains the styles used on the entire row for the recents bookings information area on the user home page as well as the category section of the booking modal */
+
+#user_historyarea, .blueback{
+	background-color: rgba(24, 24, 215, 0.1);
+}/* This contains blue background settings*/
+
+.setting_blackback{
+	background-color: rgba(0,0,0,0.1);
+}/* This is used for some stylings on the user settings page */
+
+.profile_pic{
+	border-radius: 50%;
+}/* This is used to control the border appearance of images used as profile pictures */
+
+.vendor_banner{ height:300px; width:100% } /* Dimensions of vendor banner */
+
+#uservendor_profilepic{
+	margin-top: -185px; margin-left: -45px;
+}/* This is used to style the vendor image the user sees and how it is flushed against the banner */
+
+.off_booking{
+	min-height: 100px; background-color: rgba(241, 153, 83, 0.1);;
+}/* This contains styles common to the pending and new booking sections of the booking offcanvas */
+
+.off_bookingtitle{
+	background-color: rgba(24, 24, 215, 1); color: rgba(248, 155, 78, 1);
+}/* This uniformly styles the section titles in the offcanvas booking sections */
+
+.info_heading{ font-weight: bold; }
+/* This contains the basic styles for the info-types when listing user/booking info in the admin pages  */
+
+.side_panel{ 
+	height: 100vh; position:fixed; left:0px;
+	background-color: rgba(24, 24, 215, 0.2);
+}	
+/* This styles the general area of the side panel */
+
+.main_links{
+	height: 70vh; display: flex; align-items: center;
+}
+
+.buttom_border{ 
+	border-bottom: 1px solid rgba(24, 24, 215, 0.5);
+ }/* This is used to created buttom borders to act like demarkations */
+
+tbody tr:hover{ background-color: rgba(0, 0, 0, 0.3); }
+/* This makes it possible to hover above a particular row in a table */
+
+
+
+
+@media screen and (max-width: 769px){
+	.hidemd{ display:none; } /* Used to hide elements at md */
+	.vendor_banner{ height:220px }
+	#uservendor_profilepic{ margin-top: -125px; margin-left: -45px; }
+	#logincol{padding-top: 115px; padding-bottom: 115px;}
+}
+
+@media screen and (max-width: 577px ){
+	.homesearch{ padding-top: 50px; }
+	#home_sitedescription{padding-bottom: 50px; font-size: 1em;}
+	.hidesm{ display:none; } /* Used to hide elements  as sm breakpoint*/
+	.footerlist{ padding-left: 0px; }
+	.vendor_banner{ height:100px; }
+	#uservendor_profilepic{margin-top: -65px; margin-left: -30px;}
+}
+
+@media screen and (max-width: 426px ){
+	body{ font-size: 1em }
+	#site_faq{ min-height: 500px; }
+	#panel_shower_container{ 
+		position:sticky; top:0px; background-color: rgba(24, 24, 215, 1.0);
+	 }/* To make admin navigation button sticky */
+	.block_change{ display:block; }
+	.side_panel{
+	background-color: rgba(24, 24, 215, 1.0);}
+	.side_panel a{ color:white; }
+	
+}
+
+@media screen and (max-width: 321px ){
+	#cal_2{ display:none }	
+	#user_bookingcontainer{ min-height: 650px; }
+	#site_faq{ min-height: 435px; }
+}

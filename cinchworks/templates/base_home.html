@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+<title>CinchWorks</title>
+<meta charset= "UTF-8">
+<meta name= "viewport" content= "width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename= 'libraries/bootstrap/css/bootstrap.css') }}">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename= 'external_files/stylesheet.css') }}">
+{% block home_internal_styles %}
+
+{% endblock home_internal_styles %}
+</head>
+
+<body>
+<div class= "container-fluid">
+
+	<!-- This div will contain the navigation bar -->
+	{% include 'home_navigation.html' %}
+{% block home_inside_content %}
+
+{% endblock home_inside_content %}
+<!-- This div wil contain the footer area -->
+<div class= "row allfooter">
+	<div class= "col-5 col-3-md">
+		<ul style= "list-style-type: none;" class= "footerlist">
+			<li><a href= "/" class= "nav-link text-light">Home</a></li>
+			<li><a href= "/login/" class= "nav-link text-light">Login</a></li>
+			<li><a href= "site_faq.html" class= "nav-link text-light">FAQ</a></li>
+			<li><a href= "site_contact.html" class= "nav-link text-light">Contact Us</a></li>
+		</ul>
+	</div>
+	<div class= "col">
+		<div class= "row"></div>
+		<div class= "row mt-5">
+			<div class= "col">
+				<p><a href= "#"><img src= "{{ url_for('static', filename= 'images/twitter.png') }}" alt= "twitter icon" height="32"></a></p>
+				<p><a href= "#"><img src= "{{ url_for('static', filename= 'images/facebook.png') }}" alt= "facebook icon" height="32"></a></p>
+				<p><a href= "#"><img src= "{{ url_for('static', filename= 'images/instagram.png') }}" alt= "instagram icon" height="32"></a></p>
+			</div>
+		</div>
+		<div class= "row"></div>
+		
+	</div>
+
+</div>
+
+
+
+
+
+<!-- JS Files -->
+<script type= "text/javascript" src= "{{ url_for('static', filename= 'libraries/jquery.js') }}"></script>
+<script type= "text/javascript" src= "{{ url_for('static', filename= 'libraries/bootstrap/js/bootstrap.bundle.js') }}"></script>
+<script type= "text/javascript" src= "{{ url_for('static', filename= 'external_files/javascript.js') }}">
+</script>
+</body>
+</html>
+

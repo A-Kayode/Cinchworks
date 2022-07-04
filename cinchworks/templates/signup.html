@@ -1,0 +1,51 @@
+{% extends 'base_home.html' %}
+{% block home_internal_styles %}
+<style type= "text/css">
+body{background: linear-gradient(to bottom, white, rgba(49, 49, 193, 1));}
+</style>
+{% endblock home_internal_styles %}
+
+{% block home_inside_content %}
+	<div class= "row mt-md-5 mb-3">
+		<div class= "col-md-6 offset-md-1" id= "">
+				<h2 class= "mb-2">SIGN UP</h2>
+					<form action= "/signup" method= "post" id= "signup_form">
+						<div class= "mb-1">
+							<input type= "radio" class= "" name= "user_type" id= "signup_sel_customer">
+							<label class= "form-label" for= "signup_sel_customer">Customer</label>
+							<input type= "radio" class= "" name= "user_type" id= "signup_sel_vendor">
+							<label class= "form-label" for= "signup_sel_vendor">Vendor</label>
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Username</label>
+							<input type= "text" class= "form-control" name= "username" id= "signup_username" required>
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">First Name</label>
+							<input type= "text" class= "form-control" name= "fname" required>
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Last Name</label>
+							<input type= "text" class= "form-control" name= "lname" required>
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Email Address</label>
+							<input type= "email" class= "form-control" name= "email" required>
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Passsword</label>
+							<input type= "password" class= "form-control" name= "pswd" required>
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Confirm Passsword</label>
+							<input type= "password" class= "form-control" name= "cpswd" required>
+						</div>
+						<div>
+						<button class= "btn homebutton" type= "button" id= "signup_button">Sign Up</button>
+						</div>
+					</form>
+
+				<p>Existing User? Login <span><a href= "/login/" class= "text-dark">here</a></span></p>
+			</div>
+	</div>
+{% endblock home_inside_content %}

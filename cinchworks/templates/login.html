@@ -1,0 +1,33 @@
+{% extends 'base_home.html' %}
+{% block home_internal_styles %}
+<style type= "text/css">
+body{background: linear-gradient(to bottom, white, rgba(49, 49, 193, 1));}
+</style>
+{% endblock home_internal_styles %}
+
+{% block home_inside_content %}
+	<div class= "row mt-3">
+		<div class= "col-md-6 offset-md-3" id= "logincol">
+				<h2 class= "mb-2">LOGIN</h2>
+					<form action= "user_home.html" id= "login_form">
+						<div class= "mb-1">
+							<label class= "form-label">Username</label>
+							<input type= "text" class= "form-control" name= "username" id= "login_username">
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Password</label>
+							<input type= "password" class= "form-control" name= "password" id= "login_password">
+						</div>
+						<div class= "mb-1">
+							<input type= "radio" class= "" name= "user_type" id= "sel_customer">
+							<label class= "form-label" for= "sel_customer">Customer</label>
+							<input type= "radio" class= "" name= "user_type" id= "sel_vendor">
+							<label class= "form-label" for= "sel_vendor">Vendor</label>	
+						</div>
+						<button class= "btn homebutton" type= "button" id= "login_button">Login</button>
+					</form>
+
+				<p>New User? Register <span><a href= "/sign_up/" class= "text-dark">here</a></span></p>
+			</div>
+	</div>
+{% endblock home_inside_content %}

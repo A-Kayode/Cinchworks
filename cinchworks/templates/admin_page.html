@@ -1,0 +1,336 @@
+<!doctype html>
+<html>
+<head>
+<meta name= "viewport" content= "initial-scale=1, width=device-width, shrink-to-fit=no">
+<meta charset= "UTF-8">
+<title></title>
+<link type= "text/css" rel= "stylesheet" href= "{{ url_for('static', filename= 'libraries/bootstrap/css/bootstrap.css') }}">
+<link type= "text/css" rel= "stylesheet" href= "{{ url_for('static', filename= 'external_files/stylesheet.css') }}">
+<style type= "text/css">
+	div{ border: 0px solid red; }
+</style>
+</head>
+
+<body>
+<div class= "container-fluid">
+	<div class= "row">
+		<!-- This handles the side panel of the administrator page -->
+		<nav>
+		<div class= "col-4 col-sm-2 side_panel" id= "admin_sidepanel">
+			<div><button class= "btn btn-primary" type= "button" id= "panel_hider">Navigation</button></div>
+			<div class= "main_links"><ul class="nav nav-tabs flex-column col" role= "tablist">
+				<li class= "nav-item text-start"> 
+					<a class= "nav-link active" role= "tab" data-toggle= "tab" href= "#admin_users_tab" id= "admin_users_link">Users</a> </li>
+				<li class= "nav-item text-start"> 
+					<a class= "nav-link" role= "tab" data-toggle= "tab" href= "#admin_booking_tab"  id= "admin_booking_link">Bookings</a> </li>
+				<li class= "nav-item text-start"> 
+					<a class= "nav-link" href= "#" id= "admin_logout">Log Out</a> </li>
+			</ul></div>
+		</div>
+		</nav>
+		<div class= "col-md-2" id= "panel_shower_container">
+			<button class= "btn btn-primary" type= "button" id= "panel_shower">Navigation</button>
+		</div>
+
+
+
+		<!-- Rest of the admin page stuff goes here -->
+		<div class= "col-sm-10 tab-content main_content">
+
+			<!-- Contains the content for the user area -->
+			<div class= "row tab-pane fade show active" role= "tabpanel" id="admin_users_tab">
+				<div class= "col">
+					<!-- Contains welcome heading -->
+					<div class= "row">
+						<div class= "col p-3">
+							<h1>
+								Welcome, Admin Name	
+							</h1>
+						</div>
+					</div>
+
+
+					<!-- Contains the user search and embedded tables -->
+					<div class= "row mb-3">
+						<div class= "col">
+
+							<!-- Contains the user search -->
+							<div class= "row justify-content-center mb-3 buttom_border">
+								<div class= "col-md-10">
+									<form>
+										<div class= "mb-2">
+											<input type= "text" class= "form-control" name= "user_search" placeholder= "Input username or fullname to search for user">
+										</div>
+										<div class= "mb-2">
+											<!-- The option checked should determine whether customer or vendor table is being loaded. It should also determine which information area is shown, whether for customers or vendors -->
+											<input type= "radio" class= "admin_choice" name= "user" id= "pick_customer" checked>
+											<label class= "form-check-label" for= "pick_customer">Customers</label>
+											<input type= "radio" class= "admin_choice" name= "user" id= "pick_vendor">
+											<label class= "form-check-label" for= "pick_vendor">Vendors</label>
+										</div>
+										<div class= "text-center mb-2">
+											<button type= "button" class= "btn brownbutton col-3 m-auto">Search</button>
+										</div>
+									</form>
+								</div>
+							</div>
+
+							<!-- Contains the embedded tables -->
+							<div class= "row">
+								<div class= "col">
+									<table class= "table table-striped">
+										<thead>
+											<th>User ID</th>
+											<th>Fullname (firstname + lastname)</th>
+											<th class= "specific_vendor_info">Business Name</th>
+											<th>Username</th>
+										</thead>
+										<tbody>
+											<tr class= "user_table">
+												<td>1</td>
+												<td>Funke Akindele</td>
+												<td class= "specific_vendor_info"></td>
+												<td>badfunke</td>
+											</tr>
+											<tr class= "user_table">
+												<td>2</td>
+												<td>Laomin Ilaoi</td>
+												<td class= "specific_vendor_info"></td>
+												<td>lickylicky</td>
+											</tr>
+											<tr class= "user_table">
+												<td>3</td>
+												<td>Freddie Mcgauvin</td>
+												<td class= "specific_vendor_info"></td>
+												<td>mcfreddiegauvin</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+					<!-- Contains Placement For User Info -->
+					
+					<div class= "row user_information mb-3 buttom_border">
+						<div class= "col">
+							<!-- Users Info -->
+							<div class= "row mb-3">
+								<div class= 'col'>
+									<div class= "row mb-1">
+										<div class= "col">
+											<p><span class= "info_heading">User ID: </span><span></span></p>
+											<p><span class= "info_heading">Username: </span><span></span></p>
+											<p><span class= "info_heading">Name: </span><span></span></p>
+											<p><span class= "info_heading specific_vendor_info">Business Name: </span><span></span></p>
+											<p><span class= "info_heading">Phone Number 1: </span><span></span></p>
+											<p><span class= "info_heading">Phone Number 2: </span><span></span></p>
+											<p><span class= "info_heading">Email: </span><span></span></p>
+											<p><span class= "info_heading">Address: </span><span></span></p>
+											<p><span class= "info_heading">City: </span><span></span></p>
+											<p><span class= "info_heading">State: </span><span></span></p>
+											<p><span class= "info_heading specific_vendor_info">Services: </span><span></span></p>
+										</div>
+									</div>
+									<div class= "row">
+										<div class= "col d-flex justify-content-sm-end">
+											<div><button type= "button" class= "btn btn-primary block_change mb-1 mb-sm-0">Reset Password</button>
+											<button type= "button" class= "btn btn-warning block_change mb-1 mb-sm-0">Suspend Account</button>
+											<button type= "button" class= "btn btn-danger block_change mb-1 mb-sm-0">Deactivate Account</button></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+
+						</div>
+					</div>
+
+
+					<!-- Contains area for User Booking Info -->
+					<div class= "row user_information">
+						<div class= "col">
+							<h3 class= "mb-3">User's Name Booking Information</h3>
+							<!-- Contains the specific booking search -->
+							<div class= "row justify-content-center mb-2">
+								<div class= "col-md-10">
+									<form>
+										<div class= "mb-2">
+											<input type= "text" class= "form-control" name= "user_search" placeholder= "Search by Business name, Customer name, Services or Booking Date">
+										</div>
+										<div class= "text-center mb-2">
+											<button class= "btn brownbutton col-3">Search</button>
+										</div>
+									</form>
+								</div>
+							</div>
+
+							<!-- Contains the embedded table -->
+							<div class= "row mb-3 buttom_border">
+								<div class= "col">
+									<table class= "table table-striped">
+										<thead>
+											<th>Booking ID</th>
+											<th class= "specific_customer_info">Business Name</th>
+											<th class= "specific_vendor_info">Customer Name</th>
+											<th>Service</th>
+											<th class= "hidesm">Booking Date</th>
+										</thead>
+										<tbody>
+											<tr class= "user_booking_table">
+												<td>1</td>
+												<td class= "specific_customer_info">Hire a Bad Bitch</td>
+												<td class= "specific_vendor_info"></td>
+												<td>Companionship</td>
+												<td class= "hidesm"></td>
+											</tr>
+											<tr class= "user_booking_table">
+												<td>2</td>
+												<td class= "specific_customer_info">Brainshavers</td>
+												<td class= "specific_vendor_info"></td>
+												<td>Brain Relieving Procedure</td>
+												<td class= "hidesm"></td>
+											</tr>
+											<tr class= "user_booking_table">
+												<td>3</td>
+												<td class= "specific_customer_info">Wall Painters and Sons</td>
+												<td class= "specific_vendor_info"></td>
+												<td>Wall painting</td>
+												<td class= "hidesm"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							<!-- Contains Information on Selected Booking -->
+							<div class= "row user_booking_information">
+								<div class= "col">
+									<div class= "row mb-2">
+										<div class= "col">
+											<p><span class= "info_heading">Booking ID: </span><span></span></p>
+											<p><span class= "info_heading specific_vendor_info">Customer Name: </span><span></span></p>
+											<p><span class= "info_heading specific_customer_info">Vendor Name: </span><span></span></p>
+											<p><span class= "info_heading specific_customer_info">Business Name: </span><span></span></p>
+											<p><span class= "info_heading">Service: </span><span></span></p>
+											<p><span class= "info_heading">Booking Date: </span><span></span></p>
+											<p><span class= "info_heading">Date Booked: </span><span></span></p>
+											<p><span class= "info_heading">Time Booked: </span><span></span></p>
+											<p><span class= "info_heading">Service Duration: </span><span></span></p>
+											<p><span class= "info_heading">Confirmation Status: </span><span></span></p>
+										</div>
+									</div>
+									<div class= "row">
+										<div class= "col d-flex justify-content-end">
+											<div><button type= "button" class= "btn btn-danger">Delete Booking</button></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<!-- Ideally my booking page area -->
+			<div class= "row tab-pane fade" role= "tabpanel" id= "admin_booking_tab">
+				<div class= "col">
+					<h1 class= "p-2">All Bookings</h1>
+					<!-- Booking Search Area -->
+					<div class= "row justify-content-center">
+						<div class= "col-md-10">
+							<form>
+								<input type= "text" class= "form-control" placeholder= "Search Bookings by Booking id, Customer Name, Business Name, Service, Category or Booking Date" name= "admin_bookingsearch">
+								<div class= "text-center mt-2 mb-2">
+									<button type= "button" class= "btn brownbutton col-3">Search</button>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<!-- Contains all bookings in a table -->
+					<div class= "row mb-3">
+						<div class= "col">
+							<table class= "table table-striped">
+								<thead>
+									<th>Booking ID</th>
+									<th>Business Name</th>
+									<th>Customer Name</th>
+									<th class= "hidesm">Service</th>
+									<th class= "hidesm">Booking Date</th>
+								</thead>
+								<tbody>
+									<tr class= "admin_booking_table">
+										<td>1</td>
+										<td>Hire a Bad Bitch</td>
+										<td></td>
+										<td class= "hidesm">Companionship</td>
+										<td class= "hidesm"></td>
+									</tr>
+									<tr class= "admin_booking_table">
+										<td>2</td>
+										<td>Brainshavers</td>
+										<td></td>
+										<td class= "hidesm">Brain Relieving Procedure</td>
+										<td class= "hidesm"></td>
+									</tr>
+									<tr class= "admin_booking_table">
+										<td>3</td>
+										<td>Wall Painters and Sons</td>
+										<td></td>
+										<td class= "hidesm">Wall painting</td>
+										<td class= "hidesm"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<!-- Contains all the information about selected booking -->
+					<div class= "row admin_booking_information">
+						<div class= "col">
+							<div class= "row">
+								<div class= "col">
+									<p><span class= "info_heading">Booking ID: </span><span></span></p>
+									<p><span class= "info_heading">Customer Name: </span><span></span></p>
+									<p><span class= "info_heading">Vendor Name: </span><span></span></p>
+									<p><span class= "info_heading">Business Name: </span><span></span></p>
+									<p><span class= "info_heading">Service: </span><span></span></p>
+									<p><span class= "info_heading">Booking Date: </span><span></span></p>
+									<p><span class= "info_heading">Date Booked: </span><span></span></p>
+									<p><span class= "info_heading">Time Booked: </span><span></span></p>
+									<p><span class= "info_heading">Service Duration: </span><span></span></p>
+									<p><span class= "info_heading">Confirmation Status: </span><span></span></p>
+								</div>
+							</div>
+
+							<div class= "row">
+								<div class= "col d-flex justify-content-end">
+									<div><button type= "button" class= "btn btn-danger">Delete Booking</button></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+
+</div>
+
+<script type= "text/javascript" src= "
+{{ url_for('static', filename= 'libraries/bootstrap/js/bootstrap.bundle.js') }}"></script>
+<script type= "text/javascript" src= "
+{{ url_for('static', filename= 'libraries/jquery.js') }}"></script>
+<script type= 'text/javascript' src= "
+{{ url_for('static', filename= 'external_files/javascript.js') }}"></script>
+</body>
+<html>

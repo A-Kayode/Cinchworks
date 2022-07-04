@@ -1,0 +1,113 @@
+{% extends 'ubase.html' %}
+{% block body %}
+	<!-- This div will contain a welcome message for the user as well as their picture -->
+	<div class= "row py-4 welcome">
+		<div class= "col-5 col-sm-2 offset-4 offset-sm-1">
+			<img src= "{{url_for('static', filename='images/profile_pic2.jpg')}}" alt= "profile_picture" class= "img-fluid profile_pic">
+		</div>
+		<div class= "col-sm offset-sm-1">
+			<h1 class= "mt-2 mt-sm-5 text-center">Welcome, {{ namer }}</h1>
+		</div>
+	</div>
+
+	<!-- This div will contain the calender for the next booked days, idea is that it will be dynamic and only days booked will be shown for both vendor and user home page. User-Vendor search page will carry full next 5 days to ensure that they can see the full bookings of the specified vendor -->
+	<div class= "row mt-1 mt-sm-4">
+		<div class= "col">
+			<h4>Your Schedule</h4>
+			<div class= "row">
+				<div class= "col m-2 p-0 calen_day rounded" id= "cal_1">
+					{% include 'main_calender.html' %}
+				</div>
+				<div class= "col m-2 p-0 calen_day rounded" id= "cal_2">
+					{% include 'main_calender.html' %}
+				</div>
+				<div class= "col m-2 p-0 calen_day rounded d-none d-md-block" id= "cal_3">
+					{% include 'main_calender.html' %}
+				</div>
+				<div class= "col m-2 p-0 calen_day rounded d-none d-lg-block" id= "cal_4">
+					{% include 'main_calender.html' %}
+				</div>
+				<div class= "col m-2 p-0 calen_day rounded d-none d-lg-block" id= "cal_5">
+					{% include 'main_calender.html' %}
+				</div>
+				
+			</div>
+			<div class= "row mt-1">
+				<div class= "col offset-6 offset-sm-8 offset-lg-10">
+					<button data-bs-toggle= "modal" data-bs-target= "#book_modal" class= "btn brownbutton" type= "button">Make new booking</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- This div will contain some other information I do not have yet -->
+	<div class= "row my-4" id= "user_homebookinginfo_row">
+		<div class= "col">
+			<h3 class= "text-center">Recent Bookings</h3>
+			<table class= "table">
+				<thead>
+					<th>Vendor</th>
+					<th>Date</th>
+					<th>Time</th>
+					<th>Status</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Vendor 1</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Vendor 2</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Vendor 3</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+<div class= "modal" id= "book_modal">
+	<div class= "modal-dialog">
+		<div class= "modal-content">
+			<div class= "modal-header">
+				<h3 class= "text-center">Book New Services</h3>
+			</div>
+			<div class= "modal-body">
+				<div class= "row">
+					<div class= "col">
+						<form action= "user_vendor_page.html">
+						<input type= "text" class= "form-control mb-2" name= "vendor_search" placeholder= "Search for Services">
+						<button class= "btn brownbutton offset-5 col-2">Search</button>
+						</form>
+					</div>
+				</div>
+				<div class= "row mt-4">
+					<div class= "col ">
+						<h3 class= "text-center">Search by Catergory</h3>
+						<div class= "row booking_category_modal">
+							<div class= "col">Category 1</div>
+							<div class= "col">Category 2</div>
+							<div class= "col">Category 3</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class= "modal-footer">
+				<button data-bs-dismiss= "modal" class= "btn btn-danger">close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock body %}
