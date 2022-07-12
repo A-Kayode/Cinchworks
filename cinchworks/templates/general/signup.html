@@ -1,0 +1,70 @@
+{% extends 'general/base_home.html' %}
+{% block internal_styles %}
+<style type= "text/css">
+body{background: linear-gradient(to bottom, white, rgba(49, 49, 193, 1));}
+</style>
+{% endblock internal_styles %}
+
+{% block home_inside_content %}
+	<div class= "row mt-md-5 mb-3">
+		<div class= "col-md-6 offset-md-1" id= "">
+				<h2 class= "mb-2">SIGN UP</h2>
+					<form action= "/signup" method= "post">
+						<div class= "mb-1">
+							<input type= "radio" class= "" name= "user_type" id= "signup_sel_customer" value= "customer">
+							<label class= "form-label" for= "signup_sel_customer">Customer</label>
+							<input type= "radio" class= "" name= "user_type" id= "signup_sel_vendor" value= "vendor">
+							<label class= "form-label" for= "signup_sel_vendor">Vendor</label>
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Username</label>
+							{% for i in sform.username.errors %}
+							<p class= "alert alert-danger">{{i}}</p>
+							{% endfor %}
+							{{ sform.username(class_="form-control") }}
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">First Name</label>
+							{% for i in sform.fname.errors %}
+							<p class= "alert alert-danger">{{i}}</p>
+							{% endfor %}
+							{{ sform.fname(class_="form-control") }}
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Last Name</label>
+							{% for i in sform.lname.errors %}
+							<p class= "alert alert-danger">{{i}}</p>
+							{% endfor %}
+							{{ sform.lname(class_="form-control") }}
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Email Address</label>
+							{% for i in sform.email.errors %}
+							<p class= "alert alert-danger">{{i}}</p>
+							{% endfor %}
+							{{ sform.email(class_="form-control") }}
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Passsword</label>
+							{% for i in sform.pswd.errors %}
+							<p class= "alert alert-danger">{{i}}</p>
+							{% endfor %}
+							{{ sform.pswd(class_="form-control") }}
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Confirm Passsword</label>
+							{% for i in sform.cpswd.errors %}
+							<p class= "alert alert-danger">{{i}}</p>
+							{% endfor %}
+							{{ sform.cpswd(class_="form-control") }}
+						</div>
+						<div>
+							{{ sform.submit(class_= "btn homebutton") }}
+						</div>
+						{{ sform.csrf_token }}
+					</form>
+
+				<p>Existing User? Login <span><a href= "/login/" class= "text-dark">here</a></span></p>
+			</div>
+	</div>
+{% endblock home_inside_content %}

@@ -1,0 +1,173 @@
+{% extends 'vendor/vbase.html' %}
+{% block body %}
+
+
+	<!-- Banner -->
+	<div class= "row">
+		<div class= "col">
+			<img src= "{{ url_for('static', filename='images/banner.jpg') }}" alt= "Vendor Banner" class= "vendor_banner">
+		</div>
+	</div>
+
+
+	<!-- Welcome Message plus stats and small vendor description-->
+	<div class= "row welcome">
+		<div class= "col">
+			<div class= "row">
+				<div class= "col-4 col-md-3 offset-5">
+					<img src= "{{ url_for('static', filename='images/profile_pic2.jpg') }}" alt= "" class= "img-fluid profile_pic" id= "uservendor_profilepic">
+				</div>
+			</div>
+			<div class= "row">
+				<div class= "col">
+					<h4 class= "text-center">Vendor Name</h4>
+					<p class= "text-center">Brief description/overview of vendor's services plus average rating</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Calender -->
+	<div class= "row mt-3">
+		<div class= "col">
+			<h3>Your Calender</h3>
+			<div class= "row">
+				<div class= "col m-2 p-0 calen_day rounded" id= "cal_1">
+					{% include 'vendor/main_calender.html' %}
+				</div>
+				<div class= "col m-2 calen_day p-0 rounded" id= "cal_2">
+					{% include 'vendor/main_calender.html' %}
+				</div>
+				<div class= "col m-2 calen_day d-none d-md-block p-0 rounded" id= "cal_3">
+					{% include 'vendor/main_calender.html' %}
+				</div>
+				<div class= "col m-2 calen_day d-none d-md-block p-0 rounded" id= "cal_4">
+					{% include 'vendor/main_calender.html' %}
+				</div>
+				<div class= "col m-2 calen_day d-none d-lg-block p-0 rounded" id= "cal_5">
+					{% include 'vendor/main_calender.html' %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Booking Requests -->
+	<div class= "row mt-3 blueback">
+		<div class= "col">
+			<h3><span class= "bagde bg-danger rounded-pill">5</span> Pending Requests</h3>
+			<div class= "row">
+				<div class= "col">
+					<table class= "table">
+						<thead>
+							<th>Customer Name</th>
+							<th>Location</th>
+							<th>Date</th>
+							<th class= "hidemd">Time</th>
+							<th class= "hidemd">Time of Booking</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Customer 1</td>
+								<td></td>
+								<td></td>
+								<td class= "hidemd"></td>
+								<td class= "hidemd"></td>
+							</tr>
+							<tr>
+								<td>Customer 2</td>
+								<td></td>
+								<td></td>
+								<td class= "hidemd"></td>
+								<td class= "hidemd"></td>
+							</tr>
+							<tr>
+								<td>Customer 3</td>
+								<td></td>
+								<td></td>
+								<td class= "hidemd"></td>
+								<td class= "hidemd"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<a href= "#" class= "nav-link text-end">View All Requests</a>
+		</div>
+	</div>
+
+
+	<!-- Detailed Calender information -->
+	<div class= "row mt-3 blueback">
+		<div class= "col">
+			<h3><span class= "bagde bg-success rounded-pill">6</span> Active Bookings</h3>
+			<div class= "row">
+				<div class= "col">
+					<table class= "table">
+						<thead>
+							<th>Customer Name</th>
+							<th>Services</th>
+							<th class= "hidemd">Location</th>
+							<th>Date</th>
+							<th class= "hidemd">Time</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Customer 1</td>
+								<td></td>
+								<td class= "hidemd"></td>
+								<td></td>
+								<td class= "hidemd"></td>
+							</tr>
+							<tr>
+								<td>Customer 2</td>
+								<td></td>
+								<td class= "hidemd"></td>
+								<td></td>
+								<td class= "hidemd"></td>
+							</tr>
+							<tr>
+								<td>Customer 3</td>
+								<td></td>
+								<td class= "hidemd"></td>
+								<td></td>
+								<td class= "hidemd"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<a href= "#" class= "nav-link text-end">View All Active Bookings</a>
+		</div>
+	</div>
+
+	<!-- Reviews -->
+	<div class= "row mt-3 blueback">
+		<div class= "col">
+			<h3>Statistics</h3>
+			<p>User Ratings: </p>
+			<p>Fufillment Rating: </p>
+			<div class= "row">
+				<div class= "col">
+					<div>
+						<p class= "mb-0"><b>Username</b></p>
+						<p>Review</p>
+					</div>
+					<div>
+						<p class= "mb-0"><b>Username</b></p>
+						<p>Review</p>
+					</div>
+					<div>
+						<p class= "mb-0"><b>Username</b></p>
+						<p>Review</p>
+					</div>
+					<a href= "" class= "nav-link text-end">Read More...</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+{% endblock body %}

@@ -106,18 +106,6 @@ $(document).ready(function(){
 $(document).ready(function(){
 	//This code caters to selecting whether you want to login as a customer, vendor or admin
 	$('#sel_customer').prop('checked', true);
-	$('#sel_vendor').click(function(){
-		$('#login_form').attr('action', 'vendor_home.html')
-	});
-	$('#sel_customer').click(function(){
-		$('#login_form').attr('action', 'user_home.html')
-	});
-	$('#login_button').click(function(){
-		if($('#login_username').val().toLowerCase() == "admin"){
-			$('#login_form').attr('action', '/admin');
-		}
-		$('#login_button').attr('type','submit');
-	})
 });
 
 
@@ -125,24 +113,49 @@ $(document).ready(function(){
 /* This code caters for the signup page */
 $(document).ready(function(){
 	$('#signup_sel_customer').prop('checked', true);
-	$('#signup_sel_vendor').click(function(){
-		$('#signup_form').attr('action', 'vendor_home.html')
+	
+});
+
+
+
+/* This caters for the customer settings page */
+$(document).ready(function(){
+	$('#cancel_cuspersonal').hide();
+	$('#edit_cuspersonal').click(function(){
+		$('.cus_personal').prop('disabled', false);
+		$('#cancel_cuspersonal').show();
+		$('#edit_cuspersonal').hide();
 	});
-	$('#signup_sel_customer').click(function(){
-		$('#signup_form').attr('action', '/signup')
+	$('#cancel_cuspersonal').click(function(){
+		$('.cus_personal').prop('disabled', true);
+		$('#cancel_cuspersonal').hide();
+		$('#edit_cuspersonal').show();
 	});
-	//This code checks the username before allowing signup
-	$('#signup_button').click(function(){
-		if($('#signup_username').val().toLowerCase() == "admin"){
-			alert("You cannot signup with the username 'admin'. Please choose another one.")
+});
+
+
+
+/* This caters for the vendor settings page */
+$(document).ready(function(){
+	//This caters for the editing of the profile information
+	$('#cancel_venpersonal').hide();
+	$('#edit_venpersonal').click(function(){
+		$('.ven_personal').prop('disabled', false);
+		$('#cancel_venpersonal').show();
+		$('#edit_venpersonal').hide();
+	});
+	$('#cancel_venpersonal').click(function(){
+		$('.ven_personal').prop('disabled', true);
+		$('#cancel_venpersonal').hide();
+		$('#edit_venpersonal').show();
+	});
+
+	//This caters for script used in the adding service section of the page
+	$('#addservice').change(function(){
+		if ( $('#addservice').val() == "others" ){
+			$('#othservice').attr('type', 'text');
 		}else{
-			if ( $('[name= "pswd"]').val() != $('[name= "cpswd"]').val() ){
-				$('#signup_button').attr('type','button')
-				alert("Password doesn not match")
-			}else{
-				$('#signup_button').attr('type','submit')
-			}
-			
+			$('#othservice').attr('type', 'hidden');
 		}
 	});
 });

@@ -1,0 +1,38 @@
+{% extends 'general/base_home.html' %}
+{% block internal_styles %}
+<style type= "text/css">
+body{background: linear-gradient(to bottom, white, rgba(49, 49, 193, 1));}
+</style>
+{% endblock internal_styles %}
+
+{% block home_inside_content %}
+	<div class= "row mt-3">
+		<div class= "col-md-6 offset-md-3" id= "logincol">
+				<h2 class= "mb-2">LOGIN</h2>
+				{% set msg = get_flashed_messages() %}
+				{% for i in msg %}
+				<p class= "alert alert-danger">{{i}}</p>
+				{% endfor %}
+					<form action= "/login" method= "post">
+						<div class= "mb-1">
+							<label class= "form-label">Username</label>
+							<input type= "text" class= "form-control" name= "username" id= "login_username">
+						</div>
+						<div class= "mb-1">
+							<label class= "form-label">Password</label>
+							<input type= "password" class= "form-control" name= "pswd" id= "login_password">
+						</div>
+						<div class= "mb-1">
+							<input type= "radio" class= "" name= "user_type" id= "sel_customer" value= "customer">
+							<label class= "form-label" for= "sel_customer">Customer</label>
+							<input type= "radio" class= "" name= "user_type" id= "sel_vendor" value= "vendor">
+							<label class= "form-label" for= "sel_vendor">Vendor</label>	
+						</div>
+						<button class= "btn homebutton" id= "login_button">Login</button>
+						<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
+					</form>
+
+				<p>New User? Register <span><a href= "/signup" class= "text-dark">here</a></span></p>
+			</div>
+	</div>
+{% endblock home_inside_content %}

@@ -1,0 +1,44 @@
+{% if session.get('cust_id') != None %}
+{% extends 'customer/cbase.html' %}
+{% else %}
+{% extends 'general/base_home.html' %}
+{% endif %}
+
+{% block body %}
+{% for i in vs %}
+<div class= "row">
+	<div class= "col">
+		<h5>
+			{% if session.get('cust_id') == None %}
+			<a href= "/cus/vendorpage/{{ i.ven_info.ven_id }}" target= "_blank">
+			{% else %}
+			<a href= "/cus/vendorpage/{{ i.ven_info.ven_id }}">
+			{% endif %}
+
+				{{ i.ven_info.ven_busname }}
+			</a>
+		</h5>
+		<p>{{ i.ven_info.ven_shortdesc }}</p>
+	</div>
+</div>
+{% endfor %}
+
+{% for i in vb %}
+<div class= "row">
+	<div class= "col">
+		<h5>
+			{% if session.get('cust_id') == None %}
+			<a href= "/cus/vendorpage/{{ i.ven_id }}" target= "_blank">
+			{% else %}
+			<a href= "/cus/vendorpage/{{ i.ven_id }}">
+			{% endif %}
+
+				{{ i.ven_busname }}
+			</a>
+		</h5>
+		<p>{{ i.ven_shortdesc }}</p>
+	</div>
+</div>
+{% endfor %}
+
+{% endblock body %}

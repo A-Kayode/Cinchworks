@@ -4,9 +4,9 @@
 <title></title>
 <meta charset= "UTF-8">
 <meta name= "viewport" content= "width=device-width, initial-scale=1, shrink-to-fit=no">
-<link rel= "stylesheet" type= "text/css" href= "../libraries/bootstrap/css/bootstrap.css">
-<link rel= "stylesheet" type= "text/css" href= "external_files/stylesheet.css">
-<style type= "text/css">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='libraries/bootstrap/css/bootstrap.css') }}">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='external_files/stylesheet.css') }}">
+<style>
 	div{border: 0px solid red;}
 </style>
 </head>
@@ -25,16 +25,13 @@
 			    <div class="collapse navbar-collapse" id="homenav">
 			      <ul class="navbar-nav me-auto mb-2 mb-lg-0 offset-md-2 offset-lg-6">
 			        <li class="nav-item">
-			          <a class="nav-link" href="index.html">Home</a>
+			          <a class="nav-link" href="/">Home</a>
 			        </li>
 			         <li class="nav-item">
-			          <a class="nav-link" href="signup.html">Sign Up</a>
+			          <a class="nav-link" href="/signup">Sign Up</a>
 			        </li>
 			        <li class="nav-item">
-			          <a class="nav-link" href="site_faq.html">FAQ</a>
-			        </li>
-			        <li class="nav-item">
-			          <a class="nav-link" href="site_contact.html">Contact Us</a>
+			          <a class="nav-link" href="/contactus">Contact Us</a>
 			        </li>
 			      </ul>
 			    </div>
@@ -66,9 +63,9 @@
 					<p>+234-849-5963-874, 01-868-8746</p>
 				</div>
 				<div class= "col-md-5">
-					<p><img src= "images/twitter.png" alt= "twitter icon" height="20"> twitter: @cinchworks</p>
-					<p><img src= "images/facebook.png" alt= "facebook icon" height="20"> facebook: CinchWorks</p>
-					<p><img src= "images/instagram.png" alt= "instagram icon" height="20"> instagram: @cinhworks</p>
+					<p><img src= "{{ url_for('static', filename='') }}images/twitter.png" alt= "twitter icon" height="20"> twitter: @cinchworks</p>
+					<p><img src= "{{ url_for('static', filename='') }}images/facebook.png" alt= "facebook icon" height="20"> facebook: CinchWorks</p>
+					<p><img src= "{{ url_for('static', filename='') }}images/instagram.png" alt= "instagram icon" height="20"> instagram: @cinhworks</p>
 
 				</div>
 			</div>
@@ -104,19 +101,18 @@
 <div class= "row allfooter">
 	<div class= "col-5 col-3-md">
 		<ul style= "list-style-type: none;" class= "footerlist">
-			<li><a href= "index.html" class= "nav-link text-light">Home</a></li>
-			<li><a href= "login.html" class= "nav-link text-light">Login/Sign Up</a></li>
-			<li><a href= "site_faq.html" class= "nav-link text-light">FAQ</a></li>
-			<li><a href= "site_contact.html" class= "nav-link text-light">Contact Us</a></li>
+			<li><a href= "/" class= "nav-link text-light">Home</a></li>
+			<li><a href= "/login" class= "nav-link text-light">Login/Sign Up</a></li>
+			<li><a href= "/contactus" class= "nav-link text-light">Contact Us</a></li>
 		</ul>
 	</div>
 	<div class= "col">
 		<div class= "row"></div>
 		<div class= "row mt-5">
 			<div class= "col">
-				<p><a href= "#"><img src= "images/twitter.png" alt= "twitter icon" height="32"></a></p>
-				<p><a href= "#"><img src= "images/facebook.png" alt= "facebook icon" height="32"></a></p>
-				<p><a href= "#"><img src= "images/instagram.png" alt= "instagram icon" height="32"></a></p>
+				<p><a href= "#"><img src= "{{ url_for('static', filename='images/twitter.png') }}" alt= "twitter icon" height="32"></a></p>
+				<p><a href= "#"><img src= "{{ url_for('static', filename='images/facebook.png') }}" alt= "facebook icon" height="32"></a></p>
+				<p><a href= "#"><img src= "{{ url_for('static', filename='images/instagram.png') }}" alt= "instagram icon" height="32"></a></p>
 			</div>
 		</div>
 		<div class= "row"></div>
@@ -127,8 +123,8 @@
 </div>
 
 <!-- JS Files -->
-<script type= "text/javascript" src= "../libraries/jquery.js"></script>
-<script type= "text/javascript" src= "../libraries/bootstrap/js/bootstrap.bundle.js"></script>
+<script type= "text/javascript" src= "{{ url_for('static', filename='libraries/jquery.js') }}"></script>
+<script type= "text/javascript" src= "{{ url_for('static', filename='libraries/bootstrap/js/bootstrap.bundle.js') }}"></script>
 <script type= "text/javascript">
 
 

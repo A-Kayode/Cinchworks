@@ -1,0 +1,85 @@
+{%  extends 'customer/cbase.html' %}
+{% block body %}
+	<!-- Title Div -->
+	<div class= "row mb-3 mb-sm-2 mt-sm-2 welcome">
+		<div class= "col">
+			<h2 class= "text-center">Booking</h2>
+		</div>
+	</div>
+
+	<div class= "row blueback">
+		<div class= "col">
+			<h3 class= "text-center mb-3" id= "pending">Pending Bookings</h3>
+			<table class= "table">
+				<thead>
+					<th>S/N</th>
+					<th class= "hidesm">Vendor</th>
+					<th>Service</th>
+					<th class= "hidemd">Description</th>
+					<th>Date</th>
+					<th class= "hidemd">Time</th>
+					<th>Cancel</th>
+				</thead>
+				<tbody>
+					{% for i in pbook%}
+					<tr>
+						<td>{{ loop.index }}</td>
+						<td class= "hidesm">{{ i.ven_info.ven_busname }}</td>
+						<td>{{ i.service_info.service.service_name }}</td>
+						<td class= "hidemd">{{ i.service_info.short_desc }}</td>
+						<td>{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
+						<td class= "hidemd">{{ i.calender_time }}</td>
+						<td></td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<button data-bs-toggle= "modal" data-bs-target= "#book_modal" class= "btn brownbutton offset-5 offset-sm-9 offset-lg-10" type= "button">Make new booking</button>
+		</div>
+	</div>
+
+	<!-- Booking History -->
+	<div class= "row blueback mt-3 mb-sm-3">
+		<div class= "col">
+			<h3 class= "text-center mb-3" id= "booking_history">Booking History</h3>
+			<table class= "table">
+				<thead>
+					<th class= "hidesm">Booking ID</th>
+					<th class= "hidesm">Vendor</th>
+					<th>Service</th>
+					<th>Date</th>
+					<th class= "hidemd">Time</th>
+					<th>Status</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td class= "hidesm"></td>
+						<td class= "hidesm">Vendor 1</td>
+						<td></td>
+						<td></td>
+						<td class= "hidemd"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class= "hidesm"></td>
+						<td class= "hidesm">Vendor 2</td>
+						<td></td>
+						<td></td>
+						<td class= "hidemd"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class= "hidesm"></td>
+						<td class= "hidesm">Vendor 3</td>
+						<td></td>
+						<td></td>
+						<td class= "hidemd"></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock body %}

@@ -1,0 +1,212 @@
+{% if session.get('cust_id') != None %}
+{% extends 'customer/cbase.html' %}
+{% else %}
+{% extends 'general/base_home.html' %}
+{% endif %}
+{% block body %}
+
+
+{% if session.get('cust_id') == None %}
+<div class= "container">
+{% endif %}
+
+	<!-- Banner -->
+	<div class= "row">
+		<div class= "col">
+			<img src= "{{url_for('static', filename='images/banner.jpg')}}" alt= "Vendor Banner" class= "vendor_banner">
+		</div>
+	</div>
+
+
+	<!-- Welcome Message plus stats and small vendor description-->
+	<div class= "row welcome">
+		<div class= "col">
+			<div class= "row">
+				<div class= "col-4 col-md-3 offset-5">
+					<img src= "{{url_for('static', filename='images/profile_pic2.jpg')}}" alt= "" class= "img-fluid profile_pic" id= "uservendor_profilepic">
+				</div>
+			</div>
+			<div class= "row">
+				<div class= "col">
+					<h4 class= "text-center">{{ v.ven_busname }}</h4>
+					<p class= "text-center">Brief description/overview of vendor's services plus average rating</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Calender -->
+	<div class= "row mt-md-3">
+		<div class= "col">
+			<div class= "row">
+				<div class= "col m-2 p-0 calen_day rounded" id= "cal_1">
+					{% include 'customer/main_calender.html' %}
+				</div>
+				<div class= "col m-2 p-0 calen_day rounded" id= "cal_2">
+					{% include 'customer/main_calender.html' %}
+				</div>
+				<div class= "col m-2 p-0 calen_day rounded d-none d-md-block" id= "cal_3">
+					{% include 'customer/main_calender.html' %}
+				</div>
+				<div class= "col m-2 p-0 calen_day rounded d-none d-lg-block" id= "cal_4">
+					{% include 'customer/main_calender.html' %}
+				</div>
+				<div class= "col m-2 p-0 calen_day rounded d-none d-lg-block" id= "cal_5">
+					{% include 'customer/main_calender.html' %}
+				</div>
+			</div>
+			<div class= "row mt-2">
+				<div class= "col">
+					<button data-bs-toggle= "offcanvas" data-bs-target= "#book_offcanvas" type= "button" class= "btn brownbutton offset-md-9 offset-lg-10">Book Vendor</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Services -->
+	<div class= "row mt-3 blueback">
+		<div class= "col">
+			<h3>Services</h3>
+			<div class= "row">
+				<div class= "col">
+					{% for i in vs %}
+					<div class= "row">
+						<div class= "col">
+							<p><b>{{ i.service.service_name }}</b></p>
+							<p><pre>Avg duration: {{i.average_duration}}      Min duration: {{ i.min_duration }}      Max duration: {{ i.max_duration }}</pre></p>
+							<pre>Price: {{i.service_price}}</pre>
+							<p>{{ i.long_desc }}</p>
+							<hr>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+			<div class= "row mt-1">
+				<div class= "col">
+					<button data-bs-toggle= "offcanvas" data-bs-target= "#book_offcanvas" type= "button" class= "btn brownbutton offset-md-9 offset-lg-10">Book Services</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Reviews -->
+	<div class= "row mt-5 blueback">
+		<div class= "col">
+			<h3>User Reviews</h3>
+			<div class= "row">
+				<div class= "col">
+					<form>
+						<textarea class= "form-control mb-2" placeholder= "write your review here"></textarea>
+						<button class= "btn btn-primary offset-9 offset-md-10 offset-lg-11">Submit</button>
+					</form>
+				</div>
+			</div>
+			<div class= "row">
+				<div class= "col">
+					<div>
+						<p class= "mb-0"><b>Username</b></p>
+						<p>Review</p>
+					</div>
+					<div>
+						<p class= "mb-0"><b>Username</b></p>
+						<p>Review</p>
+					</div>
+					<div>
+						<p class= "mb-0"><b>Username</b></p>
+						<p>Review</p>
+					</div>
+					<a href= "" class= "nav-link text-end">Read More...</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+
+<div class= "offcanvas offcanvas-end" id= "book_offcanvas">
+	<div class= "offcanvas-header">
+		<h3>Your Bookings</h3>
+	</div>
+	<div class= "offcanvas-body">
+		<div class= "row off_booking">
+			<div class= "col">
+				<div class= "row off_bookingtitle">
+					<div class= "col">
+						<h4>Added Requests</h4>
+					</div>
+				</div>
+				<div class= "row">
+					<div class= "col">
+						
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class= "row off_booking">
+			<div class= "col">
+				<div class= "row off_bookingtitle">
+					<div class= "col">
+						<h4>New Booking</h4>
+					</div>
+				</div>
+				<form action= "/cus/bookvendor/{{v.ven_id}}" method= "post">
+					<div class= "mb-2">
+					<label class="form-label">Choose Service</label>
+					<select name= "bservice" class= "form-select">
+						<option value= "">Please Select Service</option>
+						{% for i in vs %}
+						<option value= "{{ i.ven_service_id }}">{{i.service.service_name}}</option>
+						{% endfor %}
+					</select>
+					</div>
+
+					<div class= "mb-2">
+						<label class="form-label">Service Location</label>
+						<select class= "form-select" name= "blocation">
+							<option value= "">Please select location</option>
+							<option value= "customer_address">Home</option>
+							<option value= "vendor_address">Vendor Location</option>
+						</select>
+					</div>
+
+					<div class= "mb-2">
+					<label class="form-label">Date</label>
+					<input type= "date" class= "form-control" name= "bdate">
+					</div>
+
+					<div class= "mb-2">
+					<label class="form-label">Time</label>
+					<input type= "time" class= "form-control" name= "btime">
+					</div>
+
+					<div class= "mb-2">
+					<label class="form-label">Duration</label>
+					<select name= "duration" class= "form-select">
+						<option value= "">Select duration of service</option>
+						<option value= "02:00">Mininum Duration</option>
+						<option value= "02:45">Average Duration</option>
+						<option value= "03:30">Maximum Duration</option>
+					</select>
+					<p>It should be noted that ideally I want this duration to change based on what was selected by the customer for service.</p>
+					</div>
+
+					<div class= "mb-2">
+						<label class= "form-label">Notes</label>
+						<textarea class= "form-control" name= "notes" placeholder= "Input any notes you have here"></textarea>
+					</div>
+
+					<div>
+						<button class= "btn btn-primary offset-8">Book Service</button>
+					</div>
+					<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock body %}

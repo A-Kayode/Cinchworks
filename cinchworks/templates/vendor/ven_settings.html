@@ -1,0 +1,288 @@
+{% extends 'vendor/vbase.html' %}
+{% block body %}
+
+<div class= "container-fluid blueback">
+<div class= "container">
+	<!-- Page Title -->
+	<div class= "row my-md-3">
+		<div class= "col">
+			<h2 class= "text-center">Settings</h2>
+		</div>
+	</div>
+
+
+	{% set msg = get_flashed_messages(with_categories=True) %}
+	{% for i,j in msg %}
+	{% if i == 'success' %}
+	<div class= "row my-3">
+		<div class= "col">
+			<p class= "alert alert-success">{{j}}</p>
+		</div>
+	</div>
+	{% elif i == 'failure' %}
+	<div class= "row my-3">
+		<div class= "col">
+			<p class= "alert alert-danger">{{j}}</p>
+		</div>
+	</div>
+	{% endif %}
+	{% endfor %}
+
+
+	<!-- Personal Information Settings -->
+	<div class= "row setting_blackback">
+		<div class= "col">
+			<h3 class= "mb-4">Profile</h3>
+			<form action= "{{url_for('ven_edit_info')}}" method= "post">
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">First Name:</label>
+					<div class= "col">
+						<input type= "text" class= "form-control ven_personal" name= "fname" value= "{{ v.ven_fname }}" disabled>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Last Name:</label>
+					<div class= "col">
+						<input type= "text" class= "form-control ven_personal" name= "lname" value= "{{ v.ven_lname }}" disabled>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Business Name:</label>
+					<div class= "col">
+						<input type= "text" class= "form-control ven_personal" name= "bname" value= "{{ v.ven_busname }}" disabled>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Phone Number 1:</label>
+					<div class= "col">
+						<input type= "text" class= "form-control ven_personal" name= "phone1" value= "{{ v.ven_phone1 }}" disabled>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Phone Number 2:</label>
+					<div class= "col">
+						<input type= "text" class= "form-control ven_personal" name= "phone2" value= "{{ v.ven_phone2 }}" disabled>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Address:</label>
+					<div class= "col">
+						<textarea class= "form-control ven_personal" name= "address" disabled>{{ v.ven_address }}</textarea>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">City:</label>
+					<div class= "col">
+						<input type= "text" class= "form-control ven_personal" name= "city" value= "{{ v.ven_city }}" disabled>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">State:</label>
+					<div class= "col">
+						<select name= "state" class= "form-select ven_personal" disabled>
+							<option value= "{{v.ven_state}}">{{v.vendor_state.state_name}}</option>
+							
+							{% for i in s %}
+							<option value= "{{i.state_id}}">{{i.state_name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Local Government:</label>
+					<div class= "col">
+						<p>will need to have a way to select this automatically on selection of state to make this less stressful for user</p>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Short Business Description:</label>
+					<div class= "col">
+						<textarea class= "form-control ven_personal" name= "busdesc" disabled>{{ v.ven_shortdesc }}</textarea>
+					</div>
+				</div>
+				<div class= "row">
+					<div class= "col text-end">
+						<button type= "button" class= "btn btn-danger" id= "cancel_venpersonal">Cancel</button>
+						<button type= "button" class= "btn brownbutton" id= "edit_venpersonal">Edit</button>
+						<button class= "btn btn-primary" onclick= "return confirm('Confirm profile update?')">Submit</button>
+					</div>
+				</div>
+				<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
+			</form>
+		</div>
+	</div>
+
+
+	<!-- Services Settings -->
+	<div class= "row my-3 setting_blackback">
+		<div class= "col">
+			<h3 class= "mb-4">Services</h3>
+			<div class= "row mb-4">
+				<div class= "col">
+					<h4 class= "text-center mb-2" id= "add_service">Add Service</h4>
+					{% set msg2 = get_flashed_messages(with_categories=True, category_filter=['service']) %}
+					{% for i, j in msg2 %}
+					<p class= "alert alert-success">{{j}}</p>
+					{% endfor %}
+					<form action= "/ven/settings/addservice" method= "post">
+						<div class= "row mb-3">
+							<label class= "col-2 form-label">Category</label>
+							<div class= "col">
+								<select class= "form-select" name= "category">
+									<option value= "">Select Category</option>
+									{% for i in cat %}
+									<option value= "{{i.category_id}}">{{i.category_name}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class= "row mb-3">
+							<label class= "col-2 form-label">Service</label>
+							<div class= "col">
+								<div class= "row"> <div class= "col">
+								<select class= "form-select" name= "service" id="addservice">
+									<option value= "">Select Service</option>
+									{% for i in ser %}
+									<option value= "{{i.service_id}}">{{i.service_name}}</option>
+									{% endfor %}
+									<option value= "others">others</option>
+								</select>
+								<input type= "hidden" name= "othservice" class= "form-control mt-2" placeholder= "Input other service here" id= "othservice">
+								<p>Note this will need to be able to respond to what category is chosen. Don't know how to do that yet.</p></div></div>
+							</div>
+						</div>
+						<div class= "row mb-3">
+							<label class= "col-2 form-label">Short Description:</label>
+							<div class= "col">
+								<input type= "text" class= "form-control" name= "shortdesc">
+							</div>
+						</div>
+						<div class= "row mb-3">
+							<label class= "col-2 form-label">Long Description:</label>
+							<div class= "col">
+								<textarea class= "form-control" name= "longdesc"></textarea>
+							</div>
+						</div>
+						<div class= "row mb-3">
+							<label class= "col-2 form-label">Price:</label>
+							<div class= "col">
+								<input type= "number" class= "form-control" name= "price">
+							</div>
+						</div>
+						<div class= "row mb-3">
+							<label class= "col-2 form-label">Average Service Duration:</label>
+							<div class= "col-2">
+								<input type= "time" class= "form-check" name= "avgdur">
+							</div>
+							<label class= "col-2 form-label">Minimun Service Duration:</label>
+							<div class= "col-2">
+								<input type= "time" class= "form-check" name= "mindur">
+							</div>
+							<label class= "col-2 form-label">Maximum Service Duration:</label>
+							<div class= "col-2">
+								<input type= "time" class= "form-check" name= "maxdur">
+							</div>
+						</div>
+						<div class= "row"><div class= "col text-end">
+						<button class= "btn btn-primary" onclick= "return confirm('Are you sure you want to add this service?')">Add Service</button></div></div>
+						<input type= "hidden" name= "csrf_token" id= "csrf_token" value="{{csrf_token()}}">
+					</form>
+				</div>
+			</div>
+
+			<div class= "row">
+				<div class= "col">
+					<table class= "table">
+						<thead>
+							<th>S/N</th>
+							<th>Service</th>
+							<th class= "hidemd">Min Duration</th>
+							<th class= "hidemd">Avg Duration</th>
+							<th class= "hidemd">Max Duration</th>
+							<th>Price</th>
+						</thead>
+						<tbody>
+							{% for i in venser %}
+							<tr>
+								<td>{{ loop.index }}</td>
+								<td>{{ i.service.service_name }}</td>
+								<td>{{ i.min_duration }}</td>
+								<td>{{ i.average_duration }}</td>
+								<td>{{ i.max_duration }}</td>
+								<td>{{ i.service_price }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					<button type= "button" class= "btn btn-danger offset-md-9 offset-lg-10">Remove Service</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Calender Settings -->
+	<div class= "row my-3 setting_blackback">
+		<div class= "col">
+			<h3 class= "mb-4">Calender</h3>
+			<div class= "row">
+				<div class= "col">
+					<h4 class= "text-center mb-2">Off-Days</h4>
+					<form>
+						<div class= "row mb-3">
+							<label class= "form-label col-2">Start Date</label>
+							<div class= "col-6">
+								<input type= "date" class="form-control">
+							</div>
+						</div>
+						<div class= "row mb-3">
+							<label class= "form-label col-2">End Date</label>
+							<div class= "col-6">
+								<input type= "date" class="form-control">
+							</div>
+						</div>
+						<button class= "btn btn-primary offset-0 offset-md-10">Add Off-day</button>
+					</form>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+
+	<!-- Account Settings -->
+	<div class= "row my-3 setting_blackback">
+		<div class= "col">
+			<h3 class= "mb-4">Account</h3>
+			<div class= "row">
+				<div class= "col mt-2">
+					<h4 class= "text-center">Change Password</h4>
+					<form action= "{{url_for('ven_change_password')}}" method= "post">
+						<div class= "mb-3">
+							<label class= "form-label">Old Password</label>
+							<input type= "password" class= "form-control" name= "opswd">
+						</div>
+						<div class= "mb-3">
+							<label class= "form-label">New Password</label>
+							{{ cform.npswd(class_="form-control") }}
+						</div>
+						<div class= "mb-3">
+							{% for i in cform.cnpswd.errors %}
+							<p class= "alert alert-danger">{{i}}</p>
+							{% endfor %}
+							<label class= "form-label">Confirm New Password</label>
+							{{ cform.cnpswd(class_="form-control") }}
+						</div>
+						{{ cform.csrf_token }}
+						<div class= "text-end">
+							<button class= "btn btn-primary" onclick= "return confirm('Are you sure you want to change your password?')">Save</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+{% endblock body %}

@@ -1,0 +1,138 @@
+{% extends 'customer/cbase.html' %}
+{% block body %}
+<div class= "container-fluid blueback">
+<div class= "container">
+	<!-- Page Title -->
+	<div class= "row my-3">
+		<div class= "col">
+			<h2 class= "text-center">Settings</h2>
+		</div>
+	</div>
+
+	{% set msg = get_flashed_messages(with_categories=True) %}
+	{% for i,j in msg %}
+	{% if i == 'success' %}
+	<div class= "row my-3">
+		<div class= "col">
+			<p class= "alert alert-success">{{j}}</p>
+		</div>
+	</div>
+	{% else %}
+	<div class= "row my-3">
+		<div class= "col">
+			<p class= "alert alert-danger">{{j}}</p>
+		</div>
+	</div>
+	{% endif %}
+	{% endfor %}
+
+	<!-- Personal Information Settings -->
+	<div class= "row setting_blackback">
+		<div class= "col">
+			<h3 class= "mb-3">Personal Information</h3>
+			<form action= "{{url_for('cus_edit_info')}}" method= "post">
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">First Name:</label>
+					<div class= "col">
+						<input type= "text" class= "form-control cus_personal" name= "fname" value= "{{ c.cus_fname }}" disabled>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Last Name:</label>
+					<div class= "col">
+						<input type= "text" class= "form-control cus_personal" name= "lname" value= "{{ c.cus_lname }}" disabled>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Phone Number 1:</label>
+					<div class= "col">
+						<input type= "text" class= "form-control cus_personal" name= "phone1" value= "{{ c.cus_phone1 }}" disabled>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Phone Number 2:</label>
+					<div class= "col">
+						<input type= "text" class= "form-control cus_personal" name= "phone2" value= "{{ c.cus_phone2 }}" disabled>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Address:</label>
+					<div class= "col">
+						<textarea class= "form-control cus_personal" name= "address" disabled>{{ c.cus_address }}</textarea>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">City:</label>
+					<div class= "col">
+						<input type= "text" class= "form-control cus_personal" name= "city" value= "{{ c.cus_city }}" disabled>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">State:</label>
+					<div class= "col">
+						<select name= "state" class= "form-select cus_personal" disabled>
+							<option value= "{{c.cus_state}}">{{c.customer_state.state_name}}</option>
+							
+							{% for i in s %}
+							<option value= "{{i.state_id}}">{{i.state_name}}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class= "row mb-3">
+					<label class= "form-label col-md-2">Local Government:</label>
+					<div class= "col">
+						<p>will need to have a way to select this automatically on selection of state to make this less stressful for user</p>
+					</div>
+				</div>
+				<div class= "row">
+					<div class= "col text-end">
+						<button type= "button" class= "btn btn-danger" id= "cancel_cuspersonal">Cancel</button>
+						<button type= "button" class= "btn brownbutton" id= "edit_cuspersonal">Edit</button>
+						<button class= "btn btn-primary" onclick= "return confirm('Confirm profile update?')">Submit</button>
+					</div>
+				</div>
+				<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
+			</form>
+		</div>
+	</div>
+
+	<!-- Calender Settings -->
+	<div class= "row my-3">
+		<div class= "col">
+			<h3>Calender Settings</h3>
+		</div>
+	</div>
+
+	<!-- Account Settings -->
+	<div class= "row my-3 setting_blackback">
+		<div class= "col">
+			<h3>Account Settings</h3>
+			<form action= "{{url_for('cus_change_password')}}" method= "post">
+				<p>Change Password</p>
+				<div class= "mb-3">
+					<label class= "form-label">Old Password</label>
+					<input type= "password" class= "form-control" name= "opswd">
+				</div>
+				<div class= "mb-3">
+					<label class= "form-label">New Password</label>
+					{{ cform.npswd(class_="form-control") }}
+				</div>
+				<div class= "mb-3">
+					{% for i in cform.cnpswd.errors %}
+					<p class= "alert alert-danger">{{i}}</p>
+					{% endfor %}
+					<label class= "form-label">Confirm New Password</label>
+					{{ cform.cnpswd(class_="form-control") }}
+				</div>
+				{{ cform.csrf_token }}
+				<div class= "text-end">
+					<button class= "btn btn-primary">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</div>
+
+{% endblock body %}

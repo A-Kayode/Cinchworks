@@ -1,5 +1,5 @@
-{% extends 'base_home.html' %}
-{% block home_internal_styles %}
+{% extends 'general/base_home.html' %}
+{% block internal_styles %}
 <style type= "text/css">
 	.innercontainer{
 		background-image: url(" {{url_for('static', filename='images/carpenter3.jpg')}} "); 
@@ -7,7 +7,7 @@
 	}
 	.overlay{ background-color:rgba(0,0,0,0.5) }
 </style>
-{% endblock home_internal_styles %}
+{% endblock internal_styles %}
 {% block home_inside_content %}
 <div class= "innercontainer">
 <div class= "overlay">
@@ -15,23 +15,23 @@
 
 	<div class= "row pt-2 ms-md-5">
 		<div class= "col offset-sm-2 offset-lg-6 offset-xxl-7">
-			<form class= "row row-cols-md-auto" action= "user_home.html" id= "login_form">
+			<form class= "row row-cols-md-auto" action= "/login" method= "post">
 				<div class= "col-12 gx-2 gy-2 gy-md-0">
 					<input type= "text" name= "username" class= "form-control" placeholder="Username" id= "login_username">
 				</div>
 				<div class= "col-12 gx-2 gy-2 gy-md-0">
-					<input type= "password" name= "password" class= "form-control" placeholder="Password" id= "login_password">
+					<input type= "password" name= "pswd" class= "form-control" placeholder="Password" id= "login_password">
 				</div>
 				<div class= "col-12 gx-2 gy-2 gy-md-0">
-					<button class= "btn brownbutton" type= "button" id= "login_button">Login</button>
+					<button class= "btn brownbutton" id= "login_button">Login</button>
 				</div>
 				<div class= "col-12 gx-2 gy-2 gy-md-0">
-					<input type= "radio" name= "user_type" class= "" id= "sel_customer">
+					<input type= "radio" name= "user_type" class= "" id= "sel_customer" value= "customer">
 					<label class= "form-check-label text-light me-3" for= "sel_customer">Customer</label>
-					<input type= "radio" name= "user_type" class= "" id= "sel_vendor">
+					<input type= "radio" name= "user_type" class= "" id= "sel_vendor" value= "vendor">
 					<label class= "form-check-label text-light" for= "sel_vendor">Vendor</label>
 				</div>
-				
+				<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
 
 			</form>
 		</div>
@@ -40,7 +40,7 @@
 	<!-- This contains the basic search field to find vendors. Will also contain navigation for the most common/popular vendor categories-->
 	<div class= "row homesearch">
 		<div class= "col mb-5">
-			<form>
+			<form action= "/vendorsearch">
 				<div class= "row">
 					<div class= "col-sm-8 offset-0 offset-sm-2 mb-2">
 						<input type= "text" class= "form-control rounded-pill" name= "vendor_search" placeholder= "Find Workers or Services" id= "home_searchinput">
