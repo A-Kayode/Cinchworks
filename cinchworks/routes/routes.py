@@ -95,6 +95,9 @@ def contact_us():
     return render_template('general/contact_us.html')
 
 
+
+
+#This contains the general code that is used in combination with the vendor search feature
 @app.route('/vendorsearch/')
 def vendor_search():
     vsearch= request.args.get('vendor_search')
@@ -106,6 +109,24 @@ def vendor_search():
         return render_template('general/search.html', c=c, vs=vs, vb=vb)
     else:
         return render_template('general/search.html', vs=vs, vb=vb)
+
+
+@app.route('/ajax/searchoption/')
+def ajax_searchoption():
+    sinput= request.args.get('sinput')
+    posval1= Services.query.filter(Services.service_name.like(f'%{sinput}%')).all()
+    posval2= Vendor.query.filter(Vendor.ven_busname.like(f'%{sinput}%'))
+
+    optiontext= ""
+    for i in posval1:
+        optiontext= optiontext + f"<option value= '{i.service_name}'>"
+    for j in posval2:
+        optiontext= optiontext + f"<option value= '{j.ven_busname}'>"
+
+    return optiontext
+
+
+
 
 
 @app.route('/logout/')

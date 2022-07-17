@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 12, 2022 at 08:11 PM
+-- Generation Time: Jul 17, 2022 at 02:51 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -79,6 +79,7 @@ CREATE TABLE `customer` (
   `cus_state` int(11) DEFAULT NULL,
   `cus_username` varchar(255) NOT NULL,
   `cus_password` varchar(255) NOT NULL,
+  `cus_profilepic` varchar(255) DEFAULT NULL,
   `cus_regdate` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -86,8 +87,9 @@ CREATE TABLE `customer` (
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`cus_id`, `cus_fname`, `cus_lname`, `cus_phone1`, `cus_phone2`, `cus_email`, `cus_address`, `cus_city`, `cus_lga`, `cus_state`, `cus_username`, `cus_password`, `cus_regdate`) VALUES
-(1, 'Friday', 'Iwangumi', '08154289637', '08052936648', 'friiwan@yahoo.com', '5, Ogunsiji Close, Allen Avenue', 'Ikeja', NULL, 24, 'freakyfriday', 'pbkdf2:sha256:260000$uuIB0LQ4q83lO5ZE$dc5be7165bdfdad4f678b583bf60feddc7a6ed8aed1e950c26b87f46974005ee', '2022-07-10 19:53:27');
+INSERT INTO `customer` (`cus_id`, `cus_fname`, `cus_lname`, `cus_phone1`, `cus_phone2`, `cus_email`, `cus_address`, `cus_city`, `cus_lga`, `cus_state`, `cus_username`, `cus_password`, `cus_profilepic`, `cus_regdate`) VALUES
+(1, 'Friday', 'Iwangumi', '08154289637', '08052936648', 'friiwan@yahoo.com', '5, Ogunsiji Close, Allen Avenue', 'Ikeja', 513, 24, 'freakyfriday', 'pbkdf2:sha256:260000$uuIB0LQ4q83lO5ZE$dc5be7165bdfdad4f678b583bf60feddc7a6ed8aed1e950c26b87f46974005ee', '8523440126080357.0.jpg', '2022-07-17 13:50:25'),
+(3, 'Lucky', 'Monday', NULL, NULL, 'monlucky@yahoo.com', NULL, NULL, NULL, NULL, 'luckyday', 'pbkdf2:sha256:260000$MZTTA8hz7kjEGEPM$37b6f959fb275fd2ec9f8d7e5af36a8755af11f53a4275770ce38ae942df1648', NULL, '2022-07-13 13:46:39');
 
 -- --------------------------------------------------------
 
@@ -943,8 +945,8 @@ INSERT INTO `services` (`service_id`, `service_name`, `ser_category`) VALUES
 (1, 'Painting', 1),
 (2, 'Sculpture', 1),
 (3, 'Magomago', 1),
-(4, 'Impression', 1),
-(5, 'Impression', 1);
+(5, 'Impression', 1),
+(6, 'Chocolate Making', 2);
 
 -- --------------------------------------------------------
 
@@ -962,7 +964,8 @@ CREATE TABLE `service_category` (
 --
 
 INSERT INTO `service_category` (`category_id`, `category_name`) VALUES
-(1, 'Art');
+(1, 'Art'),
+(2, 'Food and Drinks');
 
 -- --------------------------------------------------------
 
@@ -1040,6 +1043,10 @@ CREATE TABLE `vendor` (
   `ven_username` varchar(255) NOT NULL,
   `ven_password` varchar(255) NOT NULL,
   `ven_shortdesc` varchar(255) DEFAULT NULL,
+  `ven_openingtime` time DEFAULT NULL,
+  `ven_closingtime` time DEFAULT NULL,
+  `ven_bannerpic` varchar(255) DEFAULT NULL,
+  `ven_profilepic` varchar(255) DEFAULT NULL,
   `ven_regdate` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -1047,8 +1054,9 @@ CREATE TABLE `vendor` (
 -- Dumping data for table `vendor`
 --
 
-INSERT INTO `vendor` (`ven_id`, `ven_fname`, `ven_lname`, `ven_busname`, `ven_phone1`, `ven_phone2`, `ven_email`, `ven_address`, `ven_city`, `ven_lga`, `ven_state`, `ven_username`, `ven_password`, `ven_shortdesc`, `ven_regdate`) VALUES
-(1, 'Damilola', 'Crazycongo', 'Dami Sells Stuff', '08175963248', '', 'cogocray@gmail.com', '25, Ilupeju drive, Ilupeju', 'Ikeja', NULL, 24, 'damicray', 'pbkdf2:sha256:260000$YExGCkkUSq3TzGBB$673d4f50abd4ecb95dfda394a1c9c18cc56fed362cd99877847eadc4e414cbaf', 'Well Sell Stuff That you might need.', '2022-07-11 13:46:07');
+INSERT INTO `vendor` (`ven_id`, `ven_fname`, `ven_lname`, `ven_busname`, `ven_phone1`, `ven_phone2`, `ven_email`, `ven_address`, `ven_city`, `ven_lga`, `ven_state`, `ven_username`, `ven_password`, `ven_shortdesc`, `ven_openingtime`, `ven_closingtime`, `ven_bannerpic`, `ven_profilepic`, `ven_regdate`) VALUES
+(1, 'Damilola', 'Crazycongo', 'Dami Sells Stuff', '08175963248', '', 'cogocray@gmail.com', '25, Ilupeju drive, Ilupeju', 'Ikeja', NULL, 24, 'damicray', 'pbkdf2:sha256:260000$YExGCkkUSq3TzGBB$673d4f50abd4ecb95dfda394a1c9c18cc56fed362cd99877847eadc4e414cbaf', 'Well Sell Stuff That you might need.', '09:00:00', '05:00:00', NULL, NULL, '2022-07-11 13:46:07'),
+(2, 'Willy', 'Wonka', 'Wonka Foods', '07052954189', 'None', 'willwonka@yahoo.com', '58, Nigerian street, Ojodu, Berger', 'Berger', 517, 24, 'willywonka', 'pbkdf2:sha256:260000$SsIC7PpjC1zLpiqt$e97842575b5f00120d555d8a2bc186de22834e17f6ef314980ca3faa6c8411f3', 'We make and sell delicious food and chocolates', '08:00:00', '04:00:00', '4613172034963542.0.jpg', '8958985686155323.0.jpg', '2022-07-17 13:32:47');
 
 -- --------------------------------------------------------
 
@@ -1079,8 +1087,9 @@ INSERT INTO `vendor_services` (`ven_service_id`, `vendor_id`, `service_id`, `sho
 (1, 1, 2, 'We sculpt stuff', 'We will sculp your dick to your liking', 50000, '02:30', NULL, NULL, '', '', ''),
 (2, 1, 1, 'We paint stuff for you', 'We are the true painters', 1500, '23:20', NULL, NULL, '', '', ''),
 (3, 1, 3, 'We do magomago', 'Magomagomagomago', 500, '03:30', NULL, NULL, '', '', ''),
-(4, 1, 1, 'We paint stuff for you', 'dbdfbf', 5850, '21:24', NULL, NULL, '', '', ''),
-(5, 1, 5, 'We make impressions of things', 'The impression that is created at the crux of the battle of sambody.', 2500, '2 hours 45 minutes', '2 hours ', '3 hours 30 minutes', '', '', '');
+(5, 1, 5, 'We make impressions of things', 'The impression that is created at the crux of the battle of sambody.', 2500, '2 hours 45 minutes', '2 hours ', '3 hours 30 minutes', '', '', ''),
+(6, 1, 2, 'We sculpt nice things', 'Nice things are good to look at', 5000, '05:00', '03:00', '07:30', '5 hours ', '3 hours ', '7 hours 30 minutes'),
+(7, 2, 6, 'We make delicious chocolates for your enjoyment', 'The chocolates are made from the freshest of cocoas and the best confectionary experts.', 7500, '03:00', '03:00', '05:00', '3 hours ', '3 hours ', '5 hours ');
 
 --
 -- Indexes for dumped tables
@@ -1139,6 +1148,7 @@ ALTER TABLE `reviews`
 --
 ALTER TABLE `services`
   ADD PRIMARY KEY (`service_id`),
+  ADD UNIQUE KEY `service_name` (`service_name`),
   ADD KEY `ser_category` (`ser_category`);
 
 --
@@ -1182,7 +1192,7 @@ ALTER TABLE `vendor_services`
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `calender`
@@ -1194,7 +1204,7 @@ ALTER TABLE `calender`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `cus_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cus_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `lga`
@@ -1218,13 +1228,13 @@ ALTER TABLE `reviews`
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `service_category`
 --
 ALTER TABLE `service_category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `state`
@@ -1236,13 +1246,13 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT for table `vendor`
 --
 ALTER TABLE `vendor`
-  MODIFY `ven_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ven_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `vendor_services`
 --
 ALTER TABLE `vendor_services`
-  MODIFY `ven_service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `ven_service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

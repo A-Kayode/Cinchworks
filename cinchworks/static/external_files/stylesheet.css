@@ -65,13 +65,13 @@ body { font-size: 1.15em; }
 }/* This is used for some stylings on the user settings page */
 
 .profile_pic{
-	border-radius: 50%;
+	border-radius: 50%; width: 20vw; height: 20vw;
 }/* This is used to control the border appearance of images used as profile pictures */
 
 .vendor_banner{ height:300px; width:100% } /* Dimensions of vendor banner */
 
 #uservendor_profilepic{
-	margin-top: -185px; margin-left: -45px;
+	margin-top: -185px;
 }/* This is used to style the vendor image the user sees and how it is flushed against the banner */
 
 .off_booking{
@@ -108,7 +108,7 @@ tbody tr:hover{ background-color: rgba(0, 0, 0, 0.3); }
 @media screen and (max-width: 769px){
 	.hidemd{ display:none; } /* Used to hide elements at md */
 	.vendor_banner{ height:220px }
-	#uservendor_profilepic{ margin-top: -125px; margin-left: -45px; }
+	#uservendor_profilepic{ margin-top: -125px;}
 	#logincol{padding-top: 115px; padding-bottom: 115px;}
 }
 
@@ -118,7 +118,7 @@ tbody tr:hover{ background-color: rgba(0, 0, 0, 0.3); }
 	.hidesm{ display:none; } /* Used to hide elements  as sm breakpoint*/
 	.footerlist{ padding-left: 0px; }
 	.vendor_banner{ height:100px; }
-	#uservendor_profilepic{margin-top: -65px; margin-left: -30px;}
+	#uservendor_profilepic{margin-top: -65px;}
 }
 
 @media screen and (max-width: 426px ){

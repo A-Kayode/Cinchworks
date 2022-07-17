@@ -33,6 +33,7 @@
 	<div class= "row setting_blackback">
 		<div class= "col">
 			<h3 class= "mb-4">Profile</h3>
+			
 			<form action= "{{url_for('ven_edit_info')}}" method= "post">
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">First Name:</label>
@@ -40,77 +41,98 @@
 						<input type= "text" class= "form-control ven_personal" name= "fname" value= "{{ v.ven_fname }}" disabled>
 					</div>
 				</div>
+
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">Last Name:</label>
 					<div class= "col">
 						<input type= "text" class= "form-control ven_personal" name= "lname" value= "{{ v.ven_lname }}" disabled>
 					</div>
 				</div>
+
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">Business Name:</label>
 					<div class= "col">
 						<input type= "text" class= "form-control ven_personal" name= "bname" value= "{{ v.ven_busname }}" disabled>
 					</div>
 				</div>
+
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">Phone Number 1:</label>
 					<div class= "col">
 						<input type= "text" class= "form-control ven_personal" name= "phone1" value= "{{ v.ven_phone1 }}" disabled>
 					</div>
 				</div>
+
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">Phone Number 2:</label>
 					<div class= "col">
 						<input type= "text" class= "form-control ven_personal" name= "phone2" value= "{{ v.ven_phone2 }}" disabled>
 					</div>
 				</div>
+
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">Address:</label>
 					<div class= "col">
 						<textarea class= "form-control ven_personal" name= "address" disabled>{{ v.ven_address }}</textarea>
 					</div>
 				</div>
+
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">City:</label>
 					<div class= "col">
 						<input type= "text" class= "form-control ven_personal" name= "city" value= "{{ v.ven_city }}" disabled>
 					</div>
 				</div>
+
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">State:</label>
 					<div class= "col">
-						<select name= "state" class= "form-select ven_personal" disabled>
+						<select name= "state" class= "form-select ven_personal" disabled id= "vspstate">
+							{% if v.ven_state != None %}
 							<option value= "{{v.ven_state}}">{{v.vendor_state.state_name}}</option>
-							
+							{% else %}
+							<option value= "">Please Select State</option>
+							{% endif %}
 							{% for i in s %}
 							<option value= "{{i.state_id}}">{{i.state_name}}</option>
 							{% endfor %}
 						</select>
 					</div>
 				</div>
+
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">Local Government:</label>
 					<div class= "col">
-						<p>will need to have a way to select this automatically on selection of state to make this less stressful for user</p>
+						<select name= "lga" class= "form-select ven_personal" id= "vsplga" disabled>
+							{% if v.ven_lga != None %}
+							<option value= "{{v.ven_lga}}">{{v.vendor_lga.lga_name}}</option>
+							{% else %}
+							<option value= ""></option>
+							{% endif %}
+						</select>
 					</div>
 				</div>
+
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">Short Business Description:</label>
 					<div class= "col">
 						<textarea class= "form-control ven_personal" name= "busdesc" disabled>{{ v.ven_shortdesc }}</textarea>
 					</div>
 				</div>
+
 				<div class= "row">
 					<div class= "col text-end">
 						<button type= "button" class= "btn btn-danger" id= "cancel_venpersonal">Cancel</button>
 						<button type= "button" class= "btn brownbutton" id= "edit_venpersonal">Edit</button>
-						<button class= "btn btn-primary" onclick= "return confirm('Confirm profile update?')">Submit</button>
+						<button class= "btn btn-primary ven_personal" onclick= "return confirm('Confirm profile update?')" disabled>Submit</button>
 					</div>
 				</div>
 				<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
 			</form>
 		</div>
 	</div>
+
+
 
 
 	<!-- Services Settings -->
@@ -128,7 +150,7 @@
 						<div class= "row mb-3">
 							<label class= "col-2 form-label">Category</label>
 							<div class= "col">
-								<select class= "form-select" name= "category">
+								<select class= "form-select" name= "category" id= "vspcategory">
 									<option value= "">Select Category</option>
 									{% for i in cat %}
 									<option value= "{{i.category_id}}">{{i.category_name}}</option>
@@ -140,12 +162,8 @@
 							<label class= "col-2 form-label">Service</label>
 							<div class= "col">
 								<div class= "row"> <div class= "col">
-								<select class= "form-select" name= "service" id="addservice">
-									<option value= "">Select Service</option>
-									{% for i in ser %}
-									<option value= "{{i.service_id}}">{{i.service_name}}</option>
-									{% endfor %}
-									<option value= "others">others</option>
+								<select class= "form-select" name= "service" id="vspaddservice">
+									
 								</select>
 								<input type= "hidden" name= "othservice" class= "form-control mt-2" placeholder= "Input other service here" id= "othservice">
 								<p>Note this will need to be able to respond to what category is chosen. Don't know how to do that yet.</p></div></div>
@@ -206,9 +224,9 @@
 							<tr>
 								<td>{{ loop.index }}</td>
 								<td>{{ i.service.service_name }}</td>
-								<td>{{ i.min_duration }}</td>
-								<td>{{ i.average_duration }}</td>
-								<td>{{ i.max_duration }}</td>
+								<td>{{ i.mindur_text }}</td>
+								<td>{{ i.avgdur_text }}</td>
+								<td>{{ i.maxdur_text }}</td>
 								<td>{{ i.service_price }}</td>
 							</tr>
 							{% endfor %}
@@ -219,6 +237,8 @@
 			</div>
 		</div>
 	</div>
+
+
 
 
 	<!-- Calender Settings -->
@@ -248,6 +268,7 @@
 			
 		</div>
 	</div>
+
 
 
 	<!-- Account Settings -->
@@ -286,3 +307,43 @@
 </div>
 
 {% endblock body %}
+
+{% block internal_script %}
+<script type= "text/javascript">
+$(document).ready(function(){
+	var token= $('#csrf_token').val()
+	//This is ajax code for services to change dynamically based on category chosen
+	$('#vspcategory').change(function(){
+		var cat= $(this).val();
+		var sentdata= {'categoryid':cat, "csrf_token":token}
+		$.ajax({
+			url:"/ven/ajax/chooseservice",
+			data:sentdata,
+			type:"post",
+			dataType:"text",
+			success:function(rsp){
+				$('#vspaddservice').html(rsp);
+			},
+			error:function(err){ console.log(err); }
+		})
+	});
+
+	//This is ajax code for lga to change dynamically based on state chosen
+	$('#vspstate').change(function(){
+		var state= $(this).val();
+		var sentdata2= {'stateid':state, "csrf_token":token}
+		$.ajax({
+			url:"/ven/ajax/selectlga",
+			data:sentdata2,
+			type:"post",
+			dataType:"text",
+			success:function(rsp){
+				$('#vsplga').html(rsp);
+			},
+			error:function(err){ console.log(err); }
+		})
+	});
+});
+
+</script>
+{% endblock internal_script %}

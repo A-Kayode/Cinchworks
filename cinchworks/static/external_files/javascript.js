@@ -151,11 +151,29 @@ $(document).ready(function(){
 	});
 
 	//This caters for script used in the adding service section of the page
-	$('#addservice').change(function(){
-		if ( $('#addservice').val() == "others" ){
+	$('#vspaddservice').change(function(){
+		if ( $('#vspaddservice').val() == "others" ){
 			$('#othservice').attr('type', 'text');
 		}else{
 			$('#othservice').attr('type', 'hidden');
 		}
 	});
 });
+
+
+
+/* This caters for the vendor home page */
+$(document).ready(function(){
+	//This caters for the appearance and disappearance of the change picture form
+	$('#hppic_change').hide();
+	$('#hpchangepic').click(function(){
+		$('#hppic_change').show();
+	});
+	$('#hpcancelchange').click(function(){
+		$('#hppic_change').hide();
+	});
+	$('#hpsavechange').click(function(){
+		$('#hppic_change').hide();
+	});
+});
+

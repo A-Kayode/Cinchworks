@@ -37,13 +37,16 @@
 		</div>
 	</div>
 
+
+
 	<!-- This contains the basic search field to find vendors. Will also contain navigation for the most common/popular vendor categories-->
 	<div class= "row homesearch">
 		<div class= "col mb-5">
-			<form action= "/vendorsearch">
+			<form action= "/vendorsearch" id= "searchform">
 				<div class= "row">
 					<div class= "col-sm-8 offset-0 offset-sm-2 mb-2">
-						<input type= "text" class= "form-control rounded-pill" name= "vendor_search" placeholder= "Find Workers or Services" id= "home_searchinput">
+						<input list= "homevenserv" class= "form-control rounded-pill" name= "vendor_search" placeholder= "Find Workers or Services" id= "home_searchinput" oninput="getlist();">
+						<datalist id= "homevenserv"></datalist>
 					</div>
 				</div>
 				<div class= "row">
@@ -71,3 +74,24 @@
 </div>
 </div>
 {% endblock home_inside_content %}
+
+{% block internal_script %}
+<script type= "text/javascript">
+function getlist(){
+	//This function contains ajax code for ensuring dynamic appearance of possible results when searching for vendors or services
+	var search= $('#home_searchinput').val();
+	var sentdata= {"sinput":search};
+	$.ajax({
+		url:"/ajax/searchoption",
+		type:"get",
+		dataType:"text",
+		data:sentdata,
+		success:function(rsp){
+			$('#homevenserv').html(rsp);
+		},
+		error:function(err){ console.log(err) }
+	});
+}
+</script>
+
+{% endblock internal_script %}

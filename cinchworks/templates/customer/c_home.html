@@ -1,13 +1,43 @@
 {% extends 'customer/cbase.html' %}
+
+{% block internal_styles %}
+<style type= "text/css">
+div{ border: 0px solid red; }
+.catsearch{ color:black; }
+</style>
+{% endblock internal_styles %}
+
 {% block body %}
 	<!-- This div will contain a welcome message for the user as well as their picture -->
-	<div class= "row py-4 welcome">
-		<div class= "col-5 col-sm-2 offset-4 offset-sm-1">
-			<img src= "{{url_for('static', filename='images/profile_pic2.jpg')}}" alt= "profile_picture" class= "img-fluid profile_pic">
+	<div class= "row py-4 welcome"  style= "position:relative;">
+		<div class= "col-3 col-sm-3">
+			{% if c.cus_profilepic == None %}
+			<img src= "{{url_for('static', filename='images/profile_pic2.jpg')}}" alt= "profile_picture" class= "profile_pic" id= "customer_profilepic">
+			{% else %}
+			<img src= "{{url_for('static', filename='uploads/images/'+ c.cus_profilepic)}}" alt= "profile_picture" class= "profile_pic" id= "customer_profilepic">
+			{% endif %}
+			
 		</div>
-		<div class= "col-sm offset-sm-1">
-			<h1 class= "mt-2 mt-sm-5 text-center">Welcome, {{ c.cus_fname }}</h1>
+		<div class= "col">
+			<h1 class= "mt-2 mt-sm-5">Welcome, {{ c.cus_fname }}</h1>
 		</div>
+
+		<div class="col-3" style= "position:absolute; right:1vh; display:inline-block;">
+			<button type= "button" class="btn btn-sm" id= "hpchangepic">Click to Change Picture</button>
+			<div id= "hpchangesuccess" class= "p-0"></div>
+			<div id= "hpchangesuccess"></div>
+			<form action= "" method= "post" enctype="multipart/form-data" style= "background-color: white;" id= "hppic_change">
+				<div class= "mb-2">
+					<label>Choose picture for profile picture</label>
+					<input type= "file" name= "profilepic" id= "chpprofile" class= "form-control" placeholder="Choose profile picture">
+				</div>
+				<div>
+					<button class= "btn btn-danger" id= "hpcancelchange" type= "button">Cancel</button>
+					<button class= "btn brownbutton" id= "hpsavechange" type= "button">Save Changes</button>
+				</div>
+				<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
+				</form>
+			</div>
 	</div>
 
 	<!-- This div will contain the calender for the next booked days, idea is that it will be dynamic and only days booked will be shown for both vendor and user home page. User-Vendor search page will carry full next 5 days to ensure that they can see the full bookings of the specified vendor -->
@@ -46,14 +76,28 @@
 			<h3 class= "text-center">Recent Bookings</h3>
 			<table class= "table">
 				<thead>
+					<th>S/N</th>
 					<th>Vendor</th>
-					<th>Date</th>
+					<th>Service</th>
+					<th>Date Booked</th>
 					<th>Time</th>
 					<th>Status</th>
 				</thead>
 				<tbody>
+					{% for i in bks %}
+					<tr>
+						<td>{{ loop.index }}</td>
+						<td>{{ i.ven_info.ven_busname }}</td>
+						<td>{{ i.service_info.service.service_name }}</td>
+						<td>{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
+						<td>{{ i.calender_time }}</td>
+						<td>{{ i.confirmation_status.name }}</td>
+					</tr>
+					{% endfor %}
 					<tr>
 						<td>Vendor 1</td>
+						<td></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -63,9 +107,13 @@
 						<td></td>
 						<td></td>
 						<td></td>
+						<td></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>Vendor 3</td>
+						<td></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -78,37 +126,79 @@
 
 
 
-<div class= "modal" id= "book_modal">
-	<div class= "modal-dialog">
-		<div class= "modal-content">
-			<div class= "modal-header">
-				<h3 class= "text-center">Book New Services</h3>
-			</div>
-			<div class= "modal-body">
-				<div class= "row">
-					<div class= "col">
-						<form action= "/vendorsearch">
-						<input type= "text" class= "form-control mb-2" name= "vendor_search" placeholder= "Search for Services">
-						<button class= "btn brownbutton offset-5 col-2">Search</button>
-						</form>
-					</div>
-				</div>
-				<div class= "row mt-4">
-					<div class= "col ">
-						<h3 class= "text-center">Search by Catergory</h3>
-						<div class= "row booking_category_modal">
-							<div class= "col">Category 1</div>
-							<div class= "col">Category 2</div>
-							<div class= "col">Category 3</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class= "modal-footer">
-				<button data-bs-dismiss= "modal" class= "btn btn-danger">close</button>
-			</div>
-		</div>
-	</div>
-</div>
+{% include 'customer/cus_bookservices_modal.html' %}
 
 {% endblock body %}
+
+{% block internal_script %}
+<script type= "text/javascript">
+function getlist(){
+	//This function contains ajax code for ensuring dynamic appearance of possible results when searching for vendors or services
+	var search= $('#cbmsearch').val();
+	var sentdata= {"sinput":search};
+	$.ajax({
+		url:"/ajax/searchoption",
+		type:"get",
+		dataType:"text",
+		data:sentdata,
+		success:function(rsp){
+			$('#cbmvenserv').html(rsp);
+		},
+		error:function(err){ console.log(err) }
+	});
+}
+
+$(document).ready(function(){
+	//This caters for changing of profile picture
+	$('#chpprofile').change(function(){
+		var form= document.getElementById('hppic_change');
+		var formdata= new FormData(form)
+
+		$.ajax({
+			url:"/cus/ajax/changepicture/",
+			type:"post",
+			dataType:"json",
+			data:formdata,
+			success:function(rsp){
+				var locate= "{{url_for('static', filename='uploads/images/')}}" + rsp.profile;
+				$('#customer_profilepic').attr('src', locate);
+
+			},
+			error:function(err){ console.log(err) },
+			cache:false,
+			processData:false,
+			contentType:false
+
+		});
+	});
+
+	$('#hpsavechange').click(function(){
+		var form= document.getElementById('hppic_change');
+		var formdata= new FormData(form)
+		formdata.append('custid', '{{c.cus_id}}');
+
+		$.ajax({
+			url:"/cus/ajax/savepicture/",
+			type:"post",
+			dataType:"json",
+			data:formdata,
+			success:function(rsp){
+				if (rsp.profile != ""){
+					var locate2= "{{url_for('static', filename='uploads/images/')}}" + rsp.profile;
+					$('#customer_profilepic').attr('src', locate2);
+				}
+
+				var msg= "<span class= 'alert alert-success'>Picture Changed Successfully</span>";
+				$('#hpchangesuccess').html(msg);
+			},
+			error:function(err){ console.log(err) },
+			cache:false,
+			processData:false,
+			contentType:false
+
+		});
+	});
+});
+</script>
+
+{% endblock internal_script %}

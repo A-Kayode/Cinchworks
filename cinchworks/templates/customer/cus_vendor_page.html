@@ -127,6 +127,9 @@
 
 </div>
 
+
+
+
 <div class= "offcanvas offcanvas-end" id= "book_offcanvas">
 	<div class= "offcanvas-header">
 		<h3>Your Bookings</h3>
@@ -157,7 +160,7 @@
 				<form action= "/cus/bookvendor/{{v.ven_id}}" method= "post">
 					<div class= "mb-2">
 					<label class="form-label">Choose Service</label>
-					<select name= "bservice" class= "form-select">
+					<select name= "bservice" class= "form-select" id= "bservice">
 						<option value= "">Please Select Service</option>
 						{% for i in vs %}
 						<option value= "{{ i.ven_service_id }}">{{i.service.service_name}}</option>
@@ -176,21 +179,18 @@
 
 					<div class= "mb-2">
 					<label class="form-label">Date</label>
-					<input type= "date" class= "form-control" name= "bdate">
+					<input type= "date" class= "form-control" name= "bdate" id= "bdate">
 					</div>
 
 					<div class= "mb-2">
 					<label class="form-label">Time</label>
-					<input type= "time" class= "form-control" name= "btime">
+					<input type= "time" class= "form-control" name= "btime" id= "btime">
 					</div>
 
 					<div class= "mb-2">
 					<label class="form-label">Duration</label>
-					<select name= "duration" class= "form-select">
-						<option value= "">Select duration of service</option>
-						<option value= "02:00">Mininum Duration</option>
-						<option value= "02:45">Average Duration</option>
-						<option value= "03:30">Maximum Duration</option>
+					<select name= "duration" class= "form-select" id= "bduration">
+						
 					</select>
 					<p>It should be noted that ideally I want this duration to change based on what was selected by the customer for service.</p>
 					</div>
@@ -210,3 +210,50 @@
 	</div>
 </div>
 {% endblock body %}
+
+{% block internal_script %}
+<script type= "text/javascript">
+$(document).ready(function(){
+	//This Ajax code controls the changing of the duration of the work times depending of the services choosen by the customer.
+	$('#bservice').change(function(){
+		var ser= $('#bservice').val();
+		var token= $('#csrf_token').val()
+		senddata= {'bservice': ser, 'vendid':'{{v.ven_id}}', 'csrf_token':token};
+		
+		$.ajax({
+			url:"/cus/ajax/chooseduration",
+			type:"post",
+			data:senddata,
+			dataType:"text",
+			success:function(rsp){
+				alert(rsp);
+				$('#bduration').html(rsp);
+			},
+			error:function(err){
+				console.log(err)
+			}
+		});
+	});
+
+	//This Ajax code controls the validation for booking vendors
+	$('#btime').change(function(){
+		var date= $('#bdate').val()
+
+		$.ajax({
+			url:"",
+			type:"post",
+			data:"",
+			dataType:"",
+			success:function(rsp){
+
+			},
+			error:function(err){
+				console.log(err)
+			}
+		});
+	})
+
+});
+
+</script>
+{% endblock internal_script %}

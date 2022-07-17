@@ -1,9 +1,11 @@
+import os
+import random
 from datetime import datetime
-from flask import render_template, make_response, redirect, session, request, flash
+from flask import render_template, make_response, redirect, session, request, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from .. import app, db
 from ..custom_functions import venvalidation, rewrite_duration
-from ..models import Vendor, State, Services, Service_category, Vendor_services, Booking
+from ..models import *
 from ..forms import Change_password
 
 
@@ -15,16 +17,74 @@ def vendor_home():
     return render_template('vendor/ven_home.html', v=v)
 
 
-@app.route('/ven/bookings/')
+@app.route('/ven/ajax/changepicture/', methods=['POST', 'GET'])
 @venvalidation
-def vendor_bookings():
-    vendid= session['vend_id']
-    v= Vendor.query.get(vendid)
-    pbook= Booking.query.filter(Booking.confirmation_status == "pending", Booking.b_vendor == vendid).all()
-    abook= Booking.query.filter(Booking.confirmation_status == "active", Booking.b_vendor == vendid).all()
-    return render_template('vendor/ven_booking.html', v=v, pbook=pbook, abook=abook)
+def vendor_ajax_changepicture():
+    bannerpic= request.files.get('bannerpic')
+    profilepic= request.files.get('profilepic')
+    
+    if bannerpic != None:
+        banpicname= bannerpic.filename
+        tt, ext= os.path.splitext(banpicname)
+        banpictest= "1" + ext
+        bannerpic.save(f"cinchworks/static/uploads/images/{banpictest}")
+    
+    if profilepic != None:
+        propicname= profilepic.filename
+        hh, ext2= os.path.splitext(propicname)
+        propictest= "2" + ext2
+        profilepic.save(f"cinchworks/static/uploads/images/{propictest}")
+    
+    if bannerpic != None and profilepic != None:
+        return jsonify(banner=banpictest, profile=propictest)
+    elif bannerpic != None and profilepic == None:
+        return jsonify(banner=banpictest)
+    elif bannerpic == None and profilepic != None:
+        return jsonify(profile=propictest)
 
 
+@app.route('/ven/ajax/savepicture/', methods=['POST', 'GET'])
+@venvalidation
+def vendor_ajax_savepicture():
+    bannerpic= request.files.get('bannerpic')
+    profilepic= request.files.get('profilepic')
+    vendid= request.form.get('vendid')
+    vp= Vendor.query.get(vendid)
+    
+    if bannerpic.filename != "":
+        banpicname= bannerpic.filename
+        t, ext= os.path.splitext(banpicname)
+        nn= random.random() * 10000000000000000
+        banpicname= str(nn) + ext
+        bannerpic.save(f"cinchworks/static/uploads/images/{banpicname}")
+        vp.ven_bannerpic= banpicname
+    
+    if profilepic.filename != "":
+        propicname= profilepic.filename
+        r, ext2= os.path.splitext(propicname)
+        hh= random.random() * 10000000000000000
+        propicname= str(hh) + ext2
+        profilepic.save(f"cinchworks/static/uploads/images/{propicname}")
+        vp.ven_profilepic= propicname
+    
+    db.session.commit()
+    
+    if bannerpic != None and profilepic != None:
+        return jsonify(banner=banpicname, profile=propicname)
+    elif bannerpic != None and profilepic == None:
+        return jsonify(banner=banpicname, profile="")
+    elif bannerpic == None and profilepic != None:
+        return jsonify(profile=propicname, banner="")
+    
+    
+
+    
+
+
+
+
+
+#Codes for vendor service
 @app.route('/ven/settings/')
 @venvalidation
 def ven_settings():
@@ -51,6 +111,7 @@ def ven_edit_info():
     address= request.form.get('address')
     city= request.form.get('city')
     state= request.form.get('state')
+    lga= request.form.get('lga')
     busdesc= request.form.get('busdesc')
     v.ven_fname= fname
     v.ven_lname= lname
@@ -59,6 +120,7 @@ def ven_edit_info():
     v.ven_address= address
     v.ven_city= city
     v.ven_state= state
+    v.ven_lga= lga
     v.ven_busname= bname
     v.ven_shortdesc= busdesc
     db.session.commit()
@@ -115,6 +177,47 @@ def add_service():
     db.session.commit()
     flash("Service Added", "service")
     return redirect('/ven/settings#add_service')
+
+
+@app.route('/ven/ajax/chooseservice/', methods=['POST'])
+@venvalidation
+def ajax_vendor_chooseservice():
+    catid= request.form.get('categoryid')
+    catser= Services.query.filter(Services.ser_category == catid).all()
+
+    returntext= "<option value= ''>Select Service</option>"
+    for i in catser:
+        returntext= returntext + f"<option value= '{i.service_id}'>{i.service_name}</option>"
+    else:
+        returntext= returntext + "<option value= 'others'>others</option>"
+
+    return returntext
+
+
+@app.route('/ven/ajax/selectlga/', methods= ['POST'])
+@venvalidation
+def ajax_vendor_selectlga():
+    stateid= request.form.get('stateid')
+    statelga= Lga.query.filter(Lga.state_id == stateid).all()
+
+    returntext= "<option value= ''>Select LGA</option>"
+    for i in statelga:
+        returntext= returntext + f"<option value= '{i.lga_id}'>{i.lga_name}</option>"
+
+    return returntext
+
+
+
+
+#codes for vendor booking
+@app.route('/ven/bookings/')
+@venvalidation
+def vendor_bookings():
+    vendid= session['vend_id']
+    v= Vendor.query.get(vendid)
+    pbook= Booking.query.filter(Booking.confirmation_status == "pending", Booking.b_vendor == vendid).all()
+    abook= Booking.query.filter(Booking.confirmation_status == "active", Booking.b_vendor == vendid).all()
+    return render_template('vendor/ven_booking.html', v=v, pbook=pbook, abook=abook)
 
 
 @app.route('//ven/booking/confirmbooking/<int:bookid>/')

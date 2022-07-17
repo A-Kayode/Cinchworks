@@ -28,6 +28,7 @@ class Customer(db.Model):
     cus_state= db.Column(db.Integer(), db.ForeignKey('state.state_id'))
     cus_username= db.Column(db.String(255), unique=True, nullable=False)
     cus_password= db.Column(db.String(255), nullable=False)
+    cus_profilepic= db.Column(db.String(255))
     cus_regdate= db.Column(db.DateTime(), nullable=False, default=func.now(), onupdate=func.now())
 
     customer_state= db.relationship('State', backref='customer_info')
@@ -48,6 +49,10 @@ class Vendor(db.Model):
     ven_username= db.Column(db.String(255), unique=True, nullable=False)
     ven_password= db.Column(db.String(255), nullable=False)
     ven_shortdesc= db.Column(db.String(255))
+    ven_openingtime= db.Column(db.Time())
+    ven_closingtime= db.Column(db.Time())
+    ven_bannerpic= db.Column(db.String(255))
+    ven_profilepic= db.Column(db.String(255))
     ven_regdate= db.Column(db.DateTime(), nullable=False, default=func.now(), onupdate=func.now())
 
     vendor_state= db.relationship('State', backref='vendor_info')

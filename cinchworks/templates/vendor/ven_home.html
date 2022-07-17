@@ -5,17 +5,48 @@
 	<!-- Banner -->
 	<div class= "row">
 		<div class= "col">
-			<img src= "{{ url_for('static', filename='images/banner.jpg') }}" alt= "Vendor Banner" class= "vendor_banner">
+			{% if v.ven_bannerpic == None %}
+			<img src= "{{ url_for('static', filename='images/banner.jpg') }}" alt= "Vendor Banner" class= "vendor_banner" id= "vendorbanner">
+			{% else %}
+			<img src= "{{ url_for('static', filename='uploads/images/'+ v.ven_bannerpic) }}" alt= "Vendor Banner" class= "vendor_banner" id= "vendorbanner">
+			{% endif %}
+			
 		</div>
 	</div>
 
 
 	<!-- Welcome Message plus stats and small vendor description-->
-	<div class= "row welcome">
+	<div class= "row welcome" style= "position:relative;">
 		<div class= "col">
-			<div class= "row">
-				<div class= "col-4 col-md-3 offset-5">
-					<img src= "{{ url_for('static', filename='images/profile_pic2.jpg') }}" alt= "" class= "img-fluid profile_pic" id= "uservendor_profilepic">
+			<div class= "row justify-content-center">
+				<div class= "col-3">
+					<div style= "display: inline-block;">
+						{% if v.ven_profilepic == None %}
+						<img src= "{{ url_for('static', filename='images/profile_pic2.jpg') }}" alt= "" class= " profile_pic" id= "uservendor_profilepic">
+						{% else %}
+						<img src= "{{ url_for('static', filename='uploads/images/'+ v.ven_profilepic) }}" alt= "" class= " profile_pic" id= "uservendor_profilepic">
+						{% endif %}
+					</div>
+
+					<div style= "position:absolute; left:1vh; display:inline-block;">
+						<button type= "button" class="btn btn-sm" id= "hpchangepic">Click to Change Picture</button>
+						<div id= "hpchangesuccess" class= "p-0"></div>
+						<form action= "" method= "post" enctype="multipart/form-data" style= "background-color: white;" id= "hppic_change">
+							<div class= "mb-2">
+								<label>Choose picture for the banner</label>
+								<input type= "file" name= "bannerpic" id= "vhpbanner" class= "form-control">
+							</div>
+							<div class= "mb-2">
+								<label>Choose picture for profile picture</label>
+								<input type= "file" name= "profilepic" id= "vhpprofile" class= "form-control" placeholder="Choose profile picture">
+							</div>
+							<div>
+								<button class= "btn btn-danger" id= "hpcancelchange" type= "button">Cancel</button>
+								<button class= "btn brownbutton" id= "hpsavechange" type= "button">Save Changes</button>
+							</div>
+							<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
+						</form>
+					</div>
 				</div>
 			</div>
 			<div class= "row">
@@ -171,3 +202,87 @@
 </div>
 
 {% endblock body %}
+
+{% block internal_script %}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#vhpbanner').change(function(){
+		var form= document.getElementById('hppic_change');
+		var formdata= new FormData(form)
+
+		$.ajax({
+			url:"/ven/ajax/changepicture/",
+			type:"post",
+			dataType:"json",
+			data:formdata,
+			success:function(rsp){
+				var locate= "{{url_for('static', filename='uploads/images/')}}" + rsp.banner;
+				$('#vendorbanner').attr('src', locate);
+
+			},
+			error:function(err){ console.log(err) },
+			cache:false,
+			processData:false,
+			contentType:false
+
+		});
+	});
+
+	$('#vhpprofile').change(function(){
+		var form= document.getElementById('hppic_change');
+		var formdata= new FormData(form)
+
+		$.ajax({
+			url:"/ven/ajax/changepicture/",
+			type:"post",
+			dataType:"json",
+			data:formdata,
+			success:function(rsp){
+				var locate= "{{url_for('static', filename='uploads/images/')}}" + rsp.profile;
+				$('#uservendor_profilepic').attr('src', locate);
+
+			},
+			error:function(err){ console.log(err) },
+			cache:false,
+			processData:false,
+			contentType:false
+
+		});
+	});
+
+	$('#hpsavechange').click(function(){
+		var form= document.getElementById('hppic_change');
+		var formdata= new FormData(form)
+		formdata.append('vendid', '{{v.ven_id}}');
+
+		$.ajax({
+			url:"/ven/ajax/savepicture/",
+			type:"post",
+			dataType:"json",
+			data:formdata,
+			success:function(rsp){
+				if (rsp.banner != "" ){
+					var locate1= "{{url_for('static', filename='uploads/images/')}}" + rsp.banner;
+					$('#vendorbanner').attr('src', locate1);
+				}
+
+				if (rsp.profile != ""){
+					var locate2= "{{url_for('static', filename='uploads/images/')}}" + rsp.profile;
+					$('#uservendor_profilepic').attr('src', locate2);
+				}
+
+				var msg= "<span class= 'alert alert-success'>Picture Changed Successfully</span>";
+				$('#hpchangesuccess').html(msg);
+			},
+			error:function(err){ console.log(err) },
+			cache:false,
+			processData:false,
+			contentType:false
+
+		});
+	});
+})
+
+</script>
+
+{% endblock internal_script %}

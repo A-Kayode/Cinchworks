@@ -70,9 +70,12 @@
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">State:</label>
 					<div class= "col">
-						<select name= "state" class= "form-select cus_personal" disabled>
+						<select name= "state" class= "form-select cus_personal" disabled id= "cspstate">
+							{% if c.cus_state != None %}
 							<option value= "{{c.cus_state}}">{{c.customer_state.state_name}}</option>
-							
+							{% else %}
+							<option value= "">Please Select State</option>
+							{% endif %}
 							{% for i in s %}
 							<option value= "{{i.state_id}}">{{i.state_name}}</option>
 							{% endfor %}
@@ -82,14 +85,20 @@
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">Local Government:</label>
 					<div class= "col">
-						<p>will need to have a way to select this automatically on selection of state to make this less stressful for user</p>
+						<select name= "lga" class= "form-select cus_personal" id= "csplga" disabled>
+							{% if c.cus_lga != None %}
+							<option value= "{{c.cus_lga}}">{{c.customer_lga.lga_name}}</option>
+							{% else %}
+							<option value= ""></option>
+							{% endif %}
+						</select>
 					</div>
 				</div>
 				<div class= "row">
 					<div class= "col text-end">
 						<button type= "button" class= "btn btn-danger" id= "cancel_cuspersonal">Cancel</button>
 						<button type= "button" class= "btn brownbutton" id= "edit_cuspersonal">Edit</button>
-						<button class= "btn btn-primary" onclick= "return confirm('Confirm profile update?')">Submit</button>
+						<button class= "btn btn-primary cus_personal" onclick= "return confirm('Confirm profile update?')" disabled>Submit</button>
 					</div>
 				</div>
 				<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
@@ -135,4 +144,31 @@
 </div>
 </div>
 
+
+
 {% endblock body %}
+
+{% block internal_script %}
+<script type= "text/javascript">
+$(document).ready(function(){
+	var token= $('#csrf_token').val()
+	//This ajax code caters for dynamic changing of lga depending on state chosen
+	$('#cspstate').change(function(){
+		var state= $(this).val();
+		var sentdata2= {'stateid':state, "csrf_token":token}
+		$.ajax({
+			url:"/cus/ajax/selectlga",
+			data:sentdata2,
+			type:"post",
+			dataType:"text",
+			success:function(rsp){
+				$('#csplga').html(rsp);
+			},
+			error:function(err){ console.log(err); }
+		})
+	});
+});
+
+</script>
+
+{% endblock internal_script %}
