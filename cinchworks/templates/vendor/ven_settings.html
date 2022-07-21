@@ -30,7 +30,7 @@
 
 
 	<!-- Personal Information Settings -->
-	<div class= "row setting_blackback">
+	<div class= "row setting_blackback" id= "venprofileinfo">
 		<div class= "col">
 			<h3 class= "mb-4">Profile</h3>
 			
@@ -136,7 +136,7 @@
 
 
 	<!-- Services Settings -->
-	<div class= "row my-3 setting_blackback">
+	<div class= "row my-3 setting_blackback" id= "venservices">
 		<div class= "col">
 			<h3 class= "mb-4">Services</h3>
 			<div class= "row mb-4">
@@ -165,8 +165,7 @@
 								<select class= "form-select" name= "service" id="vspaddservice">
 									
 								</select>
-								<input type= "hidden" name= "othservice" class= "form-control mt-2" placeholder= "Input other service here" id= "othservice">
-								<p>Note this will need to be able to respond to what category is chosen. Don't know how to do that yet.</p></div></div>
+								<input type= "hidden" name= "othservice" class= "form-control mt-2" placeholder= "Input other service here" id= "othservice"></div></div>
 							</div>
 						</div>
 						<div class= "row mb-3">
@@ -179,6 +178,12 @@
 							<label class= "col-2 form-label">Long Description:</label>
 							<div class= "col">
 								<textarea class= "form-control" name= "longdesc"></textarea>
+							</div>
+						</div>
+						<div class= "row mb-3">
+							<label class= "col-2 form-label">Workdays:</label>
+							<div class= "col">
+								<textarea class= "form-control" name= "workday"></textarea>
 							</div>
 						</div>
 						<div class= "row mb-3">
@@ -210,6 +215,7 @@
 
 			<div class= "row">
 				<div class= "col">
+					<div id= "servicemessage"></div>
 					<table class= "table">
 						<thead>
 							<th>S/N</th>
@@ -218,8 +224,9 @@
 							<th class= "hidemd">Avg Duration</th>
 							<th class= "hidemd">Max Duration</th>
 							<th>Price</th>
+							<th></th>
 						</thead>
-						<tbody>
+						<tbody id= "servicelist">
 							{% for i in venser %}
 							<tr>
 								<td>{{ loop.index }}</td>
@@ -228,11 +235,16 @@
 								<td>{{ i.avgdur_text }}</td>
 								<td>{{ i.maxdur_text }}</td>
 								<td>{{ i.service_price }}</td>
+								<td>
+									<button class= "btn btn-sm btn-danger" onclick= "return delete_service({{ i.ven_service_id }}, {{ v.ven_id }});
+									">Delete</button>
+									<button class= "btn btn-sm btn-secondary" onclick= "return depreciate_service({{ i.ven_service_id }}, {{ v.ven_id }});">Depreciate</button>
+
+								</td>
 							</tr>
 							{% endfor %}
 						</tbody>
 					</table>
-					<button type= "button" class= "btn btn-danger offset-md-9 offset-lg-10">Remove Service</button>
 				</div>
 			</div>
 		</div>
@@ -242,26 +254,30 @@
 
 
 	<!-- Calender Settings -->
-	<div class= "row my-3 setting_blackback">
+	<div class= "row my-3 setting_blackback" id= "vencalendersetting">
 		<div class= "col">
 			<h3 class= "mb-4">Calender</h3>
 			<div class= "row">
 				<div class= "col">
 					<h4 class= "text-center mb-2">Off-Days</h4>
-					<form>
+					<form id= "venaddoffday">
+						<div id= "sucmess" class= "my-2"></div>
 						<div class= "row mb-3">
 							<label class= "form-label col-2">Start Date</label>
 							<div class= "col-6">
-								<input type= "date" class="form-control">
+								<input type= "date" class="form-control" name= "sdate" id= "offst">
 							</div>
 						</div>
 						<div class= "row mb-3">
 							<label class= "form-label col-2">End Date</label>
 							<div class= "col-6">
-								<input type= "date" class="form-control">
+								<input type= "date" class="form-control" name= "edate" id= "offen">
 							</div>
 						</div>
-						<button class= "btn btn-primary offset-0 offset-md-10">Add Off-day</button>
+						<div class= "text-end">
+							<button type= "button" class= "btn btn-primary" onclick= "add_offday({{v.ven_id}})">Add Off-day</button>
+						</div>
+						<input type= "hidden" name= "csrf_token" id= "csrf_token" value="{{csrf_token()}}">
 					</form>
 				</div>
 			</div>
@@ -272,7 +288,7 @@
 
 
 	<!-- Account Settings -->
-	<div class= "row my-3 setting_blackback">
+	<div class= "row my-3 setting_blackback" id= "venaccountsetting">
 		<div class= "col">
 			<h3 class= "mb-4">Account</h3>
 			<div class= "row">
@@ -310,6 +326,64 @@
 
 {% block internal_script %}
 <script type= "text/javascript">
+var token= $('#csrf_token').val()
+
+//This function is used to delete service
+function delete_service(a,b){
+	var confirmation= confirm("Are you sure you want to delete this service?")
+	var data2send = {'ven_service_id':a, 'csrf_token':token, 'vendid':b}
+
+	if (confirmation){
+		$.ajax({
+		url:"/ven/ajax/deleteservice/",
+		data:data2send,
+		type:"post",
+		dataType:"json",
+		success:function(rsp){
+			if (rsp.status == 0){
+				alert(rsp.message);
+				return false
+			}else if(rsp.status == 1){
+				var text= `<span class= "alert alert-success">${rsp.message}</span>`
+				$('#servicemessage').html(text)
+				$('#servicelist').html(rsp.nhtml)			}
+		},
+		error:function(err){ console.log(err); }
+	});
+	}else{
+		return false
+	}
+}
+
+
+//This function is used to depreciate services
+function depreciate_service(a,b){
+	var confirmation= confirm("Are you sure you want to depreciate this service?")
+	var data2send = {'ven_service_id':a, 'csrf_token':token, 'vendid':b}
+
+	if (confirmation){
+		$.ajax({
+		url:"/ven/ajax/depreciateservice/",
+		data:data2send,
+		type:"post",
+		dataType:"json",
+		success:function(rsp){
+			if (rsp.status == 0){
+				alert(rsp.message);
+				return false
+			}else if(rsp.status == 1){
+				var text= `<span class= "alert alert-success">${rsp.message}</span>`
+				$('#servicemessage').html(text)
+				$('#servicelist').html(rsp.nhtml)			}
+		},
+		error:function(err){ console.log(err); }
+	});
+	}else{
+		return false
+	}
+}
+
+
 $(document).ready(function(){
 	var token= $('#csrf_token').val()
 	//This is ajax code for services to change dynamically based on category chosen

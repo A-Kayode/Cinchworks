@@ -33,7 +33,10 @@
 			          <a class="nav-link dropdown-toggle  text-dark" id= "user_setting_menu" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ v.ven_fname }}
 			          </a>
 			          <ul class="dropdown-menu" aria-labelledby="user_setting_menu">
-			            <li><a class="dropdown-item" href="/ven/settings">Settings</a></li>			  
+			            <li><a class="dropdown-item" href="/ven/settings#venprofileinfo">Profile</a></li>
+			            <li><a class="dropdown-item" href="/ven/settings#venservices">Services</a></li>
+			            <li><a class="dropdown-item" href="/ven/settings#vencalendersetting">Calender</a></li>
+			            <li><a class="dropdown-item" href="/ven/settings#venaccountsetting">Account</a></li>
 			            <li><hr class="dropdown-divider"></li>
 			            <li><a class="dropdown-item" href="/logout">Log Out</a></li>
 			          </ul>
@@ -78,6 +81,8 @@
 	</div>
 </div>
 
+{% block modal %}
+{% endblock modal %}
 
 <!-- JS Files -->
 <script type= "text/javascript" src= "{{url_for('static', filename='libraries/jquery.js')}}"></script>

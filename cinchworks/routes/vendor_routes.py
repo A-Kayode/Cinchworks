@@ -1,10 +1,10 @@
 import os
 import random
-from datetime import datetime
+from datetime import datetime, date
 from flask import render_template, make_response, redirect, session, request, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from .. import app, db
-from ..custom_functions import venvalidation, rewrite_duration
+from ..custom_functions import venvalidation, rewrite_duration, convert_date
 from ..models import *
 from ..forms import Change_password
 
@@ -14,7 +14,27 @@ from ..forms import Change_password
 def vendor_home():
     vendid= session['vend_id']
     v= Vendor.query.get(vendid)
-    return render_template('vendor/ven_home.html', v=v)
+    vbdobj= db.session.execute(f"SELECT * FROM booking WHERE b_vendor = {vendid} and calender_date >= now() GROUP BY calender_date ORDER BY calender_date LIMIT 5")
+    vbd= vbdobj.fetchall()
+    vbst= Booking.query.filter(Booking.calender_date >= date.today(), Booking.b_vendor == vendid).order_by(Booking.calender_time).all()
+
+    #make bookings for previous days expired
+    exbk= Booking.query.filter(Booking.calender_date < date.today(), Booking.b_vendor == vendid).all()
+    for i in exbk:
+        i.confirmation_status = "expired"
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
+    
+    #pending and active bookings on home page
+    pbook= Booking.query.filter(Booking.confirmation_status == "pending", Booking.b_vendor == vendid).order_by(Booking.booking_date).limit(3).all()
+    abook= Booking.query.filter(Booking.confirmation_status == "active", Booking.b_vendor == vendid).order_by(Booking.booking_date).limit(3).all()
+    pcount= Booking.query.filter(Booking.confirmation_status == "pending", Booking.b_vendor == vendid).count()
+    acount= Booking.query.filter(Booking.confirmation_status == "active", Booking.b_vendor == vendid).count()
+    
+
+    return render_template('vendor/ven_home.html', v=v, vbd=vbd, vbst=vbst, pbook=pbook, abook=abook, pcount=pcount, acount=acount)
 
 
 @app.route('/ven/ajax/changepicture/', methods=['POST', 'GET'])
@@ -76,7 +96,40 @@ def vendor_ajax_savepicture():
     elif bannerpic == None and profilepic != None:
         return jsonify(profile=propicname, banner="")
     
-    
+
+@app.route('/ven/ajax/displaybooking/')
+@venvalidation
+def vendor_ajax_displaybooking():
+    bookid= request.args.get('bookid')
+    bk= Booking.query.get(bookid)
+    if bk:
+        cfname= bk.cus_info.cus_fname
+        clname= bk.cus_info.cus_lname
+        cph1= bk.cus_info.cus_phone1
+        cph2= bk.cus_info.cus_phone2
+        caddr= bk.cus_info.cus_address
+        sname= bk.service_info.service.service_name
+        sshort= bk.service_info.short_desc
+        slong= bk.service_info.long_desc
+        slocation= bk.service_location.name
+        bdate= bk.calender_date.strftime("%a %b %d, %Y")
+        btime= bk.calender_time.strftime("%H:%M")
+        betime= bk.calender_endtime.strftime("%H:%M")
+        bnotes= bk.notes
+        ccity= bk.cus_info.cus_city
+        if bk.cus_info.customer_lga.lga_name != None:
+            clga= bk.cus_info.customer_lga.lga_name
+        else:
+            clga= ""
+        if bk.cus_info.customer_state.state_name != None:
+            cstate= bk.cus_info.customer_state.state_name
+        else:
+            cstate= ""
+
+        return jsonify(status=1, cfname=cfname, clname=clname, cph1=cph1, cph2=cph2, caddr=caddr, sname=sname, sshort=sshort, slong=slong, slocation=slocation, bdate=bdate, btime=btime, betime=betime, bnotes=bnotes, ccity=ccity, clga=clga, cstate=cstate, message="Booking retrieved")
+    else:
+        return jsonify(status=0, message="Error, cannot retrieve booking")
+    return jsonify(status=1, message="done")    
 
     
 
@@ -94,7 +147,7 @@ def ven_settings():
     cform= Change_password()
     cat= Service_category.query.all()
     ser= Services.query.all()
-    venser= Vendor_services.query.filter(Vendor_services.vendor_id == vendid).all()
+    venser= Vendor_services.query.filter(Vendor_services.vendor_id == vendid, Vendor_services.service_status != 'depreciated').all()
     return render_template('vendor/ven_settings.html', v=v, s=s, cform=cform, cat=cat, ser=ser, venser=venser)
 
 
@@ -172,7 +225,8 @@ def add_service():
     mintxt= rewrite_duration(*mindur.split(':'))
     maxdur= request.form.get('maxdur')
     maxtxt= rewrite_duration(*maxdur.split(':'))
-    vs= Vendor_services(vendor_id=vendid, service_id=service, short_desc=shortdesc, long_desc=longdesc, service_price=price, average_duration=avgdur, min_duration=mindur, max_duration=maxdur, avgdur_text=avgtxt, mindur_text=mintxt, maxdur_text=maxtxt)
+    workday= request.form.get('workdat')
+    vs= Vendor_services(vendor_id=vendid, service_id=service, short_desc=shortdesc, long_desc=longdesc, service_price=price, average_duration=avgdur, min_duration=mindur, max_duration=maxdur, avgdur_text=avgtxt, mindur_text=mintxt, maxdur_text=maxtxt, service_status="active", workdays=workday)
     db.session.add(vs)
     db.session.commit()
     flash("Service Added", "service")
@@ -189,7 +243,7 @@ def ajax_vendor_chooseservice():
     for i in catser:
         returntext= returntext + f"<option value= '{i.service_id}'>{i.service_name}</option>"
     else:
-        returntext= returntext + "<option value= 'others'>others</option>"
+        returntext= returntext + "<option value= ''>others</option>"
 
     return returntext
 
@@ -207,6 +261,87 @@ def ajax_vendor_selectlga():
     return returntext
 
 
+@app.route('/ven/ajax/deleteservice/', methods=['POST'])
+@venvalidation
+def ajax_vendor_deleteservice():
+    venser_id = request.form.get('ven_service_id')
+    vendid= request.form.get('vendid')
+    booked= Booking.query.filter(Booking.b_venservice == venser_id, ((Booking.confirmation_status != 'pending') | (Booking.confirmation_status != 'rejected')) ).first()
+
+    if booked:
+        return jsonify(status=0, message="Service cannot be deleted because it has had at least one active booking. Depreciating the service is recommended.")
+    else:
+        venser= Vendor_services.query.get(venser_id)
+        try:
+            db.session.delete(venser)
+            db.session.commit()
+
+            vss= Vendor_services.query.filter(Vendor_services.vendor_id == vendid, Vendor_services.service_status != 'depreciated').all()
+            services= ""
+            counter= 0
+            for i in vss:
+                counter= counter + 1
+                services= services + f"<tr><td>{counter}</td> <td>{i.service.service_name}</td> <td>{i.mindur_text}</td> <td>{i.avgdur_text}</td> <td>{i.maxdur_text}</td> <td>{i.service_price}</td> <td><button class= \"btn btn-sm btn-danger\" onclick= \"return delete_service({ i.ven_service_id }, { vendid });\">Delete</button> <button class= \"btn btn-sm btn-secondary\" onclick= \"return depreciate_service({ i.ven_service_id }, { vendid });\">Depreciate</button></td></tr>"
+
+            return jsonify(status=1, message= "Service Deleted", nhtml=services)
+        except:
+            db.session.rollback()
+            return jsonify(status=1, message="An error occured, service could not deleted.")
+
+
+@app.route('/ven/ajax/depreciateservice/', methods=['POST', 'GET'])
+@venvalidation
+def vendor_ajax_depreciateservice():
+    venser_id = request.form.get('ven_service_id')
+    vendid= request.form.get('vendid')
+    vss= Vendor_services.query.get(venser_id)
+    try:
+        vss.service_status= 'depreciated'
+        db.session.commit()
+
+        vss= Vendor_services.query.filter(Vendor_services.vendor_id == vendid, Vendor_services.service_status != 'depreciated').all()
+        services= ""
+        counter= 0
+        for i in vss:
+            counter= counter + 1
+            services= services + f"<tr><td>{counter}</td> <td>{i.service.service_name}</td> <td>{i.mindur_text}</td> <td>{i.avgdur_text}</td> <td>{i.maxdur_text}</td> <td>{i.service_price}</td> <td><button class= \"btn btn-sm btn-danger\" onclick= \"return delete_service({ i.ven_service_id }, { vendid });\">Delete</button> <button class= \"btn btn-sm btn-secondary\" onclick= \"return depreciate_service({ i.ven_service_id }, { vendid });\">Depreciate</button></td></tr>"
+
+        return jsonify(status=1, message="Service depreciated", nhtml=services)
+    except:
+        db.session.rollback()
+        return jsonify(status=1, message="An error occured, service could not be depreciated.")
+
+
+@app.route('/ven/ajax/addoffday/', methods=['POST'])
+@venvalidation
+def vendor_ajax_addoffday():
+    s= request.form.get('sdate')
+    e= request.form.get('edate')
+    vendid= request.form.get('vendid')
+
+    if s == "" or e == "":
+        return jsonify(status=0, message="Please fill both start and end dates")
+    else:
+        sdate = convert_date(s)
+        edate= convert_date(e)
+        if sdate < date.today() or edate < date.today():
+            return jsonify(status=0, message="You cannot backdate an offday")
+        else:
+            if edate < sdate:
+                return jsonify(status=0, message="End date cannot be before start date")
+            else:
+                off= Offday(off_ven=vendid, start_date=sdate, end_date=edate)
+                try:
+                    db.session.add(off)
+                    db.session.commit()
+                    return jsonify(status=1, message="Offdays successfully set")
+                except:
+                    db.rollback()
+                    return jsonify(status=0, message="An error occurred. Setting of offdays was unsucessful, please try again.")
+
+
+
+
 
 
 #codes for vendor booking
@@ -217,7 +352,8 @@ def vendor_bookings():
     v= Vendor.query.get(vendid)
     pbook= Booking.query.filter(Booking.confirmation_status == "pending", Booking.b_vendor == vendid).all()
     abook= Booking.query.filter(Booking.confirmation_status == "active", Booking.b_vendor == vendid).all()
-    return render_template('vendor/ven_booking.html', v=v, pbook=pbook, abook=abook)
+    hbook= Booking.query.filter(Booking.confirmation_status != "pending", Booking.confirmation_status != "active", Booking.b_vendor == vendid).order_by(Booking.booking_date).all()
+    return render_template('vendor/ven_booking.html', v=v, pbook=pbook, abook=abook, hbook=hbook)
 
 
 @app.route('//ven/booking/confirmbooking/<int:bookid>/')

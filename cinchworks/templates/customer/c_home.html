@@ -45,21 +45,23 @@ div{ border: 0px solid red; }
 		<div class= "col">
 			<h4>Your Schedule</h4>
 			<div class= "row">
-				<div class= "col m-2 p-0 calen_day rounded" id= "cal_1">
-					{% include 'customer/main_calender.html' %}
+				{% for i in cbd %}
+				<div class= "col-2 m-2 p-0 calen_day rounded" id= "cal_1">
+					<p class= "text-center"><b>{{ i[7].strftime('%a %b %d, %Y') }}</b></p>
+					{% for j in cbst %}
+					{% if i[7] == j.calender_date %}
+					<div class= " row rounded mx-1 mb-3" style= "background-color: #F8F7FF;">
+						<div class= "col hselector" onclick="show_info({{j.booking_id}});">
+							<p style= "border-bottom: 1px solid grey;">{{ j.calender_time.strftime('%H:%M') }} - {{ j.calender_endtime.strftime('%H:%M') }}</p>
+							<p style= "border-bottom: 1px solid grey;"><b>{{j.ven_info.ven_busname}}</b></p>
+							<p class= "p-0">{{j.service_info.service.service_name}}</p>
+						</div>
+					</div>
+					{% endif %}
+					{% endfor %}
+					
 				</div>
-				<div class= "col m-2 p-0 calen_day rounded" id= "cal_2">
-					{% include 'customer/main_calender.html' %}
-				</div>
-				<div class= "col m-2 p-0 calen_day rounded d-none d-md-block" id= "cal_3">
-					{% include 'customer/main_calender.html' %}
-				</div>
-				<div class= "col m-2 p-0 calen_day rounded d-none d-lg-block" id= "cal_4">
-					{% include 'customer/main_calender.html' %}
-				</div>
-				<div class= "col m-2 p-0 calen_day rounded d-none d-lg-block" id= "cal_5">
-					{% include 'customer/main_calender.html' %}
-				</div>
+				{% endfor %}
 				
 			</div>
 			<div class= "row mt-1">
@@ -85,7 +87,7 @@ div{ border: 0px solid red; }
 				</thead>
 				<tbody>
 					{% for i in bks %}
-					<tr>
+					<tr onclick= "show_info({{i.booking_id}});">
 						<td>{{ loop.index }}</td>
 						<td>{{ i.ven_info.ven_busname }}</td>
 						<td>{{ i.service_info.service.service_name }}</td>
@@ -94,32 +96,9 @@ div{ border: 0px solid red; }
 						<td>{{ i.confirmation_status.name }}</td>
 					</tr>
 					{% endfor %}
-					<tr>
-						<td>Vendor 1</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Vendor 2</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>Vendor 3</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
 				</tbody>
 			</table>
+			<a href= "/cus/bookinghistory" class= "nav-link text-end">View All Bookings</a>
 		</div>
 	</div>
 </div>
@@ -127,6 +106,7 @@ div{ border: 0px solid red; }
 
 
 {% include 'customer/cus_bookservices_modal.html' %}
+{% include 'customer/cus_bookinginfo_modal.html' %}
 
 {% endblock body %}
 

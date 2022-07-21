@@ -13,7 +13,11 @@
 	<!-- Banner -->
 	<div class= "row">
 		<div class= "col">
+			{% if v.ven_bannerpic == None %}
 			<img src= "{{url_for('static', filename='images/banner.jpg')}}" alt= "Vendor Banner" class= "vendor_banner">
+			{% else %}
+			<img src= "{{ url_for('static', filename='uploads/images/'+ v.ven_bannerpic) }}" alt= "Vendor Banner" class= "vendor_banner" id= "vendorbanner">
+			{% endif %}
 		</div>
 	</div>
 
@@ -21,9 +25,15 @@
 	<!-- Welcome Message plus stats and small vendor description-->
 	<div class= "row welcome">
 		<div class= "col">
-			<div class= "row">
-				<div class= "col-4 col-md-3 offset-5">
-					<img src= "{{url_for('static', filename='images/profile_pic2.jpg')}}" alt= "" class= "img-fluid profile_pic" id= "uservendor_profilepic">
+			<div class= "row justify-content-center">
+				<div class= "col-3">
+					<div style= "display: inline-block;">
+						{% if v.ven_profilepic == None %}
+						<img src= "{{ url_for('static', filename='images/profile_pic2.jpg') }}" alt= "" class= " profile_pic" id= "uservendor_profilepic">
+						{% else %}
+						<img src= "{{ url_for('static', filename='uploads/images/'+ v.ven_profilepic) }}" alt= "" class= " profile_pic" id= "uservendor_profilepic">
+						{% endif %}
+					</div>
 				</div>
 			</div>
 			<div class= "row">
@@ -40,10 +50,23 @@
 	<div class= "row mt-md-3">
 		<div class= "col">
 			<div class= "row">
-				<div class= "col m-2 p-0 calen_day rounded" id= "cal_1">
-					{% include 'customer/main_calender.html' %}
+				{% for i in vbd %}
+				<div class= "col-2 m-2 p-0 calen_day rounded" id= "cal_1">
+					<p class= "text-center"><b>{{ i[7].strftime('%a, %b %d %Y') }}</b></p>
+					{% for j in vbst %}
+					{% if i[7] == j.calender_date %}
+					<div class= " row rounded mx-1 mb-3" style= "background-color: #F8F7FF;">
+						<div class= "col">
+							<p style= "border-bottom: 1px solid grey;">{{ j.calender_time.strftime('%H:%M') }} - {{ j.calender_endtime.strftime('%H:%M') }}</p>
+							<p>Booked</p>
+						</div>
+					</div>
+					{% endif %}
+					{% endfor %}
+					
 				</div>
-				<div class= "col m-2 p-0 calen_day rounded" id= "cal_2">
+				{% endfor %}
+				<!-- <div class= "col m-2 p-0 calen_day rounded" id= "cal_2">
 					{% include 'customer/main_calender.html' %}
 				</div>
 				<div class= "col m-2 p-0 calen_day rounded d-none d-md-block" id= "cal_3">
@@ -54,7 +77,7 @@
 				</div>
 				<div class= "col m-2 p-0 calen_day rounded d-none d-lg-block" id= "cal_5">
 					{% include 'customer/main_calender.html' %}
-				</div>
+				</div> -->
 			</div>
 			<div class= "row mt-2">
 				<div class= "col">
@@ -68,7 +91,7 @@
 	<!-- Services -->
 	<div class= "row mt-3 blueback">
 		<div class= "col">
-			<h3>Services</h3>
+			<h3 class= "text-center">Services</h3>
 			<div class= "row">
 				<div class= "col">
 					{% for i in vs %}
@@ -76,7 +99,8 @@
 						<div class= "col">
 							<p><b>{{ i.service.service_name }}</b></p>
 							<p><pre>Avg duration: {{i.average_duration}}      Min duration: {{ i.min_duration }}      Max duration: {{ i.max_duration }}</pre></p>
-							<pre>Price: {{i.service_price}}</pre>
+							<p><pre>Price: {{i.service_price}}</pre></p>
+							<p><pre>Workdays: {{i.workdays}}</pre></p>
 							<p>{{ i.long_desc }}</p>
 							<hr>
 						</div>
@@ -91,6 +115,47 @@
 			</div>
 		</div>
 	</div>
+
+
+
+
+	<!-- Contact Information -->
+	<div class= "row my-5 blueback py-2">
+		<div class= "col">
+			<h3 class= "text-center">Contact Information</h3>
+			<div class= "row">
+				<div class= "col">
+					<p><b>Phone Number 1</b></p>
+					<span>{{ v.ven_phone1 }}</span><hr>
+					<p><b>Phone Number 2</b></p>
+					<span>{{ v.ven_phone2 }}</span><hr>
+					<p><b>Address</b></p>
+					<span>{{ v.ven_address }}, {{ v.ven_city }}, {{v.vendor_lga.lga_name}} Local Government, {{v.vendor_state.state_name}} state</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<!-- Offdays Information -->
+	<div class= "row my-5 blueback py-2">
+		<div class= "col">
+			<h3 class= "text-center">Vendor Offdays</h3>
+			<span>The vendor will not be available on the following days:</span>
+			{% for i in voff %}
+			<div class= "row">
+				<div class= "col">
+					<p><pre><b>{{ loop.index }}.</b>  <b>From:</b> {{i.start_date.strftime('%a, %b %d %Y')}}      <b>To:</b> {{i.end_date.strftime('%a, %b %d %Y')}}</pre></p>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+
+
+
 
 	<!-- Reviews -->
 	<div class= "row mt-5 blueback">
@@ -139,28 +204,13 @@
 			<div class= "col">
 				<div class= "row off_bookingtitle">
 					<div class= "col">
-						<h4>Added Requests</h4>
-					</div>
-				</div>
-				<div class= "row">
-					<div class= "col">
-						
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class= "row off_booking">
-			<div class= "col">
-				<div class= "row off_bookingtitle">
-					<div class= "col">
 						<h4>New Booking</h4>
 					</div>
 				</div>
-				<form action= "/cus/bookvendor/{{v.ven_id}}" method= "post">
+				<form action= "/cus/bookvendor/{{v.ven_id}}" method= "post" id= "cvpnewbooking">
 					<div class= "mb-2">
 					<label class="form-label">Choose Service</label>
-					<select name= "bservice" class= "form-select" id= "bservice">
+					<select name= "bservice" class= "form-select" id= "bservice" required>
 						<option value= "">Please Select Service</option>
 						{% for i in vs %}
 						<option value= "{{ i.ven_service_id }}">{{i.service.service_name}}</option>
@@ -170,7 +220,7 @@
 
 					<div class= "mb-2">
 						<label class="form-label">Service Location</label>
-						<select class= "form-select" name= "blocation">
+						<select class= "form-select" name= "blocation" required id= "blocation">
 							<option value= "">Please select location</option>
 							<option value= "customer_address">Home</option>
 							<option value= "vendor_address">Vendor Location</option>
@@ -179,20 +229,20 @@
 
 					<div class= "mb-2">
 					<label class="form-label">Date</label>
-					<input type= "date" class= "form-control" name= "bdate" id= "bdate">
-					</div>
-
-					<div class= "mb-2">
-					<label class="form-label">Time</label>
-					<input type= "time" class= "form-control" name= "btime" id= "btime">
+					<div><span id= "bdatermessage" style= "color:red"></span></div>
+					<input type= "date" class= "form-control" name= "bdate" id= "bdater">
 					</div>
 
 					<div class= "mb-2">
 					<label class="form-label">Duration</label>
 					<select name= "duration" class= "form-select" id= "bduration">
-						
+						<option value= "">Please select duration</option>
 					</select>
-					<p>It should be noted that ideally I want this duration to change based on what was selected by the customer for service.</p>
+					</div>
+
+					<div class= "mb-2">
+					<label class="form-label">Time</label>
+					<input type= "time" class= "form-control" name= "btime" id= "btimer">
 					</div>
 
 					<div class= "mb-2">
@@ -201,7 +251,7 @@
 					</div>
 
 					<div>
-						<button class= "btn btn-primary offset-8">Book Service</button>
+						<button class= "btn btn-primary offset-8" id= "bookbutton" type= "button">Book Service</button>
 					</div>
 					<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
 				</form>
@@ -214,10 +264,12 @@
 {% block internal_script %}
 <script type= "text/javascript">
 $(document).ready(function(){
+	var token= $('#csrf_token').val()
+
 	//This Ajax code controls the changing of the duration of the work times depending of the services choosen by the customer.
 	$('#bservice').change(function(){
 		var ser= $('#bservice').val();
-		var token= $('#csrf_token').val()
+		var token= $('#csrf_token').val();
 		senddata= {'bservice': ser, 'vendid':'{{v.ven_id}}', 'csrf_token':token};
 		
 		$.ajax({
@@ -235,25 +287,109 @@ $(document).ready(function(){
 		});
 	});
 
-	//This Ajax code controls the validation for booking vendors
-	$('#btime').change(function(){
-		var date= $('#bdate').val()
+	//This Ajax code controls the validation of date for booking vendors
+	$('#bdater').change(function(){
+		var date= $('#bdater').val()
+		data2send= {'bdater':date, 'csrf_token':token, 'vendid':'{{v.ven_id}}'}
 
 		$.ajax({
-			url:"",
+			url:"/cus/ajax/validatebookingdate/",
 			type:"post",
-			data:"",
-			dataType:"",
+			data:data2send,
+			dataType:"json",
 			success:function(rsp){
-
+				if (rsp.status == 1){
+					$('#btimer').prop('disabled', false);
+					$('#bookbutton').prop('disabled', false);
+					$('#bdatermessage').text("");
+				}else if(rsp.status == 0){
+					alert(rsp.message);
+					$('#btimer').prop('disabled', true);
+					$('#bookbutton').prop('disabled', true);
+					if(rsp.message == "Date bad"){
+						$('#bdatermessage').text("You cannot backdate a booking");
+					}
+				}
 			},
 			error:function(err){
-				console.log(err)
+				console.log(err);
 			}
 		});
-	})
+	});
+
+	//This controls validation of chosen time for booking vendors
+	$('#btimer').change(function(){
+		if ( $('#bdater').val() == "" ){
+			alert("Choose a date first.");
+			// $('#bookbutton').prop('disabled', true);
+		}else if( $('#bduration').val() == "" ){
+			alert("Please select a service and duration");
+			$('#bookbutton').prop('disabled', true);
+		}else{
+			var bdate= $('#bdater').val();
+			var btime= $('#btimer').val();
+			var bduration= $('#bduration').val()
+			data2send= {'bdate':bdate, 'csrf_token':token, 'vendid':"{{v.ven_id}}", 'btime':btime, 'bduration':bduration};
+
+			$.ajax({
+				url:"/cus/ajax/validatebookingtime/",
+				data:data2send,
+				type:"post",
+				dataType:"json",
+				success:function(rsp){
+					if ( rsp.status == 0 ){
+						alert(rsp.message);
+						$('#bookbutton').prop('disabled', true);
+					}else if(rsp.status == 1){
+						$('#bookbutton').prop('disabled', false);
+					}
+
+				},
+				error:function(err){ console.log(err); }
+			});
+		}
+	});
+
+	//This controls validation for final submission of the booking when booking button is clicked
+	$('#bookbutton').click(function(){
+		
+		var bservice= $('#bservice').val();
+		var blocation= $('#blocation').val();
+		var bdater= $('#bdater').val();
+		var btimer= $('#btimer').val();
+		var bduration=  $('#bduration').val();
+		if ( bservice == "" || blocation == "" || bdater == "" || btimer == "" || bduration == "" ){
+			alert("Please fill all the input fields")
+			return false
+		}else{
+			var bdate= $('#bdater').val();
+			var btime= $('#btimer').val();
+			var bduration= $('#bduration').val()
+			data2send= {'bdate':bdate, 'csrf_token':token, 'vendid':"{{v.ven_id}}", 'btime':btime, 'bduration':bduration};
+
+			if (confirm("Are you sure you want to want to book this service?")){
+				$.ajax({
+				url:"/cus/ajax/validatebookingtime/",
+				data:data2send,
+				type:"post",
+				dataType:"json",
+				success:function(rsp){
+					if ( rsp.status == 0 ){
+						alert(rsp.message);
+					}else if( rsp.status == 1 ){
+							$('#cvpnewbooking').submit();
+						
+					}
+				},
+				error:function(err){ console.log(err); }
+			});
+			}
+			
+		}
+	});
 
 });
+
 
 </script>
 {% endblock internal_script %}

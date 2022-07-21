@@ -102,6 +102,9 @@ body { font-size: 1.15em; }
 tbody tr:hover{ background-color: rgba(0, 0, 0, 0.3); }
 /* This makes it possible to hover above a particular row in a table */
 
+.hselector:hover{ background-color: rgba(0, 0, 0, 0.05); }
+/* This will make it easier to hover over and select what is given this class */
+
 
 
 

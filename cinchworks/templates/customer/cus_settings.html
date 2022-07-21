@@ -27,9 +27,9 @@
 	{% endfor %}
 
 	<!-- Personal Information Settings -->
-	<div class= "row setting_blackback">
+	<div class= "row setting_blackback" id= "cusprofileinfo">
 		<div class= "col">
-			<h3 class= "mb-3">Personal Information</h3>
+			<h3 class= "mb-3">Profile Information</h3>
 			<form action= "{{url_for('cus_edit_info')}}" method= "post">
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">First Name:</label>
@@ -106,15 +106,10 @@
 		</div>
 	</div>
 
-	<!-- Calender Settings -->
-	<div class= "row my-3">
-		<div class= "col">
-			<h3>Calender Settings</h3>
-		</div>
-	</div>
+	
 
 	<!-- Account Settings -->
-	<div class= "row my-3 setting_blackback">
+	<div class= "row my-3 setting_blackback" id= "cusaccountsetting">
 		<div class= "col">
 			<h3>Account Settings</h3>
 			<form action= "{{url_for('cus_change_password')}}" method= "post">

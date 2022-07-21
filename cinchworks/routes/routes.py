@@ -1,7 +1,8 @@
+from datetime import date, datetime
 from flask import render_template, make_response, redirect, request, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from .. import app,db
-from ..models import Customer, Vendor, Vendor_services, Services
+from ..models import Customer, Vendor, Vendor_services, Services, Booking
 from ..forms import Signup
 
 @app.errorhandler(404)
@@ -136,3 +137,23 @@ def logout():
     if session.get('vend_id') != None:
         session.pop('vend_id')
     return redirect('/')
+
+
+
+@app.route('/test', methods=['GET', 'POST'])
+def things_test():
+    some= Booking.query.first()
+    dtsome= type(some.calender_date)
+    if request.method == 'GET':
+        return render_template('general/test.html', some=some, dtsome=dtsome)
+    else:
+        form= request.form.get('testdate')
+        dtform= type(form)
+        y,m,d= form.split('-')
+        dtobj= date(int(y), int(m), int(d))
+        tdtobj= type(dtobj)
+        if dtobj > some.calender_date:
+            a = "true"
+        else:
+            a = "false"
+        return render_template('general/test.html', some=some, dtsome=dtsome, dtform=dtform, form=form, y=y, m=m, d=d, dtobj=dtobj, tdtobj=tdtobj, a=a)

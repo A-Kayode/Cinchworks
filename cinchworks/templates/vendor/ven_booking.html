@@ -27,12 +27,11 @@
 							<th>Location</th>
 							<th>Date</th>
 							<th class= "hidesm">Time</th>
-							<th class= "hidemd">Booking Expiry</th>
 							<th class= "hidesm">Confirm/Reject</th>
 						</thead>
 						<tbody>
 							{% for i in pbook %}
-							<tr>
+							<tr onclick= "ven_show_info({{i.booking_id}});">
 								<td>{{ loop.index }}</td>
 								<td>{{ i.cus_info.cus_fname }} {{ i.cus_info.cus_lname }}</td>
 								<td>
@@ -44,10 +43,9 @@
 								</td>
 								<td>{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
 								<td class= "hidesm">{{ i.calender_time }}</td>
-								<td class= "hidesm"></td>
 								<td class= "hidesm">
-									<a href= "/ven/booking/confirmbooking/{{i.booking_id}}">confirm</a>
-									<a href= "/ven/bookinghistory/rejectbooking/{{i.booking_id}}">reject</a>
+									<a href= "/ven/booking/confirmbooking/{{i.booking_id}}" class= "btn btn-sm btn-success">confirm</a>
+									<a href= "/ven/bookinghistory/rejectbooking/{{i.booking_id}}" class= "btn btn-sm btn-danger">reject</a>
 								</td>
 							</tr>
 							{% endfor %}
@@ -76,7 +74,7 @@
 						</thead>
 						<tbody>
 							{% for j in abook %}
-							<tr>
+							<tr onclick= "ven_show_info({{j.booking_id}});">
 								<td>{{ loop.index }}</td>
 								<td>{{ j.cus_info.cus_fname }} {{ j.cus_info.cus_lname }}</td>
 								<td>{{ j.service_info.service.service_name }}</td>
@@ -108,16 +106,30 @@
 				<div class= "col">
 					<table class= "table">
 						<thead>
-							<th class= "hidesm">Booking ID</th>
+							<th class= "hidesm">S/N</th>
 							<th>Customer Name</th>
 							<th class= "hidesm">Services</th>
 							<th class= "hidesm">Location</th>
 							<th>Date</th>
-							<th class= "hidesm">Time</th>
 							<th>Status</th>
 						</thead>
 						<tbody>
-
+							{% for i in hbook %}
+							<tr onclick= "ven_show_info({{i.booking_id}});">
+								<td>{{ loop.index }}</td>
+								<td>{{ i.cus_info.cus_fname }} {{ i.cus_info.cus_lname }}</td>
+								<td>{{ i.service_info.service.service_name }}</td>
+								<td>
+									{% if i.service_location.name == 'vendor_address' %}
+											Office/Shop
+									{% elif i.service_location.name == 'customer_address' %}
+											Customer Address
+									{% endif %}
+								</td>
+								<td>{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
+								<td>{{ i.confirmation_status.name }}</td>
+							<tr>
+							{% endfor %}
 						</tbody>
 					</table>
 				</div>
@@ -128,3 +140,7 @@
 </div>
 
 {% endblock body %}
+
+{% block modal %}
+{% include 'vendor/ven_bookinginfo_modal.html' %}
+{% endblock modal %}

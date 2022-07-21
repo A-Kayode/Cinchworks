@@ -1,0 +1,19 @@
+{% extends 'general/base_home.html' %}
+{% block body %}
+<h4>From GET</h4>
+{{ some }}
+{{ dtsome }}
+<h4>From Post</h4>
+{{ dtform }}
+{{ form }}
+<p>y= {{y}}, m= {{m}}, d= {{d}}</p>
+{{ dtobj }}
+{{ tdtobj }}
+{{ a }}
+
+<form action= "/test" method= "post">
+	<input type= "date" name= "testdate">
+	<button>Submit</button>
+	<input type="hidden" name= "csrf_token" id= "csrf_token" value= "{{ csrf_token() }}">
+</form>
+{% endblock body %}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 17, 2022 at 02:51 PM
+-- Generation Time: Jul 22, 2022 at 01:05 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -34,7 +34,7 @@ CREATE TABLE `booking` (
   `b_venservice` int(11) NOT NULL,
   `booking_date` datetime NOT NULL,
   `service_location` enum('vendor_address','customer_address') NOT NULL,
-  `confirmation_status` enum('active','pending','cancelled','completed','rejected') NOT NULL,
+  `confirmation_status` enum('active','pending','cancelled','expired','rejected') NOT NULL,
   `calender_date` date NOT NULL,
   `calender_time` time NOT NULL,
   `calender_endtime` time NOT NULL,
@@ -46,7 +46,11 @@ CREATE TABLE `booking` (
 --
 
 INSERT INTO `booking` (`booking_id`, `b_vendor`, `b_customer`, `b_venservice`, `booking_date`, `service_location`, `confirmation_status`, `calender_date`, `calender_time`, `calender_endtime`, `notes`) VALUES
-(1, 1, 1, 5, '2022-07-12 16:01:07', 'customer_address', 'active', '2022-07-15', '10:30:00', '13:15:00', 'The impression must be perfect');
+(1, 1, 1, 5, '2022-07-21 23:18:00', 'customer_address', 'expired', '2022-07-15', '10:30:00', '13:15:00', 'The impression must be perfect'),
+(3, 1, 1, 2, '2022-07-21 23:18:00', 'vendor_address', 'expired', '2022-07-20', '11:00:00', '13:00:00', 'I want the painting to be sexy as fuck'),
+(5, 1, 1, 2, '2022-07-19 23:29:39', 'customer_address', 'active', '2022-07-21', '10:00:00', '17:00:00', 'I want a painting of a nice busty lady'),
+(6, 1, 1, 1, '2022-07-19 23:29:43', 'customer_address', 'rejected', '2022-07-21', '09:00:00', '11:00:00', 'Sculpture of a nice busty lady is needed'),
+(7, 1, 1, 2, '2022-07-21 00:07:05', 'customer_address', 'active', '2022-07-25', '10:00:00', '15:20:00', 'I want a painting of a big busted sexy woman');
 
 -- --------------------------------------------------------
 
@@ -907,8 +911,15 @@ CREATE TABLE `offday` (
   `off_id` int(11) NOT NULL,
   `off_ven` int(11) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
-  `end_date` time DEFAULT NULL
+  `end_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `offday`
+--
+
+INSERT INTO `offday` (`off_id`, `off_ven`, `start_date`, `end_date`) VALUES
+(1, 1, '2022-07-23', '2022-07-27');
 
 -- --------------------------------------------------------
 
@@ -1055,8 +1066,8 @@ CREATE TABLE `vendor` (
 --
 
 INSERT INTO `vendor` (`ven_id`, `ven_fname`, `ven_lname`, `ven_busname`, `ven_phone1`, `ven_phone2`, `ven_email`, `ven_address`, `ven_city`, `ven_lga`, `ven_state`, `ven_username`, `ven_password`, `ven_shortdesc`, `ven_openingtime`, `ven_closingtime`, `ven_bannerpic`, `ven_profilepic`, `ven_regdate`) VALUES
-(1, 'Damilola', 'Crazycongo', 'Dami Sells Stuff', '08175963248', '', 'cogocray@gmail.com', '25, Ilupeju drive, Ilupeju', 'Ikeja', NULL, 24, 'damicray', 'pbkdf2:sha256:260000$YExGCkkUSq3TzGBB$673d4f50abd4ecb95dfda394a1c9c18cc56fed362cd99877847eadc4e414cbaf', 'Well Sell Stuff That you might need.', '09:00:00', '05:00:00', NULL, NULL, '2022-07-11 13:46:07'),
-(2, 'Willy', 'Wonka', 'Wonka Foods', '07052954189', 'None', 'willwonka@yahoo.com', '58, Nigerian street, Ojodu, Berger', 'Berger', 517, 24, 'willywonka', 'pbkdf2:sha256:260000$SsIC7PpjC1zLpiqt$e97842575b5f00120d555d8a2bc186de22834e17f6ef314980ca3faa6c8411f3', 'We make and sell delicious food and chocolates', '08:00:00', '04:00:00', '4613172034963542.0.jpg', '8958985686155323.0.jpg', '2022-07-17 13:32:47');
+(1, 'Damilola', 'Crazycongo', 'Dami Sells Stuff', '08175963248', '', 'cogocray@gmail.com', '25, Ilupeju drive, Ilupeju', 'Ikeja', 513, 24, 'damicray', 'pbkdf2:sha256:260000$YExGCkkUSq3TzGBB$673d4f50abd4ecb95dfda394a1c9c18cc56fed362cd99877847eadc4e414cbaf', 'Well Sell Stuff That you might need.', '09:00:00', '17:00:00', NULL, NULL, '2022-07-11 13:46:07'),
+(2, 'Willy', 'Wonka', 'Wonka Foods', '07052954189', 'None', 'willwonka@yahoo.com', '58, Nigerian street, Ojodu, Berger', 'Berger', 517, 24, 'willywonka', 'pbkdf2:sha256:260000$SsIC7PpjC1zLpiqt$e97842575b5f00120d555d8a2bc186de22834e17f6ef314980ca3faa6c8411f3', 'We make and sell delicious food and chocolates', '08:00:00', '16:00:00', '9534813109259998.0.jpg', '8244675026488557.0.jfif', '2022-07-19 08:58:17');
 
 -- --------------------------------------------------------
 
@@ -1071,25 +1082,25 @@ CREATE TABLE `vendor_services` (
   `short_desc` varchar(255) NOT NULL,
   `long_desc` text DEFAULT NULL,
   `service_price` float NOT NULL,
-  `average_duration` varchar(50) DEFAULT NULL,
-  `min_duration` varchar(50) DEFAULT NULL,
-  `max_duration` varchar(50) DEFAULT NULL,
+  `average_duration` time DEFAULT NULL,
+  `min_duration` time DEFAULT NULL,
+  `max_duration` time DEFAULT NULL,
   `avgdur_text` varchar(100) DEFAULT NULL,
   `mindur_text` varchar(100) DEFAULT NULL,
-  `maxdur_text` varchar(100) DEFAULT NULL
+  `maxdur_text` varchar(100) DEFAULT NULL,
+  `service_status` enum('depreciated','active') NOT NULL,
+  `workdays` varchar(255) NOT NULL DEFAULT 'Monday - Friday'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `vendor_services`
 --
 
-INSERT INTO `vendor_services` (`ven_service_id`, `vendor_id`, `service_id`, `short_desc`, `long_desc`, `service_price`, `average_duration`, `min_duration`, `max_duration`, `avgdur_text`, `mindur_text`, `maxdur_text`) VALUES
-(1, 1, 2, 'We sculpt stuff', 'We will sculp your dick to your liking', 50000, '02:30', NULL, NULL, '', '', ''),
-(2, 1, 1, 'We paint stuff for you', 'We are the true painters', 1500, '23:20', NULL, NULL, '', '', ''),
-(3, 1, 3, 'We do magomago', 'Magomagomagomago', 500, '03:30', NULL, NULL, '', '', ''),
-(5, 1, 5, 'We make impressions of things', 'The impression that is created at the crux of the battle of sambody.', 2500, '2 hours 45 minutes', '2 hours ', '3 hours 30 minutes', '', '', ''),
-(6, 1, 2, 'We sculpt nice things', 'Nice things are good to look at', 5000, '05:00', '03:00', '07:30', '5 hours ', '3 hours ', '7 hours 30 minutes'),
-(7, 2, 6, 'We make delicious chocolates for your enjoyment', 'The chocolates are made from the freshest of cocoas and the best confectionary experts.', 7500, '03:00', '03:00', '05:00', '3 hours ', '3 hours ', '5 hours ');
+INSERT INTO `vendor_services` (`ven_service_id`, `vendor_id`, `service_id`, `short_desc`, `long_desc`, `service_price`, `average_duration`, `min_duration`, `max_duration`, `avgdur_text`, `mindur_text`, `maxdur_text`, `service_status`, `workdays`) VALUES
+(1, 1, 2, 'We sculpt stuff', 'We will sculp your dick to your liking', 50000, '02:30:00', '02:00:00', '03:00:00', '', '', '', '', 'Monday - Friday'),
+(2, 1, 1, 'We paint stuff for you', 'We are the true painters', 1500, '05:20:00', '04:00:00', '07:00:00', '', '', '', '', 'Monday - Friday'),
+(5, 1, 5, 'We make impressions of things', 'The impression that is created at the crux of the battle of sambody.', 2500, '00:00:02', '00:00:02', '00:00:03', '', '', '', 'depreciated', 'Monday - Friday'),
+(7, 2, 6, 'We make delicious chocolates for your enjoyment', 'The chocolates are made from the freshest of cocoas and the best confectionary experts.', 7500, '03:00:00', '03:00:00', '05:00:00', '3 hours ', '3 hours ', '5 hours ', '', 'Monday - Friday');
 
 --
 -- Indexes for dumped tables
@@ -1192,7 +1203,7 @@ ALTER TABLE `vendor_services`
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `calender`
@@ -1216,7 +1227,7 @@ ALTER TABLE `lga`
 -- AUTO_INCREMENT for table `offday`
 --
 ALTER TABLE `offday`
-  MODIFY `off_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `off_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -1252,7 +1263,7 @@ ALTER TABLE `vendor`
 -- AUTO_INCREMENT for table `vendor_services`
 --
 ALTER TABLE `vendor_services`
-  MODIFY `ven_service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ven_service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables

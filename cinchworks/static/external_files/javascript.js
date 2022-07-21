@@ -162,6 +162,39 @@ $(document).ready(function(){
 
 
 
+function add_offday(a){
+	var conf= confirm("Are you sure you want to add these offdays?");
+	if (conf){
+		var form= document.getElementById("venaddoffday");
+		var formdata= new FormData(form)
+		formdata.append("vendid", a);
+
+		$.ajax({
+			url:"/ven/ajax/addoffday/",
+			type:"post",
+			dataType:"json",
+			data:formdata,
+			success:function(rsp){
+				if(rsp.status == 0){
+					alert(rsp.message);
+				}else if(rsp.status == 1){
+					var x= `<span class= "alert alert-success">${rsp.message}</span>`;
+					$('#sucmess').html(x);
+					$('#offst').val("");
+					$('#offen').val("");
+				}
+			},
+			error:function(err){ console.log(err); },
+			cache:false,
+			contentType:false,
+			processData:false
+
+		});
+	}
+}
+
+
+
 /* This caters for the vendor home page */
 $(document).ready(function(){
 	//This caters for the appearance and disappearance of the change picture form
@@ -176,4 +209,89 @@ $(document).ready(function(){
 		$('#hppic_change').hide();
 	});
 });
+
+
+
+/* This code is general for creating a modal that shows the information of the customer booking clicked*/
+function show_info(a){
+	$('#bookinginfo_modal').modal('toggle');
+	var data2send= {'bookid':a};
+
+	$.ajax({
+		url:"/cus/ajax/displaybooking/",
+		data:data2send,
+		type:"get",
+		dataType:"json",
+		success:function(rsp){
+			if (rsp.status == 1){
+				$('#bkvenname').text(rsp.vname);
+				$('#bkvenph1').text(rsp.vph1);
+				$('#bkvenph2').text(rsp.vph2);
+				$('#bksername').text(rsp.sname);
+				$('#bksershort').text(rsp.sshort);
+				$('#bkserlong').text(rsp.slong);
+				$('#bkbdate').text(rsp.bdate);
+				$('#bkbtime').text(rsp.btime + " - " + rsp.betime);
+				if (rsp.slocation == "vendor_address"){
+					var c = "Vendor Shop"
+				}else if(rsp.slocation == "customer_address"){
+					var c= "Home"
+				}
+				$('#bkserlocate').text(c);
+				$('#bknotes').text(rsp.bnotes);
+				if (rsp.vlga != ""){ var e = rsp.vlga + " LGA" }else{ var e= "" }
+				if (rsp.vstate != ""){ var f = rsp.vstate + " state." }else{ var f= "" }
+				if(rsp.slocation == "vendor_address"){
+					$('#bkvenadd').text(`${rsp.vaddr}, ${rsp.vcity}, ${e}, ${f}`);
+				}
+			}else{
+				alert(rsp.message);
+			}
+			
+		},
+		error:function(err){ console.log(err); }
+	});
+}
+
+
+
+/* This code is general for creating a modal that shows the information of the vendor booking clicked*/
+function ven_show_info(a){
+	$('#venbookinginfo_modal').modal('toggle');
+	var data2send= {'bookid':a};
+
+	$.ajax({
+		url:"/ven/ajax/displaybooking/",
+		data:data2send,
+		type:"get",
+		dataType:"json",
+		success:function(rsp){
+			if (rsp.status == 1){
+				$('#bkcusname').text(rsp.cfname + " " + rsp.clname);
+				$('#bkcusph1').text(rsp.cph1);
+				$('#bkcusph2').text(rsp.cph2);
+				$('#bksername').text(rsp.sname);
+				$('#bksershort').text(rsp.sshort);
+				$('#bkserlong').text(rsp.slong);
+				$('#bkbdate').text(rsp.bdate);
+				$('#bkbtime').text(rsp.btime + " - " + rsp.betime);
+				if (rsp.slocation == "vendor_address"){
+					var c = "Shop"
+				}else if(rsp.slocation == "customer_address"){
+					var c= "Customer Address"
+				}
+				$('#bkserlocate').text(c);
+				$('#bkcusnotes').text(rsp.bnotes);
+				if (rsp.clga != ""){ var e = rsp.clga + " LGA" }else{ var e= "" }
+				if (rsp.cstate != ""){ var f = rsp.cstate + " state." }else{ var f= "" }
+				if(rsp.slocation == "customer_address"){
+					$('#bkcusadd').text(`${rsp.caddr}, ${rsp.ccity}, ${e}, ${f}`);
+				}
+			}else{
+				alert(rsp.message);
+			}
+		},
+		error:function(err){ console.log(err); }
+	});
+}
 

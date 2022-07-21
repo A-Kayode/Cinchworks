@@ -1,3 +1,4 @@
+from datetime import date, datetime, time
 from functools import wraps
 from flask import session, flash, redirect
 
@@ -47,7 +48,7 @@ def calc_endtime(a,b):
     c,d= a.split(':')
     c,d= int(c), int(d)
 
-    e,f= b.split(':')
+    e,f,w= b.split(':')
     e,f= int(e), int(f)
 
     mn= f + d
@@ -65,3 +66,26 @@ def calc_endtime(a,b):
         j= "0"+j
     
     return i+":"+j
+
+
+def checkdate(a):
+    y,m,d= a.split('-')
+    dateobj= date(int(y),int(m),int(d))
+    todate= date.today()
+
+    if dateobj < todate:
+        return False
+    else:
+        return True
+
+
+def convert_time(a):
+    h,m= a.split(':')
+    timeobj= time(int(h), int(m))
+    return timeobj
+
+
+def convert_date(a):
+    y,m,d= a.split('-')
+    dateobj= date(int(y),int(m),int(d))
+    return dateobj

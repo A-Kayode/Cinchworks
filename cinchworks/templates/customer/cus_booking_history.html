@@ -34,14 +34,14 @@
 				</thead>
 				<tbody>
 					{% for i in pbook%}
-					<tr>
+					<tr onclick= "show_info({{i.booking_id}});">
 						<td>{{ loop.index }}</td>
 						<td class= "hidesm">{{ i.ven_info.ven_busname }}</td>
 						<td>{{ i.service_info.service.service_name }}</td>
 						<td class= "hidemd">{{ i.service_info.short_desc }}</td>
 						<td>{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
 						<td class= "hidemd">{{ i.calender_time }}</td>
-						<td></td>
+						<td><a href= "/cus/bookinghistory/cancelpending/{{ i.booking_id }}" onclick= "return confirm('Are you sure you want to cancel this booking?')" class= "btn btn-danger">Cancel</a></td>
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -66,7 +66,7 @@
 				</thead>
 				<tbody>
 					{% for i in rcbook %}
-					<tr>
+					<tr onclick= "show_info({{i.booking_id}});">
 						<td>{{ loop.index }}</td>
 						<td>{{ i.ven_info.ven_busname }}</td>
 						<td>{{ i.service_info.service.service_name }}</td>
@@ -75,7 +75,7 @@
 						<td>{{ i.confirmation_status.name }}</td>
 						<td>
 						{% if i.confirmation_status.name == "rejected" %}
-						<a href= "/cus/bookinghistory/deleterejected/{{ i.booking_id }}" onclick= "return confirm('Are you sure you want to delete this booking?')">Delete</a>
+						<a href= "/cus/bookinghistory/deleterejected/{{ i.booking_id }}" onclick= "return confirm('Are you sure you want to delete this booking?')" class= "btn btn-danger btn-sm">Delete</a>
 						{% endif %}
 						</td>
 					</tr>
@@ -88,6 +88,7 @@
 
 
 {% include 'customer/cus_bookservices_modal.html' %}
+{% include 'customer/cus_bookinginfo_modal.html' %}
 {% endblock body %}
 
 {% block internal_script %}

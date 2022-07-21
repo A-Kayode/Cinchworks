@@ -11,8 +11,11 @@ class Status(enum.Enum):
     active= "confirmed booking"
     pending= "unconfirmed booking"
     cancelled= "cancelled booking"
-    completed= "completed booking"
+    expired= "expired booking"
     rejected= "rejected booking"
+
+class Service_status(enum.Enum):
+    depreciated= "service depreciated"
 
 
 class Customer(db.Model):
@@ -96,6 +99,8 @@ class Vendor_services(db.Model):
     avgdur_text= db.Column(db.String(100))
     mindur_text= db.Column(db.String(100))
     maxdur_text= db.Column(db.String(100))
+    service_status= db.Column(db.Enum('depreciated', 'active'), nullable=False)
+    workdays= db.Column(db.String(255), default="Monday - Friday")
 
     ven_info= db.relationship('Vendor', backref='ven_services')
     service= db.relationship('Services', backref= 'service_vendors')
@@ -145,6 +150,6 @@ class Offday(db.Model):
     off_id= db.Column(db.Integer(), primary_key=True, autoincrement=True)
     off_ven= db.Column(db.Integer(), db.ForeignKey('vendor.ven_id'))
     start_date= db.Column(db.Date())
-    end_date= db.Column(db.Time())
+    end_date= db.Column(db.Date())
 
     ven_info= db.relationship('Vendor', backref='ven_offdays')

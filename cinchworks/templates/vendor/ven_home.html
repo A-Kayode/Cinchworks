@@ -64,21 +64,24 @@
 		<div class= "col">
 			<h3>Your Calender</h3>
 			<div class= "row">
-				<div class= "col m-2 p-0 calen_day rounded" id= "cal_1">
-					{% include 'vendor/main_calender.html' %}
+				{% for i in vbd %}
+				<div class= "col-2 m-2 p-0 calen_day rounded" id= "cal_1">
+					<p class= "text-center"><b>{{ i[7].strftime('%a, %b %d %Y') }}</b></p>
+					{% for j in vbst %}
+					{% if i[7] == j.calender_date %}
+					<div class= " row rounded mx-1 mb-3" style= "background-color: #F8F7FF;">
+						<div class= "col" onclick= "ven_show_info({{j.booking_id}});">
+							<p style= "border-bottom: 1px solid grey;">{{ j.calender_time.strftime('%H:%M') }} - {{ j.calender_endtime.strftime('%H:%M') }}</p>
+							<p style= "border-bottom: 1px solid grey;"><b>{{j.cus_info.cus_fname}} {{j.cus_info.cus_lname}}</b></p>
+							<p class= "p-0">{{j.service_info.service.service_name}}</p>
+						</div>
+					</div>
+					{% endif %}
+					{% endfor %}
+					
 				</div>
-				<div class= "col m-2 calen_day p-0 rounded" id= "cal_2">
-					{% include 'vendor/main_calender.html' %}
-				</div>
-				<div class= "col m-2 calen_day d-none d-md-block p-0 rounded" id= "cal_3">
-					{% include 'vendor/main_calender.html' %}
-				</div>
-				<div class= "col m-2 calen_day d-none d-md-block p-0 rounded" id= "cal_4">
-					{% include 'vendor/main_calender.html' %}
-				</div>
-				<div class= "col m-2 calen_day d-none d-lg-block p-0 rounded" id= "cal_5">
-					{% include 'vendor/main_calender.html' %}
-				</div>
+				{% endfor %}
+				
 			</div>
 		</div>
 	</div>
@@ -87,11 +90,12 @@
 	<!-- Booking Requests -->
 	<div class= "row mt-3 blueback">
 		<div class= "col">
-			<h3><span class= "bagde bg-danger rounded-pill">5</span> Pending Requests</h3>
+			<h3><span class= "bagde bg-danger rounded-pill">{{ pcount }}</span> Pending Requests</h3>
 			<div class= "row">
 				<div class= "col">
 					<table class= "table">
 						<thead>
+							<th>S/N</th>
 							<th>Customer Name</th>
 							<th>Location</th>
 							<th>Date</th>
@@ -99,32 +103,29 @@
 							<th class= "hidemd">Time of Booking</th>
 						</thead>
 						<tbody>
-							<tr>
-								<td>Customer 1</td>
-								<td></td>
-								<td></td>
-								<td class= "hidemd"></td>
-								<td class= "hidemd"></td>
+							{% for i in pbook %}
+							<tr onclick= "ven_show_info({{i.booking_id}});">
+								<td>{{ loop.index }}</td>
+								<td>{{ i.cus_info.cus_fname }} {{ i.cus_info.cus_lname }}</td>
+								<td>
+									{% if i.service_location.name == 'vendor_address' %}
+										Office/Shop
+									{% elif i.service_location.name == 'customer_address' %}
+										Customer Address
+									{% endif %}
+								</td>
+								<td>{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
+								<td class= "hidemd">{{ i.calender_time }}</td>
+								<td class= "hidemd">{{ i.booking_date.strftime('%d %B %Y  %H:%M') }}</td>
 							</tr>
-							<tr>
-								<td>Customer 2</td>
-								<td></td>
-								<td></td>
-								<td class= "hidemd"></td>
-								<td class= "hidemd"></td>
-							</tr>
-							<tr>
-								<td>Customer 3</td>
-								<td></td>
-								<td></td>
-								<td class= "hidemd"></td>
-								<td class= "hidemd"></td>
-							</tr>
+							{% endfor %}
+							
+							
 						</tbody>
 					</table>
 				</div>
 			</div>
-			<a href= "#" class= "nav-link text-end">View All Requests</a>
+			<a href= "/ven/bookings#pending_request" class= "nav-link text-end">View All Pending Requests</a>
 		</div>
 	</div>
 
@@ -132,11 +133,12 @@
 	<!-- Detailed Calender information -->
 	<div class= "row mt-3 blueback">
 		<div class= "col">
-			<h3><span class= "bagde bg-success rounded-pill">6</span> Active Bookings</h3>
+			<h3><span class= " bagde bg-success rounded-pill">{{acount}}</span> Active Bookings</h3>
 			<div class= "row">
 				<div class= "col">
 					<table class= "table">
 						<thead>
+							<th>S/N</th>
 							<th>Customer Name</th>
 							<th>Services</th>
 							<th class= "hidemd">Location</th>
@@ -144,32 +146,27 @@
 							<th class= "hidemd">Time</th>
 						</thead>
 						<tbody>
-							<tr>
-								<td>Customer 1</td>
-								<td></td>
-								<td class= "hidemd"></td>
-								<td></td>
-								<td class= "hidemd"></td>
+							{% for j in abook %}
+							<tr onclick= "ven_show_info({{j.booking_id}});">
+								<td>{{ loop.index }}</td>
+								<td>{{ j.cus_info.cus_fname }} {{ j.cus_info.cus_lname }}</td>
+								<td>{{ j.service_info.service.service_name }}</td>
+								<td class= "hidesm">
+									{% if j.service_location.name == 'vendor_address' %}
+										Office/Shop
+									{% elif j.service_location.name == 'customer_address' %}
+										Customer Address
+									{% endif %}
+								</td>
+								<td>{{ j.calender_date.strftime('%a, %d %B %Y') }}</td>
+								<td class= "hidemd">{{ j.calender_time }}</td>
 							</tr>
-							<tr>
-								<td>Customer 2</td>
-								<td></td>
-								<td class= "hidemd"></td>
-								<td></td>
-								<td class= "hidemd"></td>
-							</tr>
-							<tr>
-								<td>Customer 3</td>
-								<td></td>
-								<td class= "hidemd"></td>
-								<td></td>
-								<td class= "hidemd"></td>
-							</tr>
+							{% endfor %}
 						</tbody>
 					</table>
 				</div>
 			</div>
-			<a href= "#" class= "nav-link text-end">View All Active Bookings</a>
+			<a href= "/ven/bookings#active_bookings" class= "nav-link text-end">View All Active Bookings</a>
 		</div>
 	</div>
 
@@ -198,10 +195,14 @@
 			</div>
 		</div>
 	</div>
-
 </div>
 
+
 {% endblock body %}
+
+{% block modal %}
+{% include 'vendor/ven_bookinginfo_modal.html' %}
+{% endblock modal %}
 
 {% block internal_script %}
 <script type="text/javascript">

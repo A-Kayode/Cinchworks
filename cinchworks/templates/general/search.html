@@ -5,8 +5,9 @@
 {% endif %}
 
 {% block body %}
+
 {% for i in vs %}
-<div class= "row">
+<div class= "row mb-3">
 	<div class= "col">
 		<h5>
 			{% if session.get('cust_id') == None %}
@@ -18,13 +19,16 @@
 				{{ i.ven_info.ven_busname }}
 			</a>
 		</h5>
-		<p>{{ i.ven_info.ven_shortdesc }}</p>
+		<p class= "m-0">{{ i.ven_info.ven_shortdesc }}</p>
+		<p class= "m-0"><b>Service:</b> {{ i.service.service_name }}</p>
+		<p><b>Service Description:</b> {{ i.short_desc }}</p>
 	</div>
 </div>
 {% endfor %}
 
+
 {% for i in vb %}
-<div class= "row">
+<div class= "row mb-3">
 	<div class= "col">
 		<h5>
 			{% if session.get('cust_id') == None %}
