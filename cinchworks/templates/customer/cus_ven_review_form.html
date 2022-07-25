@@ -1,0 +1,26 @@
+<form id= "venreview">
+						<h5>Write a review</h5>
+						<div class= "col col-md-5 mb-2">
+							<label>Score the Vendor</label>
+							<select id= "venrevscore" name= "venrevscore" class= "form-select">
+								<option value= "">Select a Score</option>
+								<option value= "1">1</option>
+								<option value= "2">2</option>
+								<option value= "3">3</option>
+								<option value= "4">4</option>
+								<option value= "5">5</option>
+								<option value= "6">6</option>
+								<option value= "7">7</option>
+								<option value= "8">8</option>
+								<option value= "9">9</option>
+								<option value= "10">10</option>
+							</select>
+						</div>
+						<div class= "mb-2">
+							<textarea class= "form-control" placeholder= "write your review here" name= "venrevtext" id= "venrevtext" style= "height: 10vh;"></textarea>
+						</div>
+						<div class= "text-end">
+							<button class= "btn btn-primary" type= "button" onclick= "add_review({{c.cus_id}}, {{v.ven_id}});">Submit</button>
+						</div>
+					</form>
+					<div class= "my-2" id= "revmessage"></div>

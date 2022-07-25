@@ -1,0 +1,60 @@
+{% extends 'admin/abase.html' %}
+
+{% block body %}
+<div class= "row mb-5">
+	<div class= "col">
+		<h2 class= "text-center">BOOKINGS</h2>
+	</div>
+</div>
+
+
+<!-- Contains the user search -->
+<div class= "row justify-content-center mb-3">
+	<div class= "col-md-10">
+		<form>
+			<div class= "mb-2">
+				<input type= "text" class= "form-control" name= "adminbooksearch" placeholder= "Search for booking by Booking id, Customer name, Vendor name, Service, Date of Service or Status" id= "adminbooksearch">
+			</div>
+			<div class= "text-center mb-2">
+				<button type= "button" class= "btn brownbutton col-3 m-auto" onclick="admin_bookingsearch();">Search</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+
+<!-- Lists all Bookings -->
+<div class= "row">
+	<div class= "col">
+		<div id= ""></div>
+		<table class= "table table-striped">
+			<thead>
+				<th>S/N</th>
+				<th class= "hidesm">Booking ID</th>
+				<th>Vendor</th>
+				<th>Customer</th>
+				<th class= "hidesm">Service</th>
+				<th class= "hidesm">Date of Service</th>
+				<th>Status</th>
+			</thead>
+			<tbody id= "abookinglist">
+				{% for i in book %}
+				<tr onclick= "show_booking_information({{i.booking_id}});">
+					<td>{{ loop.index }}</td>
+					<td class= "hidesm">{{ i.booking_id }}</td>
+					<td>{{ i.ven_info.ven_busname }}</td>
+					<td>{{ i.cus_info.cus_fname }} {{ i.cus_info.cus_lname }}</td>
+					<td class= "hidesm">{{ i.service_info.service.service_name }}</td>
+					<td class= "hidesm">{{ i.calender_date }}</td>
+					<td>{{ i.confirmation_status.name }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+{% include 'admin/admin_bookinginfo_modal.html' %}
+{% endblock body %}

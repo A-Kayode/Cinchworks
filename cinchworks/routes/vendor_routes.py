@@ -14,7 +14,7 @@ from ..forms import Change_password
 def vendor_home():
     vendid= session['vend_id']
     v= Vendor.query.get(vendid)
-    vbdobj= db.session.execute(f"SELECT * FROM booking WHERE b_vendor = {vendid} and calender_date >= now() GROUP BY calender_date ORDER BY calender_date LIMIT 5")
+    vbdobj= db.session.execute(f"SELECT * FROM booking WHERE b_vendor = {vendid} and calender_date >= now() and confirmation_status = 'active' GROUP BY calender_date ORDER BY calender_date LIMIT 5")
     vbd= vbdobj.fetchall()
     vbst= Booking.query.filter(Booking.calender_date >= date.today(), Booking.b_vendor == vendid).order_by(Booking.calender_time).all()
 
@@ -32,9 +32,20 @@ def vendor_home():
     abook= Booking.query.filter(Booking.confirmation_status == "active", Booking.b_vendor == vendid).order_by(Booking.booking_date).limit(3).all()
     pcount= Booking.query.filter(Booking.confirmation_status == "pending", Booking.b_vendor == vendid).count()
     acount= Booking.query.filter(Booking.confirmation_status == "active", Booking.b_vendor == vendid).count()
+
+    #calculating average rating
+    revs= Reviews.query.filter(Reviews.r_vendor == vendid).all()
+    
+    if revs != []:
+        total= 0
+        for i in revs:
+            total= total + i.review_score
+        avgrat= f"{total/len(revs)}/10"
+    else:
+        avgrat= "No ratings yet"
     
 
-    return render_template('vendor/ven_home.html', v=v, vbd=vbd, vbst=vbst, pbook=pbook, abook=abook, pcount=pcount, acount=acount)
+    return render_template('vendor/ven_home.html', v=v, vbd=vbd, vbst=vbst, pbook=pbook, abook=abook, pcount=pcount, acount=acount, avgrat=avgrat)
 
 
 @app.route('/ven/ajax/changepicture/', methods=['POST', 'GET'])

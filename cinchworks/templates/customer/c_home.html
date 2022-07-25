@@ -9,8 +9,8 @@ div{ border: 0px solid red; }
 
 {% block body %}
 	<!-- This div will contain a welcome message for the user as well as their picture -->
-	<div class= "row py-4 welcome"  style= "position:relative;">
-		<div class= "col-3 col-sm-3">
+	<div class= "row py-4 welcome align-items-center"  style= "position:relative;">
+		<div class= "col-4 col-sm-3 offset-xxl-1">
 			{% if c.cus_profilepic == None %}
 			<img src= "{{url_for('static', filename='images/profile_pic2.jpg')}}" alt= "profile_picture" class= "profile_pic" id= "customer_profilepic">
 			{% else %}
@@ -19,16 +19,16 @@ div{ border: 0px solid red; }
 			
 		</div>
 		<div class= "col">
-			<h1 class= "mt-2 mt-sm-5">Welcome, {{ c.cus_fname }}</h1>
+			<h1 class= "">Welcome, {{ c.cus_fname }} {{ c.cus_lname }}</h1>
 		</div>
 
-		<div class="col-3" style= "position:absolute; right:1vh; display:inline-block;">
-			<button type= "button" class="btn btn-sm" id= "hpchangepic">Click to Change Picture</button>
+		<div class="col-6 col-md-3" style= "position:absolute; bottom:1px; right: 0px; display:inline-block;">
+			<button type= "button" class="btn btn-sm" id= "hpchangepic">Change Picture</button>
 			<div id= "hpchangesuccess" class= "p-0"></div>
 			<div id= "hpchangesuccess"></div>
 			<form action= "" method= "post" enctype="multipart/form-data" style= "background-color: white;" id= "hppic_change">
 				<div class= "mb-2">
-					<label>Choose picture for profile picture</label>
+					<label>Choose profile picture</label>
 					<input type= "file" name= "profilepic" id= "chpprofile" class= "form-control" placeholder="Choose profile picture">
 				</div>
 				<div>
@@ -41,12 +41,13 @@ div{ border: 0px solid red; }
 	</div>
 
 	<!-- This div will contain the calender for the next booked days, idea is that it will be dynamic and only days booked will be shown for both vendor and user home page. User-Vendor search page will carry full next 5 days to ensure that they can see the full bookings of the specified vendor -->
-	<div class= "row mt-1 mt-sm-4">
+	<div class= "row mt-3">
 		<div class= "col">
-			<h4>Your Schedule</h4>
-			<div class= "row">
+			<h5 class= "text-center my-2">Your Next 5 Scheduled Dates</h5>
+			<div class= "row justify-content-center">
+				{% if cbd != [] %}
 				{% for i in cbd %}
-				<div class= "col-2 m-2 p-0 calen_day rounded" id= "cal_1">
+				<div class= "col-5 col-md-3 col-xl-2 m-2 p-0 calen_day rounded" id= "cal_1">
 					<p class= "text-center"><b>{{ i[7].strftime('%a %b %d, %Y') }}</b></p>
 					{% for j in cbst %}
 					{% if i[7] == j.calender_date %}
@@ -62,10 +63,16 @@ div{ border: 0px solid red; }
 					
 				</div>
 				{% endfor %}
+				<a href= "/cus/bookinghistory#cusactivebooking" class= "nav-link text-end">View All Active Bookings</a>
+				{% else %}
+				<div class= "col">
+					<p class= "text-center"><i>You have not book any services yet.</i></p>
+				</div>
+				{% endif %}
 				
 			</div>
 			<div class= "row mt-1">
-				<div class= "col offset-6 offset-sm-8 offset-lg-10">
+				<div class= "col text-end">
 					<button data-bs-toggle= "modal" data-bs-target= "#book_modal" class= "btn brownbutton" type= "button">Make new booking</button>
 				</div>
 			</div>
@@ -79,20 +86,20 @@ div{ border: 0px solid red; }
 			<table class= "table">
 				<thead>
 					<th>S/N</th>
-					<th>Vendor</th>
+					<th class= "d-none d-sm-table-cell">Vendor</th>
 					<th>Service</th>
 					<th>Date Booked</th>
-					<th>Time</th>
+					<th class= "d-none d-sm-table-cell">Time</th>
 					<th>Status</th>
 				</thead>
 				<tbody>
 					{% for i in bks %}
 					<tr onclick= "show_info({{i.booking_id}});">
 						<td>{{ loop.index }}</td>
-						<td>{{ i.ven_info.ven_busname }}</td>
+						<td class= "d-none d-sm-table-cell">{{ i.ven_info.ven_busname }}</td>
 						<td>{{ i.service_info.service.service_name }}</td>
 						<td>{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
-						<td>{{ i.calender_time }}</td>
+						<td class= "d-none d-sm-table-cell">{{ i.calender_time }}</td>
 						<td>{{ i.confirmation_status.name }}</td>
 					</tr>
 					{% endfor %}

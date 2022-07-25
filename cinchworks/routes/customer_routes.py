@@ -1,9 +1,9 @@
-import os, random
+import os, random, math
 from datetime import datetime, date
 from flask import render_template, make_response, redirect, session, request, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from .. import app, db
-from ..custom_functions import cusvalidation, calc_endtime, checkdate, convert_time, convert_date
+from ..custom_functions import cusvalidation, calc_endtime, checkdate, convert_time, convert_date, venvalidation
 from ..models import *
 from ..forms import Change_password
 
@@ -15,9 +15,19 @@ def customer_home():
     bks= Booking.query.filter(Booking.b_customer == custid).order_by(Booking.booking_date).limit(5).all()
     cat= Service_category.query.all()
     ser= Services.query.all()
-    cbdobj= db.session.execute(f"SELECT * FROM booking WHERE b_customer = {custid} and calender_date >= now() GROUP BY calender_date ORDER BY calender_date LIMIT 5")
+    cbdobj= db.session.execute(f"SELECT * FROM booking WHERE b_customer = {custid} and calender_date >= now() and confirmation_status = 'active' GROUP BY calender_date ORDER BY calender_date LIMIT 5")
     cbd= cbdobj.fetchall()
     cbst= Booking.query.filter(Booking.calender_date >= date.today(), Booking.b_customer == custid).order_by(Booking.calender_time).all()
+
+
+    #This code will cater to what is needed for pagenation of the scheduler
+    # allobj= db.session.execute(f"SELECT * FROM booking WHERE b_customer = {custid} and calender_date >= now() and confirmation_status = 'active' GROUP BY calender_date ORDER BY calender_date")
+    # rec= allobj.fetchall()
+    # allrec= len(rec)
+    # totpage= math.ceil(allrec/5)
+    # inipage= 1
+
+
     return render_template('customer/c_home.html', c=c, bks=bks, cat=cat, ser=ser, cbd=cbd, cbst=cbst)
 
 
@@ -172,6 +182,8 @@ def ajax_customer_selectlga():
 
 
 
+
+
 #This contains code for things that happen on the customer-vendor page
 @app.route('/cus/vendorpage/<vendid>')
 def vendor_page(vendid):
@@ -179,16 +191,32 @@ def vendor_page(vendid):
     vs= Vendor_services.query.filter(Vendor_services.ven_info.has(Vendor.ven_id == vendid), Vendor_services.service_status != 'depreciated').all()
     voff= Offday.query.filter(Offday.off_ven == vendid, Offday.start_date >= date.today()).order_by(Offday.start_date).all()
 
-    vbdobj= db.session.execute(f"SELECT * FROM booking WHERE b_vendor = {vendid} and calender_date >= now() GROUP BY calender_date ORDER BY calender_date LIMIT 5")
+    vbdobj= db.session.execute(f"SELECT * FROM booking WHERE b_vendor = {vendid} and calender_date >= now() and confirmation_status = 'active' GROUP BY calender_date ORDER BY calender_date LIMIT 5")
     vbd= vbdobj.fetchall()
     vbst= Booking.query.filter(Booking.calender_date >= date.today(), Booking.b_vendor == vendid).order_by(Booking.calender_time).all()
+    venrev= Reviews.query.filter(Reviews.r_vendor == vendid).limit(4).all()
+
+    
+    #calculating vendor average rating
+    #calculating average rating
+    revs= Reviews.query.filter(Reviews.r_vendor == vendid).all()
+    
+    if revs != []:
+        total= 0
+        for i in revs:
+            total= total + i.review_score
+        avgrat= f"{total/len(revs)}/10"
+    else:
+        avgrat= "No ratings yet"
+
     
     if session.get('cust_id') != None:
         custid= session['cust_id']
         c= Customer.query.get(custid)
-        return render_template('customer/cus_vendor_page.html', c=c, v=v, vs=vs, vbd=vbd, vbst=vbst, voff=voff)
+        cvrev= Reviews.query.filter(Reviews.r_customer == custid, Reviews.r_vendor == vendid).first()
+        return render_template('customer/cus_vendor_page.html', c=c, v=v, vs=vs, vbd=vbd, vbst=vbst, voff=voff, cvrev=cvrev, venrev=venrev, avgrat=avgrat)
     else:
-        return render_template('customer/cus_vendor_page.html', v=v, vs=vs, vbd=vbd, vbst=vbst, voff=voff)
+        return render_template('customer/cus_vendor_page.html', v=v, vs=vs, vbd=vbd, vbst=vbst, voff=voff, venrev=venrev, avgrat=avgrat)
 
 
 
@@ -270,6 +298,96 @@ def customer_ajax_validatebookingtime():
     return jsonify(status=1, message="done")
 
 
+@app.route('/cus/ajax/addreview/', methods=['POST', 'GET'])
+@cusvalidation
+def customer_ajax_addreview():
+    custid= request.form.get('custid')
+    vendid= request.form.get('vendid')
+    revscore= request.form.get('venrevscore')
+    revtext= request.form.get('venrevtext')
+
+    if revscore == "":
+        return jsonify(status=0, message="Please select a score for the vendor.")
+    else:
+        if revtext == "":
+            return jsonify(status=0, message="Please ensure you review the vendor before submitting")
+        else:
+            review= Reviews(r_customer=custid, r_vendor=vendid, review_score=revscore, review_desc=revtext)
+            try:
+                db.session.add(review)
+                db.session.commit()
+                return jsonify(status=1, message="Review submitted successfully")
+            except:
+                db.session.rollback()
+                return jsonify(status=0, message="An error occured. Unable to submit review. Please try again later.")
+
+
+@app.route('/cus/ajax/deletereview/')
+@cusvalidation
+def customer_ajax_deletereview():
+    custid= request.args.get('custid')
+    vendid= request.args.get('vendid')
+    try:
+        rev= Reviews.query.filter(Reviews.r_customer == custid, Reviews.r_vendor == vendid).first()
+        db.session.delete(rev)
+        db.session.commit()
+        nhtml= f'<form id= "venreview"><h5>Write a review</h5><div class= "col-5 mb-2"><label>Score the Vendor</label><select id= "venrevscore" name= "venrevscore" class= "form-select"><option value= "">Select a Score</option><option value= "1">1</option><option value= "2">2</option><option value= "3">3</option><option value= "4">4</option><option value= "5">5</option><option value= "6">6</option><option value= "7">7</option><option value= "8">8</option><option value= "9">9</option><option value= "10">10</option></select></div><div class= "mb-2"><textarea class= "form-control" placeholder= "write your review here" name= "venrevtext" id= "venrevtext" style= "height: 10vh;"></textarea></div><div class= "text-end"><button class= "btn btn-primary" type= "button" onclick= "add_review({custid}, {vendid});">Submit</button></div></form><div class= "my-2" id= "revmessage"></div>'
+        return jsonify(status=1, message="Review deleted successfully", nhtml=nhtml)
+    except:
+        db.session.rollback()
+        return jsonify(status=0, message="An error occurred. Was unable to delete successfully. Please try again later.")
+
+
+@app.route('/vendorreviews/<int:vendid>/')
+def vendor_review(vendid):
+    v= Vendor.query.get(vendid)
+    venrev= Reviews.query.filter(Reviews.r_vendor == vendid).all()
+
+    
+    if session.get('cust_id') != None:
+        custid= session['cust_id']
+        c= Customer.query.get(custid)
+        return render_template('general/vendor_reviews.html', c=c, v=v, venrev=venrev)
+    elif session.get('vend_id') != None:
+        return render_template('general/vendor_reviews.html', v=v, venrev=venrev)
+    else:
+        return render_template('general/vendor_reviews.html', v=v, venrev=venrev)
+
+
+@app.route('/cus/ajax/getdate/')
+def customer_ajax_getdate():
+    vendid= request.args.get('vendid')
+    bdate= request.args.get('bdate')
+    
+    if checkdate(bdate):
+        vbdate= convert_date(bdate)
+        offs= Offday.query.filter(Offday.off_ven == vendid).all()
+        vb= Booking.query.filter(Booking.calender_date == bdate, Booking.b_vendor == vendid).order_by(Booking.calender_time).all()
+
+        if offs != []:
+            for i in offs:
+                if vbdate >= i.start_date and vbdate <= i.end_date:
+                    return jsonify(status=0, message="Cannot book this date, it has been set as an offday by the vendor")
+        
+        if vb != []:
+            nhtml= ""
+            for i in vb:
+                stime= i.calender_time.strftime("%H:%M")
+                etime= i.calender_endtime.strftime("%H:%M")
+                nhtml= f'<div class= "mb-2 ps-3" style= "background-color: rgba(0,0,0,0.04);">{stime} - {etime}<p><b></b></p><p>Booked</p></div>'
+            
+            return jsonify(status=1, nhtml=nhtml)
+
+        else:
+            return jsonify(status=0, message="There are no bookings on this day")
+
+
+    else:
+        return jsonify(status=0, message="Your cannot search for bookings on past dates.")
+
+
+
+
 
 
 
@@ -280,10 +398,11 @@ def customer_bookinghistory():
     custid= session['cust_id']
     c= Customer.query.get(custid)
     pbook= Booking.query.filter(Booking.confirmation_status == "pending", Booking.b_customer == custid).all()
+    abook= Booking.query.filter(Booking.confirmation_status == "active", Booking.b_customer == custid).all()
     rcbook= Booking.query.filter(Booking.confirmation_status != "active", Booking.confirmation_status != "pending", Booking.b_customer == custid).all()
     cat= Service_category.query.all()
     ser= Services.query.all()
-    return render_template('customer/cus_booking_history.html', c=c, pbook=pbook, rcbook=rcbook, cat=cat, ser=ser)
+    return render_template('customer/cus_booking_history.html', c=c, pbook=pbook, rcbook=rcbook, cat=cat, ser=ser, abook=abook)
 
 
 @app.route('/cus/bookinghistory/deleterejected/<int:bookid>/')

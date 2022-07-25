@@ -4,6 +4,8 @@
 
 body { font-size: 1.15em; }
 
+div{ border: 0px solid red; }
+
 #site_name{
 	font-size: 2em;
 } /* This contains the styles for the homepage site name/logo area sha */
@@ -65,7 +67,7 @@ body { font-size: 1.15em; }
 }/* This is used for some stylings on the user settings page */
 
 .profile_pic{
-	border-radius: 50%; width: 20vw; height: 20vw;
+	border-radius: 50%; width: 250px; height: 250px;
 }/* This is used to control the border appearance of images used as profile pictures */
 
 .vendor_banner{ height:300px; width:100% } /* Dimensions of vendor banner */
@@ -108,11 +110,22 @@ tbody tr:hover{ background-color: rgba(0, 0, 0, 0.3); }
 
 
 
-@media screen and (max-width: 769px){
-	.hidemd{ display:none; } /* Used to hide elements at md */
+@media screen and (min-width: 1201px){
+	
+}
+
+@media screen and (max-width: 1200px){
 	.vendor_banner{ height:220px }
+	#uservendor_profilepic{ margin-top: -145px;}
+	.profile_pic{ width: 200px; height: 200px; }
+}
+
+@media screen and (max-width: 800px){
+	.hidemd{ display:none; } /* Used to hide elements at md */
+	.vendor_banner{ height:200px }
 	#uservendor_profilepic{ margin-top: -125px;}
 	#logincol{padding-top: 115px; padding-bottom: 115px;}
+	.profile_pic{ width: 160px; height: 160px; }
 }
 
 @media screen and (max-width: 577px ){
@@ -121,7 +134,8 @@ tbody tr:hover{ background-color: rgba(0, 0, 0, 0.3); }
 	.hidesm{ display:none; } /* Used to hide elements  as sm breakpoint*/
 	.footerlist{ padding-left: 0px; }
 	.vendor_banner{ height:100px; }
-	#uservendor_profilepic{margin-top: -65px;}
+	#uservendor_profilepic{margin-top: -75px;}
+	.profile_pic{ width: 115px; height: 115px; }
 }
 
 @media screen and (max-width: 426px ){
@@ -134,6 +148,8 @@ tbody tr:hover{ background-color: rgba(0, 0, 0, 0.3); }
 	.side_panel{
 	background-color: rgba(24, 24, 215, 1.0);}
 	.side_panel a{ color:white; }
+	.profile_pic{ width: 105px; height: 105px; }
+	#uservendor_profilepic{ margin-top: -70px;}
 	
 }
 
@@ -141,4 +157,6 @@ tbody tr:hover{ background-color: rgba(0, 0, 0, 0.3); }
 	#cal_2{ display:none }	
 	#user_bookingcontainer{ min-height: 650px; }
 	#site_faq{ min-height: 435px; }
+	.profile_pic{ width: 100px; height: 100px; }
+
 }

@@ -1,0 +1,119 @@
+{% extends 'admin/abase.html' %}
+
+{% block body %}
+<div class= "row mb-4">
+	<div class= "col">
+		<h2 class= "text-center">SERVICES</h2>
+	</div>
+</div>
+
+<!-- CATEGORIES -->
+<div class= "row mt-3">
+	<div class= "col">
+		<h3 class= "text-center">Categories</h3>
+	</div>
+</div>
+
+<!-- Lists all service categories -->
+<div class= "row">
+	<div class= "col">
+		<div id= "categorymess"></div>
+		<table class= "table table-striped">
+			<thead>
+				<th>S/N</th>
+				<th>Category ID</th>
+				<th>Category Name</th>
+			</thead>
+			<tbody id= "categorylist">
+				{% for i in cat %}
+				<tr>
+					<td>{{ loop.index }}</td>
+					<td>{{ i.category_id }}</td>
+					<td>{{ i.category_name }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!-- Add service categories -->
+<div class= "row mt-2 mb-5 justify-content-center">
+	<div class= "col-12 col-md-6">
+		<h5 class= "text-center">Add Categories</h5>
+		<form id= "adminaddcategory">
+			<div class= "mb-3">
+				<input type= "text" name= "cater" placeholder="Input New Category here" class= "form-control">
+			</div>
+			<div class= "text-center">
+				<button type= "button" class= "btn btn-success" onclick="add_category()">Submit</button>
+			</div>
+			<input type= "hidden"  name= "csrf_token" id= "csrf_token" value= "{{ csrf_token() }}">
+		</form>
+	</div>
+</div>
+
+
+
+<!-- SERVICES -->
+<div class= "row">
+	<div class= "col">
+		<h3 class= "text-center">Services</h3>
+	</div>
+</div>
+
+<!-- List all services -->
+<div class= "row">
+	<div class= "col">
+		<div id= "servicemess" class= "my-2"></div>
+		<table class= "table table-striped">
+			<thead>
+				<th>S/N</th>
+				<th>Service ID</th>
+				<th>Service Name</th>
+				<th>Service Category</th>
+			</thead>
+			<tbody id= "servicelist">
+				{% for i in ser %}
+				<tr>
+					<td>{{ loop.index }}</td>
+					<td>{{ i.service_id }}</td>
+					<td>{{ i.service_name }}</td>
+					<td>{{ i.category.category_name }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!-- Add new services -->
+<div class= "row justify-content-center mt-3">
+	<div class= "col-12 col-md-6">
+		<h5 class= 'text-center'>Add Services</h5>
+		<form id= "adminaddservice">
+			<div class= "mb-3">
+				<select name= "catselect" class= "form-select" id= "catselect">
+					<option value= "">Select Category</option>
+					{% for j in cat %}
+					<option value= "{{j.category_id}}">{{j.category_name}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class= "mb-3">
+				<input type= "text" name= "sever" placeholder="Input New Service here" class= "form-control">
+			</div>
+			<div class= "text-center">
+				<button type= "button" class= "btn btn-success" onclick="admin_add_service()">Submit</button>
+			</div>
+			<input type= "hidden"  name= "csrf_token" id= "csrf_token" value= "{{ csrf_token() }}">
+		</form>
+	</div>
+</div>
+
+
+<div class= "row">
+	<div class= "col"></div>
+</div>
+
+{% endblock body %}

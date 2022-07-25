@@ -1,0 +1,36 @@
+{% if session.get('cust_id') != None %}
+{% extends 'customer/cbase.html' %}
+{% elif session.get('vend_id') != None %}
+{% extends 'vendor/vbase.html' %}
+{% else %}
+{% extends 'general/base_home.html' %}
+{% endif %}
+
+{% block body %}
+
+<div class= "row mb-3">
+	<div class= 'col'>
+		<h2 class= "text-center">All Reviews for {{v.ven_busname}}</h2>
+	</div>
+</div>
+
+<div class= 'row'>
+	<div class= "col">
+		{% if venrev != [] %}
+		<div>
+			{% for i in venrev %}
+			<div class= "mb-3">
+				<p class= "mb-0"><b>{{i.cus_info.cus_fname}} {{i.cus_info.cus_lname}}:</b></p>
+				<p class= "mb-0">Date: {{i.review_date.strftime('%a, %b %d %Y')}}</p>
+				<p class= "mb-0">Score: {{i.review_score}}/10</p>
+				<p>{{i.review_desc}}</p>
+			</div>
+			{% endfor %}
+		</div>
+		{% else %}
+		<p>There are no reviews yet.</p>
+		{% endif %}
+	</div>
+</div>
+
+{% endblock body %}

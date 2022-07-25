@@ -148,8 +148,8 @@
 					{% endfor %}
 					<form action= "/ven/settings/addservice" method= "post">
 						<div class= "row mb-3">
-							<label class= "col-2 form-label">Category</label>
-							<div class= "col">
+							<label class= "col-12 col-md-2 form-label">Category</label>
+							<div class= "col-12 col-md-6">
 								<select class= "form-select" name= "category" id= "vspcategory">
 									<option value= "">Select Category</option>
 									{% for i in cat %}
@@ -159,8 +159,8 @@
 							</div>
 						</div>
 						<div class= "row mb-3">
-							<label class= "col-2 form-label">Service</label>
-							<div class= "col">
+							<label class= "col-12 col-md-2 form-label">Service</label>
+							<div class= "col-12 col-md-6">
 								<div class= "row"> <div class= "col">
 								<select class= "form-select" name= "service" id="vspaddservice">
 									
@@ -169,41 +169,41 @@
 							</div>
 						</div>
 						<div class= "row mb-3">
-							<label class= "col-2 form-label">Short Description:</label>
-							<div class= "col">
+							<label class= "col-12 col-md-2 form-label">Short Description:</label>
+							<div class= "col-12 col-md-10">
 								<input type= "text" class= "form-control" name= "shortdesc">
 							</div>
 						</div>
 						<div class= "row mb-3">
-							<label class= "col-2 form-label">Long Description:</label>
-							<div class= "col">
+							<label class= "col-12 col-md-2 form-label">Long Description:</label>
+							<div class= "col-12 col-md-10">
 								<textarea class= "form-control" name= "longdesc"></textarea>
 							</div>
 						</div>
 						<div class= "row mb-3">
-							<label class= "col-2 form-label">Workdays:</label>
-							<div class= "col">
+							<label class= "col-12 col-md-2 form-label">Workdays:</label>
+							<div class= "col-12 col-md-10">
 								<textarea class= "form-control" name= "workday"></textarea>
 							</div>
 						</div>
 						<div class= "row mb-3">
-							<label class= "col-2 form-label">Price:</label>
-							<div class= "col">
+							<label class= "col-12 col-md-2 form-label">Price:</label>
+							<div class= "col-12 col-md-6">
 								<input type= "number" class= "form-control" name= "price">
 							</div>
 						</div>
 						<div class= "row mb-3">
-							<label class= "col-2 form-label">Average Service Duration:</label>
-							<div class= "col-2">
-								<input type= "time" class= "form-check" name= "avgdur">
+							<label class= "col-12 col-md-2 form-label">Average Service Duration:</label>
+							<div class= "col-12 col-md-2">
+								<input type= "time" class= "form-control" name= "avgdur">
 							</div>
-							<label class= "col-2 form-label">Minimun Service Duration:</label>
-							<div class= "col-2">
-								<input type= "time" class= "form-check" name= "mindur">
+							<label class= "col-12 col-md-2 form-label">Minimun Service Duration:</label>
+							<div class= "col-12 col-md-2">
+								<input type= "time" class= "form-control" name= "mindur">
 							</div>
-							<label class= "col-2 form-label">Maximum Service Duration:</label>
-							<div class= "col-2">
-								<input type= "time" class= "form-check" name= "maxdur">
+							<label class= "col-12 col-md-2 form-label">Maximum Service Duration:</label>
+							<div class= "col-12 col-md-2">
+								<input type= "time" class= "form-control" name= "maxdur">
 							</div>
 						</div>
 						<div class= "row"><div class= "col text-end">
@@ -220,21 +220,21 @@
 						<thead>
 							<th>S/N</th>
 							<th>Service</th>
-							<th class= "hidemd">Min Duration</th>
-							<th class= "hidemd">Avg Duration</th>
-							<th class= "hidemd">Max Duration</th>
-							<th>Price</th>
-							<th></th>
+							<th class= "hidesm">Min Duration</th>
+							<th class= "hidesm">Avg Duration</th>
+							<th class= "hidesm">Max Duration</th>
+							<th class= "hidesm">Price</th>
+							<th>Delete Service</th>
 						</thead>
 						<tbody id= "servicelist">
 							{% for i in venser %}
 							<tr>
 								<td>{{ loop.index }}</td>
 								<td>{{ i.service.service_name }}</td>
-								<td>{{ i.mindur_text }}</td>
-								<td>{{ i.avgdur_text }}</td>
-								<td>{{ i.maxdur_text }}</td>
-								<td>{{ i.service_price }}</td>
+								<td class= "hidesm">{{ i.mindur_text }}</td>
+								<td class= "hidesm">{{ i.avgdur_text }}</td>
+								<td class= "hidesm">{{ i.maxdur_text }}</td>
+								<td class= "hidesm">{{ i.service_price }}</td>
 								<td>
 									<button class= "btn btn-sm btn-danger" onclick= "return delete_service({{ i.ven_service_id }}, {{ v.ven_id }});
 									">Delete</button>
@@ -261,16 +261,16 @@
 				<div class= "col">
 					<h4 class= "text-center mb-2">Off-Days</h4>
 					<form id= "venaddoffday">
-						<div id= "sucmess" class= "my-2"></div>
+						<div id= "sucmess" class= "my-5"></div>
 						<div class= "row mb-3">
-							<label class= "form-label col-2">Start Date</label>
-							<div class= "col-6">
+							<label class= "form-label col-12 col-md-2">Start Date</label>
+							<div class= "col-12 col-md-6">
 								<input type= "date" class="form-control" name= "sdate" id= "offst">
 							</div>
 						</div>
 						<div class= "row mb-3">
-							<label class= "form-label col-2">End Date</label>
-							<div class= "col-6">
+							<label class= "form-label col-12 col-md-2">End Date</label>
+							<div class= "col-12 col-md-6">
 								<input type= "date" class="form-control" name= "edate" id= "offen">
 							</div>
 						</div>

@@ -1,0 +1,83 @@
+{% extends 'admin/abase.html' %}
+
+{% block body %}
+<div class= "row">
+	<div class= "col">
+		<h2 class= "text-center">OVERVIEW</h2>
+	</div>	
+</div>
+
+<div class= "row mb-3 pb-5" style= "border-bottom: 1px solid #05003D;">
+	<div class= "col">
+		<div class= "row">
+			<div class= "col text-center">
+				<span style= "font-size: 60px; font-weight: bold;">{{tc}}</span>
+			</div>
+		</div>
+		<div class= "row">
+			<div class= "col text-center">
+				<span style= "font-size:35px; border-top: 4px solid #05003D;">Total Customers</span>
+			</div>
+		</div>
+		<div class= "row">
+			<div class= "col text-center">
+				<span class= "mx-2 mx-md-5" style= "font-size:25px; border-bottom: 4px solid green;">{{ac}} Active</span><span class= "mx-2 mx-md-5" style= "font-size:25px; border-bottom: 4px solid red;">{{sc}} Suspended</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class= "row mb-3 pb-5" style= "border-bottom: 1px solid #05003D;">
+	<div class= "col">
+		<div class= "row">
+			<div class= "col text-center">
+				<span style= "font-size: 60px; font-weight: bold;">{{tv}}</span>
+			</div>
+		</div>
+		<div class= "row">
+			<div class= "col text-center">
+				<span style= "font-size:35px; border-top: 4px solid #05003D;">Total Vendors</span>
+			</div>
+		</div>
+		<div class= "row">
+			<div class= "col text-center">
+				<span class= "mx-2 mx-md-5" style= "font-size:25px; border-bottom: 4px solid green;">{{av}} Active</span><span class= "mx-2 mx-md-5" style= "font-size:25px; border-bottom: 4px solid red;">{{sv}} Suspended</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class= "row mb-5">
+	<div class= "col">
+		<div class= "row">
+			<div class= "col text-center">
+				<span style= "font-size: 60px; font-weight: bold;">{{tb}}</span>
+			</div>
+		</div>
+		<div class= "row">
+			<div class= "col text-center">
+				<span style= "font-size:35px; border-top: 4px solid #05003D;">Total Bookings</span>
+			</div>
+		</div>
+		<div class= "row justify-content-center">
+			<div class= "col-6 col-md-3 col-xl-2 m-0 text-center">
+				<span class= "" style= "font-size:25px; border-bottom: 4px solid skyblue;">{{pb}} Pending</span>
+			</div>
+			<div class= "col-6 col-md-3 col-xl-2 m-0 text-center">
+				<span class= "" style= "font-size:25px; border-bottom: 4px solid green;">{{ab}} Active</span>
+			</div>
+			<div class= "col-6 col-md-3 col-xl-2 m-0 text-center">
+				<span class= "" style= "font-size:25px; border-bottom: 4px solid red;">{{cb}} Cancelled</span>
+			</div>
+			<div class= "col-6 col-md-3 col-xl-2 m-0 text-center">
+				<span class= "" style= "font-size:25px; border-bottom: 4px solid brown;">{{eb}} Expired</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock body %}
+
+				

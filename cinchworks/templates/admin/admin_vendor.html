@@ -1,0 +1,192 @@
+{% extends 'admin/abase.html' %}
+
+{% block body %}
+<div class= "row mb-5">
+	<div class= "col">
+		<h2 class= "text-center">VENDORS</h2>
+	</div>
+</div>
+
+
+<!-- Contains the user search -->
+<div class= "row justify-content-center mb-3">
+	<div class= "col-md-10 col-xxl-8">
+		<form>
+			<div class= "mb-2">
+				<input type= "text" class= "form-control" name= "user_search" placeholder= "Input username, name, account status or vendor id to search for vendor" id= "ventosearch">
+			</div>
+			<div class= "text-center mb-2">
+				<button type= "button" class= "btn brownbutton col-3 col-xxl-2 m-auto" onclick="admin_vendorsearch();">Search</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<!-- Contains original table of all Vendorss -->
+<div class= "row buttom_border">
+	<div class= "col">
+		<table class= "table table-striped">
+			<thead>
+				<th>S/N</th>
+				<th class= "hidesm">Vendor ID</th>
+				<th class= "hidesm">Fullname</th>
+				<th class= "hidesm">Business Name</th>
+				<th>Username</th>
+				<th>Status</th>
+			</thead>
+			<tbody id= "avenlist">
+				{% for i in v %}
+				<tr class= "user_table" onclick= "admin_getveninfo({{i.ven_id}}); admin_getvenservices({{i.ven_id}});">
+					<td>{{loop.index}}</td>
+					<td class= "hidesm">{{i.ven_id}}</td>
+					<td class= "hidesm">{{i.ven_fname}} {{i.ven_lname}}</td>
+					<td class= "hidesm">{{i.ven_bname}}</td>
+					<td>{{i.ven_username}}</td>
+					<td>{{i.ven_status.name}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+
+<!-- This contains information about the customer that will show when a customer is clicked -->
+<div class= "row mb-3 user_information">
+	<div class= 'col'>
+		<div class= "row mb-1">
+			<div class= "col">
+				<p><span class= "info_heading">Vendor ID: </span><span id= "vid"></span></p>
+				<p><span class= "info_heading">Vendor Username: </span><span id= "vusername"></span></p>
+				<p><span class= "info_heading">Vendor Name: </span><span id= "vname"></span></p>
+				<p><span class= "info_heading">Business Name: </span><span id= "vbusname"></span></p>
+				<p><span class= "info_heading">Vendor Phone 1: </span><span id= "vphone1"></span></p>
+				<p><span class= "info_heading">Vendor Phone 2: </span><span id= "vphone2"></span></p>
+				<p><span class= "info_heading">Vendor Email: </span><span id= "vemail"></span></p>
+				<p><span class= "info_heading">Vendor Address: </span><span id= "vaddr"></span></p>
+				<p><span class= "info_heading">Vendor City: </span><span id= "vcity"></span></p>
+				<p><span class= "info_heading">Vendor LGA: </span><span id= "vlga"></span></p>
+				<p><span class= "info_heading">Vendor State: </span><span id= "vstate"></span></p>
+				<p><span class= "info_heading">Registration Date: </span><span id= "vregdate"></span></p>
+			</div>
+		</div>
+		<div class= "row">
+			<div class= "col d-flex justify-content-sm-end">
+				<div>
+					<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
+					<button type= "button" class= "btn btn-warning block_change mb-1 mb-sm-0" onclick= "ven_suspend_account();">Suspend Account</button>
+					<button type= "button" class= "btn btn-success block_change mb-1 mb-sm-0" onclick= "ven_reactivate_account();">Reactivate Account</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- This contains information about the vendor's services -->
+<div class= "row mt-5 mb-2 buttom_border user_information">
+	<div class= "col">
+		<h3 class= "mb-3 text-center" id= "avendesc2"></h3>
+		<!-- Contains the Vendor Services Table -->
+		<table class= "table table-striped">
+			<thead>
+				<th>S/N</th>
+				<th>Service</th>
+				<th>Category</th>
+				<th>Price</th>
+			</thead>
+			<tbody id= "adminvenserviceinfo">
+				<tr class= "user_booking_table" onclick="admin_getvenserviceinfo(id of service on vendor service table)">
+					<td>1</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<!-- Contains Information on Selected Service -->
+<div class= "row vendor_service_information">
+	<div class= "col">
+		<div class= "row mb-2">
+			<div class= "col">
+				<p><span class= "info_heading">Service ID: </span><span id= "avsid"></span></p>
+				<p><span class= "info_heading">Service: </span><span id= "avsservice"></span></p>
+				<p><span class= "info_heading">Service Price: </span><span id= "avsprice"></span></p>
+				<p><span class= "info_heading">Minimum Duration: </span><span id= "avsmin"></span></p>
+				<p><span class= "info_heading">Average Duration: </span><span id= "avsavg"></span></p>
+				<p><span class= "info_heading">Maximum Duration: </span><span id= "avsmax"></span></p>
+				<p><span class= "info_heading">Workdays: </span><span id= "avswork"></span></p>
+				<p><span class= "info_heading">Service Short Description: </span><span id= "avbsssdesc"></span></p>
+				<p><span class= "info_heading">Service Short Description: </span><span id= "avssldesc"></span></p>
+				<p><span class= "info_heading">Service Status: </span><span id= avsstatus></span></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- This contains booking information that will show when a particular user is clicked -->
+<div class= "row user_information mt-5">
+	<div class= "col">
+		<h3 class= "mb-4 text-center" id= "avendesc"></h3>
+		<!-- Contains the specific booking search -->
+		<div class= "row justify-content-center mb-2">
+			<div class= "col-md-10 col-xxl-8">
+				<form>
+					<div class= "mb-2">
+						<input type= "text" class= "form-control" name= "venbooksearch" placeholder= "Search by Customer name, Services or Booking ID" id= "venbooksearch">
+					</div>
+					<div class= "text-center mb-2">
+							<button type= "button" class= "btn brownbutton col-3 col-xxl-2" onclick= "admin_ven_searchbooking()">Search</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+
+		<!-- Contains the embedded table -->
+		<div class= "row mb-3 buttom_border user_information">
+			<div class= "col">
+				<table class= "table table-striped">
+					<thead>
+						<th>S/N</th>
+						<th>Booking ID</th>
+						<th>Customer Name</th>
+						<th>Service</th>
+						<th class= "hidesm">Booking Date</th>
+					</thead>
+					<tbody id= "adminvenbookinfo">
+						
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Contains Information on Selected Booking -->
+<div class= "row user_booking_information">
+	<div class= "col">
+	<div class= "row mb-2">
+	<div class= "col">
+		<p><span class= "info_heading">Booking ID: </span><span id= "avbid"></span></p>		<p><span class= "info_heading">Customer Name: </span><span id= "avcname"></span></p>
+		<p><span class= "info_heading">Service: </span><span id= "avbservice"></span></p>
+		<p><span class= "info_heading">Booking Date: </span><span id= "avbregdate"></span></p>
+		<p><span class= "info_heading">Date Booked: </span><span id= "avbdate"></span></p>
+		<p><span class= "info_heading">Time Booked: </span><span id= "avbtime"></span></p>
+		<p><span class= "info_heading">Service Location: </span><span id= "avblocation"></span></p>
+		<p><span class= "info_heading">Confirmation Status: </span><span id= avbstatus></span></p>
+		<p><span class= "info_heading">Service Short Description: </span><span id= "avbssdesc"></span></p>
+		<p><span class= "info_heading">Service Short Description: </span><span id= "avbsldesc"></span></p>
+	</div>
+</div>
+{% endblock body %}

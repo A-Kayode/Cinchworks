@@ -37,11 +37,15 @@ def login_page():
         if request.form.get('user_type') == "customer":
             c= Customer.query.filter(Customer.cus_username == username).first()
             if c != None:
-                if check_password_hash(c.cus_password, password):
-                    session['cust_id']= c.cus_id
-                    return  redirect('/cus/home')
+                if c.cus_status.name != "suspended":
+                    if check_password_hash(c.cus_password, password):
+                        session['cust_id']= c.cus_id
+                        return  redirect('/cus/home')
+                    else:
+                        flash("Invalid Credentials")
+                        return redirect('/login')
                 else:
-                    flash("Invalid Credentials")
+                    flash("Account has been suspended")
                     return redirect('/login')
             else:
                 flash("Invalid Credentials")
@@ -49,11 +53,15 @@ def login_page():
         elif request.form.get('user_type') == "vendor":
             v= Vendor.query.filter(Vendor.ven_username == username).first()
             if v != None:
-                if check_password_hash(v.ven_password, password):
-                    session['vend_id']= v.ven_id
-                    return  redirect('/ven/home')
+                if v.ven_status.name != "suspended":
+                    if check_password_hash(v.ven_password, password):
+                        session['vend_id']= v.ven_id
+                        return  redirect('/ven/home')
+                    else:
+                        flash("Invalid Credentials")
+                        return redirect('/login')
                 else:
-                    flash("Invalid Credentials")
+                    flash("Account has been suspended")
                     return redirect('/login')
             else:
                 flash("Invalid Credentials")
@@ -74,14 +82,14 @@ def signup_page():
         hashed_password= generate_password_hash(password)
         if sform.validate_on_submit():
             if request.form.get('user_type') == "customer":
-                c= Customer(cus_fname=fname, cus_lname=lname, cus_email=email, cus_username=username, cus_password=hashed_password)
+                c= Customer(cus_fname=fname, cus_lname=lname, cus_email=email, cus_username=username, cus_password=hashed_password, cus_status="active")
                 db.session.add(c)
                 db.session.commit()
                 custid= c.cus_id
                 session['cust_id']= custid
                 return redirect('/cus/home')
             elif request.form.get('user_type') == "vendor":
-                v= Vendor(ven_fname=fname, ven_lname=lname, ven_email=email, ven_username=username, ven_password=hashed_password)
+                v= Vendor(ven_fname=fname, ven_lname=lname, ven_email=email, ven_username=username, ven_password=hashed_password, ven_status="active")
                 db.session.add(v)
                 db.session.commit()
                 vendid= v.ven_id

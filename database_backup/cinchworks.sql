@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2022 at 01:05 AM
+-- Generation Time: Jul 25, 2022 at 09:00 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -20,6 +20,27 @@ SET time_zone = "+00:00";
 --
 -- Database: `cinchworks`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
+--
+
+CREATE TABLE `admin` (
+  `admin_id` int(11) NOT NULL,
+  `admin_fname` varchar(255) NOT NULL,
+  `admin_lname` varchar(255) NOT NULL,
+  `admin_email` varchar(255) NOT NULL,
+  `admin_password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`admin_id`, `admin_fname`, `admin_lname`, `admin_email`, `admin_password`) VALUES
+(2, 'Lucky', 'Dugbe', 'luckydugbe@test-email.com', 'pbkdf2:sha256:260000$A8jV8vE6U5LF61yF$03b50180484a48545c864085bcbecc9bba02e1ffc2752bbcd77e2e72875aaab3');
 
 -- --------------------------------------------------------
 
@@ -46,11 +67,13 @@ CREATE TABLE `booking` (
 --
 
 INSERT INTO `booking` (`booking_id`, `b_vendor`, `b_customer`, `b_venservice`, `booking_date`, `service_location`, `confirmation_status`, `calender_date`, `calender_time`, `calender_endtime`, `notes`) VALUES
-(1, 1, 1, 5, '2022-07-21 23:18:00', 'customer_address', 'expired', '2022-07-15', '10:30:00', '13:15:00', 'The impression must be perfect'),
-(3, 1, 1, 2, '2022-07-21 23:18:00', 'vendor_address', 'expired', '2022-07-20', '11:00:00', '13:00:00', 'I want the painting to be sexy as fuck'),
-(5, 1, 1, 2, '2022-07-19 23:29:39', 'customer_address', 'active', '2022-07-21', '10:00:00', '17:00:00', 'I want a painting of a nice busty lady'),
-(6, 1, 1, 1, '2022-07-19 23:29:43', 'customer_address', 'rejected', '2022-07-21', '09:00:00', '11:00:00', 'Sculpture of a nice busty lady is needed'),
-(7, 1, 1, 2, '2022-07-21 00:07:05', 'customer_address', 'active', '2022-07-25', '10:00:00', '15:20:00', 'I want a painting of a big busted sexy woman');
+(1, 1, 1, 5, '2022-07-24 16:49:10', 'customer_address', 'expired', '2022-07-15', '10:30:00', '13:15:00', 'The impression must be perfect'),
+(3, 1, 1, 2, '2022-07-24 16:49:10', 'vendor_address', 'expired', '2022-07-20', '11:00:00', '13:00:00', 'I want the painting to be sexy as fuck'),
+(5, 1, 1, 2, '2022-07-24 16:49:10', 'customer_address', 'expired', '2022-07-21', '10:00:00', '17:00:00', 'I want a painting of a nice busty lady'),
+(6, 1, 1, 1, '2022-07-24 16:49:10', 'customer_address', 'expired', '2022-07-21', '09:00:00', '11:00:00', 'Sculpture of a nice busty lady is needed'),
+(7, 1, 1, 2, '2022-07-21 00:07:05', 'customer_address', 'active', '2022-07-25', '10:00:00', '15:20:00', 'I want a painting of a big busted sexy woman'),
+(8, 1, 1, 1, '2022-07-24 15:40:17', 'vendor_address', 'active', '2022-07-28', '10:00:00', '12:30:00', 'I want a sculpture of a big dog like Mr Lion'),
+(9, 1, 1, 1, '2022-07-24 14:51:23', 'vendor_address', 'pending', '2022-07-30', '13:58:00', '16:28:00', '');
 
 -- --------------------------------------------------------
 
@@ -84,16 +107,16 @@ CREATE TABLE `customer` (
   `cus_username` varchar(255) NOT NULL,
   `cus_password` varchar(255) NOT NULL,
   `cus_profilepic` varchar(255) DEFAULT NULL,
-  `cus_regdate` datetime NOT NULL
+  `cus_regdate` datetime NOT NULL,
+  `cus_status` enum('suspended','active') NOT NULL DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`cus_id`, `cus_fname`, `cus_lname`, `cus_phone1`, `cus_phone2`, `cus_email`, `cus_address`, `cus_city`, `cus_lga`, `cus_state`, `cus_username`, `cus_password`, `cus_profilepic`, `cus_regdate`) VALUES
-(1, 'Friday', 'Iwangumi', '08154289637', '08052936648', 'friiwan@yahoo.com', '5, Ogunsiji Close, Allen Avenue', 'Ikeja', 513, 24, 'freakyfriday', 'pbkdf2:sha256:260000$uuIB0LQ4q83lO5ZE$dc5be7165bdfdad4f678b583bf60feddc7a6ed8aed1e950c26b87f46974005ee', '8523440126080357.0.jpg', '2022-07-17 13:50:25'),
-(3, 'Lucky', 'Monday', NULL, NULL, 'monlucky@yahoo.com', NULL, NULL, NULL, NULL, 'luckyday', 'pbkdf2:sha256:260000$MZTTA8hz7kjEGEPM$37b6f959fb275fd2ec9f8d7e5af36a8755af11f53a4275770ce38ae942df1648', NULL, '2022-07-13 13:46:39');
+INSERT INTO `customer` (`cus_id`, `cus_fname`, `cus_lname`, `cus_phone1`, `cus_phone2`, `cus_email`, `cus_address`, `cus_city`, `cus_lga`, `cus_state`, `cus_username`, `cus_password`, `cus_profilepic`, `cus_regdate`, `cus_status`) VALUES
+(1, 'Friday', 'Iwangumi', '08154289637', '08052936648', 'friiwan@yahoo.com', '5, Ogunsiji Close, Allen Avenue', 'Ikeja', 513, 24, 'freakyfriday', 'pbkdf2:sha256:260000$uuIB0LQ4q83lO5ZE$dc5be7165bdfdad4f678b583bf60feddc7a6ed8aed1e950c26b87f46974005ee', '8523440126080357.0.jpg', '2022-07-23 20:21:11', 'active');
 
 -- --------------------------------------------------------
 
@@ -919,7 +942,8 @@ CREATE TABLE `offday` (
 --
 
 INSERT INTO `offday` (`off_id`, `off_ven`, `start_date`, `end_date`) VALUES
-(1, 1, '2022-07-23', '2022-07-27');
+(1, 1, '2022-07-23', '2022-07-27'),
+(2, 1, '2022-08-01', '2022-08-05');
 
 -- --------------------------------------------------------
 
@@ -935,6 +959,13 @@ CREATE TABLE `reviews` (
   `review_score` int(11) NOT NULL,
   `review_desc` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`review_id`, `r_customer`, `r_vendor`, `review_date`, `review_score`, `review_desc`) VALUES
+(2, 1, 1, '2022-07-24', 6, 'The vendor is slightly above average with his job.');
 
 -- --------------------------------------------------------
 
@@ -957,7 +988,9 @@ INSERT INTO `services` (`service_id`, `service_name`, `ser_category`) VALUES
 (2, 'Sculpture', 1),
 (3, 'Magomago', 1),
 (5, 'Impression', 1),
-(6, 'Chocolate Making', 2);
+(6, 'Chocolate Making', 2),
+(7, 'Plumbing', 3),
+(9, 'Cake Baking', 2);
 
 -- --------------------------------------------------------
 
@@ -976,7 +1009,8 @@ CREATE TABLE `service_category` (
 
 INSERT INTO `service_category` (`category_id`, `category_name`) VALUES
 (1, 'Art'),
-(2, 'Food and Drinks');
+(2, 'Food and Drinks'),
+(3, 'Technical Labour');
 
 -- --------------------------------------------------------
 
@@ -1058,16 +1092,17 @@ CREATE TABLE `vendor` (
   `ven_closingtime` time DEFAULT NULL,
   `ven_bannerpic` varchar(255) DEFAULT NULL,
   `ven_profilepic` varchar(255) DEFAULT NULL,
-  `ven_regdate` datetime NOT NULL
+  `ven_regdate` datetime NOT NULL,
+  `ven_status` enum('suspended','active') NOT NULL DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `vendor`
 --
 
-INSERT INTO `vendor` (`ven_id`, `ven_fname`, `ven_lname`, `ven_busname`, `ven_phone1`, `ven_phone2`, `ven_email`, `ven_address`, `ven_city`, `ven_lga`, `ven_state`, `ven_username`, `ven_password`, `ven_shortdesc`, `ven_openingtime`, `ven_closingtime`, `ven_bannerpic`, `ven_profilepic`, `ven_regdate`) VALUES
-(1, 'Damilola', 'Crazycongo', 'Dami Sells Stuff', '08175963248', '', 'cogocray@gmail.com', '25, Ilupeju drive, Ilupeju', 'Ikeja', 513, 24, 'damicray', 'pbkdf2:sha256:260000$YExGCkkUSq3TzGBB$673d4f50abd4ecb95dfda394a1c9c18cc56fed362cd99877847eadc4e414cbaf', 'Well Sell Stuff That you might need.', '09:00:00', '17:00:00', NULL, NULL, '2022-07-11 13:46:07'),
-(2, 'Willy', 'Wonka', 'Wonka Foods', '07052954189', 'None', 'willwonka@yahoo.com', '58, Nigerian street, Ojodu, Berger', 'Berger', 517, 24, 'willywonka', 'pbkdf2:sha256:260000$SsIC7PpjC1zLpiqt$e97842575b5f00120d555d8a2bc186de22834e17f6ef314980ca3faa6c8411f3', 'We make and sell delicious food and chocolates', '08:00:00', '16:00:00', '9534813109259998.0.jpg', '8244675026488557.0.jfif', '2022-07-19 08:58:17');
+INSERT INTO `vendor` (`ven_id`, `ven_fname`, `ven_lname`, `ven_busname`, `ven_phone1`, `ven_phone2`, `ven_email`, `ven_address`, `ven_city`, `ven_lga`, `ven_state`, `ven_username`, `ven_password`, `ven_shortdesc`, `ven_openingtime`, `ven_closingtime`, `ven_bannerpic`, `ven_profilepic`, `ven_regdate`, `ven_status`) VALUES
+(1, 'Damilola', 'Crazycongo', 'Dami Sells Stuff', '08175963248', '', 'cogocray@gmail.com', '25, Ilupeju drive, Ilupeju', 'Ikeja', 513, 24, 'damicray', 'pbkdf2:sha256:260000$YExGCkkUSq3TzGBB$673d4f50abd4ecb95dfda394a1c9c18cc56fed362cd99877847eadc4e414cbaf', 'Well Sell Stuff That you might need.', '09:00:00', '17:00:00', NULL, NULL, '2022-07-11 13:46:07', 'active'),
+(2, 'Willy', 'Wonka', 'Wonka Foods', '07052954189', 'None', 'willwonka@yahoo.com', '58, Nigerian street, Ojodu, Berger', 'Berger', 517, 24, 'willywonka', 'pbkdf2:sha256:260000$SsIC7PpjC1zLpiqt$e97842575b5f00120d555d8a2bc186de22834e17f6ef314980ca3faa6c8411f3', 'We make and sell delicious food and chocolates', '08:00:00', '16:00:00', '9534813109259998.0.jpg', '8244675026488557.0.jfif', '2022-07-23 20:31:06', 'active');
 
 -- --------------------------------------------------------
 
@@ -1097,14 +1132,21 @@ CREATE TABLE `vendor_services` (
 --
 
 INSERT INTO `vendor_services` (`ven_service_id`, `vendor_id`, `service_id`, `short_desc`, `long_desc`, `service_price`, `average_duration`, `min_duration`, `max_duration`, `avgdur_text`, `mindur_text`, `maxdur_text`, `service_status`, `workdays`) VALUES
-(1, 1, 2, 'We sculpt stuff', 'We will sculp your dick to your liking', 50000, '02:30:00', '02:00:00', '03:00:00', '', '', '', '', 'Monday - Friday'),
-(2, 1, 1, 'We paint stuff for you', 'We are the true painters', 1500, '05:20:00', '04:00:00', '07:00:00', '', '', '', '', 'Monday - Friday'),
+(1, 1, 2, 'We sculpt stuff', 'We will sculpt anything to your liking', 50000, '02:30:00', '02:00:00', '03:00:00', '', '', '', 'active', 'Monday - Friday'),
+(2, 1, 1, 'We paint stuff for you', 'We are the true painters', 1500, '05:20:00', '04:00:00', '07:00:00', '', '', '', 'active', 'Monday - Friday'),
 (5, 1, 5, 'We make impressions of things', 'The impression that is created at the crux of the battle of sambody.', 2500, '00:00:02', '00:00:02', '00:00:03', '', '', '', 'depreciated', 'Monday - Friday'),
-(7, 2, 6, 'We make delicious chocolates for your enjoyment', 'The chocolates are made from the freshest of cocoas and the best confectionary experts.', 7500, '03:00:00', '03:00:00', '05:00:00', '3 hours ', '3 hours ', '5 hours ', '', 'Monday - Friday');
+(7, 2, 6, 'We make delicious chocolates for your enjoyment', 'The chocolates are made from the freshest of cocoas and the best confectionary experts.', 7500, '03:00:00', '03:00:00', '05:00:00', '3 hours ', '3 hours ', '5 hours ', 'active', 'Monday - Friday');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`admin_id`),
+  ADD UNIQUE KEY `admin_email` (`admin_email`);
 
 --
 -- Indexes for table `booking`
@@ -1200,10 +1242,16 @@ ALTER TABLE `vendor_services`
 --
 
 --
+-- AUTO_INCREMENT for table `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `calender`
@@ -1215,7 +1263,7 @@ ALTER TABLE `calender`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `cus_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `cus_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `lga`
@@ -1227,25 +1275,25 @@ ALTER TABLE `lga`
 -- AUTO_INCREMENT for table `offday`
 --
 ALTER TABLE `offday`
-  MODIFY `off_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `off_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `service_category`
 --
 ALTER TABLE `service_category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `state`

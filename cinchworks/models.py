@@ -17,6 +17,10 @@ class Status(enum.Enum):
 class Service_status(enum.Enum):
     depreciated= "service depreciated"
 
+class User_status(enum.Enum):
+    suspended= "user suspended"
+    active= "user active"
+
 
 class Customer(db.Model):
     cus_id= db.Column(db.Integer(), primary_key=True, autoincrement=True)
@@ -33,6 +37,7 @@ class Customer(db.Model):
     cus_password= db.Column(db.String(255), nullable=False)
     cus_profilepic= db.Column(db.String(255))
     cus_regdate= db.Column(db.DateTime(), nullable=False, default=func.now(), onupdate=func.now())
+    cus_status= db.Column(db.Enum(User_status))
 
     customer_state= db.relationship('State', backref='customer_info')
     customer_lga= db.relationship('Lga', backref='customers')
@@ -57,6 +62,7 @@ class Vendor(db.Model):
     ven_bannerpic= db.Column(db.String(255))
     ven_profilepic= db.Column(db.String(255))
     ven_regdate= db.Column(db.DateTime(), nullable=False, default=func.now(), onupdate=func.now())
+    ven_status= db.Column(db.Enum(User_status))
 
     vendor_state= db.relationship('State', backref='vendor_info')
     vendor_lga= db.relationship('Lga', backref='vendors')
@@ -153,3 +159,11 @@ class Offday(db.Model):
     end_date= db.Column(db.Date())
 
     ven_info= db.relationship('Vendor', backref='ven_offdays')
+
+
+class Admin(db.Model):
+    admin_id= db.Column(db.Integer(), primary_key=True, autoincrement=True)
+    admin_fname= db.Column(db.String(255), nullable=False)
+    admin_lname= db.Column(db.String(255), nullable=False)
+    admin_email= db.Column(db.String(255), nullable=False, unique=True)
+    admin_password= db.Column(db.String(255), nullable=False)

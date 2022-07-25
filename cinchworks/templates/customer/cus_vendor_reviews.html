@@ -1,0 +1,22 @@
+{% if session.get('cust_id') != None %}
+{% extends 'customer/cbase.html' %}
+{% else %}
+{% extends 'general/base_home.html' %}
+{% endif %}
+{% block body %}
+
+
+{% if session.get('cust_id') == None %}
+<div class= "container">
+{% endif %}
+
+<div class= "row">
+	<div class= "col">
+		<h3>Reviews</h3>
+	</div>
+</div>
+
+
+</div>
+
+{% endblock body %}

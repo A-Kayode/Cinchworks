@@ -5,6 +5,7 @@
 <meta charset= "UTF-8">
 <meta name= "viewport" content= "width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename= 'libraries/bootstrap/css/bootstrap.css') }}">
+<link rel= "stylesheet" type= "text/css" href= "{{url_for('static', filename='libraries/fontawesome/css/all.css')}}">
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename= 'external_files/stylesheet.css') }}">
 {% block internal_styles %}
 
@@ -12,15 +13,19 @@
 </head>
 
 <body>
-<div class= "container-fluid">
+<div class= "container-fluid" style= "min-height: 82vh;">
 
 	<!-- This div will contain the navigation bar -->
 	{% include 'general/home_navigation.html' %}
 {% block home_inside_content %}
 
 {% endblock home_inside_content %}
+<div class= "container">
 {% block body %}
+
 {% endblock body %}
+</div>
+</div>
 <!-- This div wil contain the footer area -->
 <div class= "row allfooter">
 	<div class= "col-5 col-3-md">

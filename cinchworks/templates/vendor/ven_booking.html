@@ -11,7 +11,7 @@
 
 
 	<!-- Pending Requests -->
-	<div class= "row my-1 my-sm-2 blueback">
+	<div class= "row my-2 my-sm-2 blueback">
 		<div class= "col">
 			<h3 class="text-center my-2 my-sm-4" id= "pending_request">Pending Requests</h3>
 			{% set msg = get_flashed_messages() %}
@@ -20,30 +20,33 @@
 			{% endfor %}
 			<div class= "row">
 				<div class= "col">
+					{% if pbook != [] %}
 					<table class= "table">
 						<thead>
 							<th>S/N</th>
-							<th>Customer Name</th>
-							<th>Location</th>
-							<th>Date</th>
+							<th class= "hidesm">Customer Name</th>
+							<th>Service</th>
+							<th class= "hidesm">Location</th>
+							<th class= "hidesm">Date</th>
 							<th class= "hidesm">Time</th>
-							<th class= "hidesm">Confirm/Reject</th>
+							<th>Confirm/Reject</th>
 						</thead>
 						<tbody>
 							{% for i in pbook %}
 							<tr onclick= "ven_show_info({{i.booking_id}});">
 								<td>{{ loop.index }}</td>
-								<td>{{ i.cus_info.cus_fname }} {{ i.cus_info.cus_lname }}</td>
-								<td>
+								<td class= "hidesm">{{ i.cus_info.cus_fname }} {{ i.cus_info.cus_lname }}</td>
+								<td>{{ i.service_info.service.service_name }}</td>
+								<td class= "hidesm">
 									{% if i.service_location.name == 'vendor_address' %}
 										Office/Shop
 									{% elif i.service_location.name == 'customer_address' %}
 										Customer Address
 									{% endif %}
 								</td>
-								<td>{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
+								<td class= "hidesm">{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
 								<td class= "hidesm">{{ i.calender_time }}</td>
-								<td class= "hidesm">
+								<td>
 									<a href= "/ven/booking/confirmbooking/{{i.booking_id}}" class= "btn btn-sm btn-success">confirm</a>
 									<a href= "/ven/bookinghistory/rejectbooking/{{i.booking_id}}" class= "btn btn-sm btn-danger">reject</a>
 								</td>
@@ -51,6 +54,9 @@
 							{% endfor %}
 						</tbody>
 					</table>
+					{% else %}
+					<p class= "text-center"><i>No pending bookings</i></p>
+					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -58,11 +64,12 @@
 
 
 	<!-- Active Bookings -->
-	<div class= "row my-2 my-sm-5 blueback">
+	<div class= "row my-3 my-sm-5 blueback">
 		<div class= "col">
 			<h3 class="text-center my-2 my-sm-4" id= "active_bookings">Active Bookings</h3>
 			<div class= "row">
 				<div class= "col">
+					{% if abook != [] %}
 					<table class= "table">
 						<thead>
 							<th>S/N</th>
@@ -89,9 +96,11 @@
 								<td class= "hidemd">{{ j.calender_time }}</td>
 							</tr>
 							{% endfor %}
-							
 						</tbody>
 					</table>
+					{% else %}
+					<p class= "text-center"><i>No active bookings</i></p>
+					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -99,39 +108,43 @@
 
 
 	<!-- Booking History -->
-	<div class= "row my-1 my-sm-2 blueback">
+	<div class= "row my-2 my-sm-3 blueback">
 		<div class= "col">
 			<h3 class= "my-2 my-sm-4 text-center" id= "booking_history">Booking History</h3>
 			<div class= "row">
 				<div class= "col">
+					{% if hbook != [] %}
 					<table class= "table">
 						<thead>
-							<th class= "hidesm">S/N</th>
-							<th>Customer Name</th>
-							<th class= "hidesm">Services</th>
+							<th>S/N</th>
+							<th class= "hidesm">Customer Name</th>
+							<th>Services</th>
 							<th class= "hidesm">Location</th>
-							<th>Date</th>
+							<th class= "hidesm">Date</th>
 							<th>Status</th>
 						</thead>
 						<tbody>
 							{% for i in hbook %}
 							<tr onclick= "ven_show_info({{i.booking_id}});">
 								<td>{{ loop.index }}</td>
-								<td>{{ i.cus_info.cus_fname }} {{ i.cus_info.cus_lname }}</td>
+								<td class= "hidesm">{{ i.cus_info.cus_fname }} {{ i.cus_info.cus_lname }}</td>
 								<td>{{ i.service_info.service.service_name }}</td>
-								<td>
+								<td class= "hidesm">
 									{% if i.service_location.name == 'vendor_address' %}
 											Office/Shop
 									{% elif i.service_location.name == 'customer_address' %}
 											Customer Address
 									{% endif %}
 								</td>
-								<td>{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
+								<td class= "hidesm">{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
 								<td>{{ i.confirmation_status.name }}</td>
 							<tr>
 							{% endfor %}
 						</tbody>
 					</table>
+					{% else %}
+					<p class= "text-center"><i>No booking history</i></p>
+					{% endif %}
 				</div>
 			</div>
 		</div>

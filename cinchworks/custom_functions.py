@@ -25,6 +25,17 @@ def venvalidation(func):
     return wrapper
 
 
+def adminvalidation(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if session.get('admin_id') != None:
+            return func(*args, **kwargs)
+        else:
+            flash('You have to login first')
+            return redirect('/admin/login')
+    return wrapper
+
+
 def rewrite_duration(a,b):
     c,d= int(a),int(b)
     if c < 1:

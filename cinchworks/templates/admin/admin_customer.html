@@ -1,0 +1,145 @@
+{% extends 'admin/abase.html' %}
+
+{% block body %}
+<div class= "row mb-5">
+	<div class= "col">
+		<h2 class= "text-center">CUSTOMERS</h2>
+	</div>
+</div>
+
+
+<!-- Contains the user search -->
+<div class= "row justify-content-center mb-3">
+	<div class= "col-md-10 col-xxl-8">
+		<form>
+			<div class= "mb-2">
+				<input type= "text" class= "form-control" name= "custosearch" placeholder= "Input username, name, account status or customer id to search for customer" id= "custosearch">
+			</div>
+			<div class= "text-center mb-2">
+				<button type= "button" class= "btn brownbutton col-3 col-xxl-2 m-auto" onclick="admin_customersearch();">Search</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<!-- Contains original table of all customerss -->
+<div class= "row buttom_border">
+	<div class= "col">
+		<table class= "table table-striped">
+			<thead>
+				<th>S/N</th>
+				<th class= "hidesm">Customer ID</th>
+				<th class= "hidesm">First Name</th>
+				<th class= "hidesm">Last Name</th>
+				<th>Username</th>
+				<th>Status</th>
+			</thead>
+			<tbody id= "acuslist">
+				{% for i in c %}
+				<tr class= "user_table" onclick= "admin_getcusinfo({{i.cus_id}})">
+					<td>{{loop.index}}</td>
+					<td class= "hidesm">{{i.cus_id}}</td>
+					<td class= "hidesm">{{i.cus_fname}}</td>
+					<td class= "hidesm">{{i.cus_lname}}</td>
+					<td>{{i.cus_username}}</td>
+					<td>{{i.cus_status.name}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+
+<!-- This contains information about the customer that will show when a customer is clicked -->
+<div class= "row mb-3 user_information">
+	<div class= 'col'>
+		<div class= "row mb-1">
+			<div class= "col">
+				<p><span class= "info_heading">Customer ID: </span><span id= "cid"></span></p>
+				<p><span class= "info_heading">Customer Username: </span><span id= "cusername"></span></p>
+				<p><span class= "info_heading">Customer Name: </span><span id= "cname"></span></p>
+				<p><span class= "info_heading">Customer Phone 1: </span><span id= "cphone1"></span></p>
+				<p><span class= "info_heading">Customer Phone 2: </span><span id= "cphone2"></span></p>
+				<p><span class= "info_heading">Customer Email: </span><span id= "cemail"></span></p>
+				<p><span class= "info_heading">Customer Address: </span><span id= "caddr"></span></p>
+				<p><span class= "info_heading">Customer City: </span><span id= "ccity"></span></p>
+				<p><span class= "info_heading">Customer LGA: </span><span id= "clga"></span></p>
+				<p><span class= "info_heading">Customer State: </span><span id= "cstate"></span></p>
+				<p><span class= "info_heading">Registration Date: </span><span id= "cregdate"></span></p>
+			</div>
+		</div>
+		<div class= "row">
+			<div class= "col d-flex justify-content-sm-end">
+				<div>
+					<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
+					<button type= "button" class= "btn btn-warning block_change mb-1 mb-sm-0" onclick= "cus_suspend_account();">Suspend Account</button>
+					<button type= "button" class= "btn btn-success block_change mb-1 mb-sm-0" onclick= "cus_reactivate_account();">Reactivate Account</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- This contains booking information that will show when a particular user is clicked -->
+<div class= "row user_information mt-5">
+	<div class= "col">
+		<h3 class= "mb-4 text-center" id= "acusdesc"></h3>
+		<!-- Contains the specific booking search -->
+		<div class= "row justify-content-center mb-2">
+			<div class= "col-md-10 col-xxl-8">
+				<form>
+					<div class= "mb-2">
+						<input type= "text" class= "form-control" name= "cusbooksearch" placeholder= "Search by Business name, Service, or Booking ID", id= "cusbooksearch">
+					</div>
+					<div class= "text-center mb-2">
+							<button class= "btn brownbutton col-3 col-xxl-2" type= "button" onclick= "admin_cus_searchbooking()">Search</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+
+		<!-- Contains the embedded table -->
+		<div class= "row mb-3 buttom_border user_information">
+			<div class= "col">
+				<table class= "table table-striped">
+					<thead>
+						<th>S/N</th>
+						<th class= "hidesm">Booking ID</th>
+						<th>Business Name</th>
+						<th>Service</th>
+						<th class= "hidesm">Date Booked</th>
+					</thead>
+					<tbody id= "admincusbookinfo">
+						
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Contains Information on Selected Booking -->
+<div class= "row user_booking_information">
+	<div class= "col">
+	<div class= "row mb-2">
+	<div class= "col">
+		<p><span class= "info_heading">Booking ID: </span><span id= "acbid"></span></p>		<p><span class= "info_heading">Vendor Name: </span><span id= "acbname"></span></p>
+		<p><span class= "info_heading">Business Name: </span><span id= "acbbusname"></span></p>
+		<p><span class= "info_heading">Service: </span><span id= "acbservice"></span></p>
+		<p><span class= "info_heading">Booking Date: </span><span id= "acbregdate"></span></p>
+		<p><span class= "info_heading">Date Booked: </span><span id= "acbdate"></span></p>
+		<p><span class= "info_heading">Time Booked: </span><span id= "acbtime"></span></p>
+		<p><span class= "info_heading">Service Location: </span><span id= "acblocation"></span></p>
+		<p><span class= "info_heading">Confirmation Status: </span><span id= acbstatus></span></p>
+		<p><span class= "info_heading">Service Short Description: </span><span id= "acbssdesc"></span></p>
+		<p><span class= "info_heading">Service Short Description: </span><span id= "acbsldesc"></span></p>
+	</div>
+</div>
+{% endblock body %}

@@ -17,3 +17,9 @@ Version 0.2.4
 7. Settings dropdown link now broken into individual sections
 8. Work days added to vendor_services table
 9. Vendor offdays now implemented and will affect date validation when customer tries to book a vendor.
+
+
+Version 0.2.5
+1. Added full admin section to the app
+2. Admin can view information, suspend and reactivate user, and add services and categories.
+3. Did some work regarding responsiveness.

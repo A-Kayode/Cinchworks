@@ -38,20 +38,8 @@ $(document).ready(function(){
 	});
 
 
-	//This controls the hiding and showing of information when customer or vendor is checked
-	$('.specific_vendor_info').hide()
-	$('.admin_choice').click(function(){
-		if ($('#pick_customer').prop("checked") == true){
-			$('.specific_vendor_info').hide();
-			$('.specific_customer_info').show();
-		}else{
-			$('.specific_vendor_info').show();
-			$('.specific_customer_info').hide();
-		}
-	});
-
-
 	//This controls the hiding and showing of information till a particular user on the table is selected
+	$('.vendor_service_information').hide();
 	$('.user_information').hide();
 	$('.user_booking_information').hide();
 	$('.user_table').click(function(){
@@ -68,16 +56,6 @@ $(document).ready(function(){
 	$('.admin_booking_table').click(function(){
 		$('.admin_booking_information').show();
 	});
-
-
-	//Admin logout is handled here
-	$('#admin_logout').click(function(){
-		var exit= confirm("Do you want to continue to log out?");
-		if (exit == true){
-			$('#admin_logout').attr('href','/')
-		}
-	});
-
 
 	//This will control the responsiveness of the side panel
 	$(window).resize(function(){
@@ -99,6 +77,521 @@ $(document).ready(function(){
 	});
 	
 });
+
+
+function admin_getcusinfo(a){
+	$('.user_information').show();
+	data2send= {'custid':a};
+
+	$.ajax({
+		url:"/admin/ajax/getcusinfo/",
+		type:"get",
+		dataType:"json",
+		data:data2send,
+		success:function(rsp){
+			if(rsp.status == 2){
+				$('#admincusbookinfo').text(rsp.message);
+				$('#cid').text(rsp.custid);
+				$('#cusername').text(rsp.username);
+				$('#cname').text(rsp.fname + " " + rsp.lname);
+				$('#cphone1').text(rsp.phone1);
+				$('#cphone2').text(rsp.phone2);
+				$('#cemail').text(rsp.email);
+				$('#caddr').text(rsp.address);
+				$('#ccity').text(rsp.city);
+				$('#clga').text(rsp.lga);
+				$('#cstate').text(rsp.state);
+				$('#cregdate').text(rsp.regis);
+				$('#acusdesc').text(rsp.fname + " " + rsp.lname + "'s Booking Information")
+			}else if(rsp.status == 1){
+				$('#admincusbookinfo').html(rsp.nhtml);
+				$('#cid').text(rsp.custid);
+				$('#cusername').text(rsp.username);
+				$('#cname').text(rsp.fname + " " + rsp.lname);
+				$('#cphone1').text(rsp.phone1);
+				$('#cphone2').text(rsp.phone2);
+				$('#cemail').text(rsp.email);
+				$('#caddr').text(rsp.address);
+				$('#ccity').text(rsp.city);
+				$('#clga').text(rsp.lga);
+				$('#cstate').text(rsp.state);
+				$('#cregdate').text(rsp.regis);
+				$('#acusdesc').text(rsp.fname + " " + rsp.lname + "'s Booking Information")
+			}
+		},
+		error:function(err){ console.log(err); }
+	});
+}
+
+
+function admin_getcusbookinfo(a){
+	$('.user_booking_information').show();
+	data2send= {'bookid':a};
+
+	$.ajax({
+		url:"/admin/ajax/getbookcusinfo/",
+		type:"get",
+		dataType:"json",
+		data:data2send,
+		success:function(rsp){
+			$('#acbid').text(rsp.bkid);
+			$('#acbname').text(rsp.fname + " " + rsp.lname);
+			$('#acbbusname').text(rsp.busname);
+			$('#acbservice').text(rsp.service);
+			$('#acbregdate').text(rsp.bookdate);
+			$('#acbdate').text(rsp.datebook);
+			$('#acbtime').text(rsp.tbook + " - " + rsp.tebook);
+			$('#acblocation').text(rsp.location);
+			$('#acbstatus').text(rsp.status);
+			$('#acbssdesc').text(rsp.sdesc);
+			$('#acbsldesc').text(rsp.ldesc);
+		},
+		error:function(err){ console.log(err); }
+	});
+}
+
+
+function admin_customersearch(){
+	var data= $('#custosearch').val()
+	if (data == ""){
+		alert("Please fill the input field before searching.");
+	}else{
+		data2send= {'custosearch':data};
+		$.ajax({
+			url:"/admin/ajax/customersearch/",
+			data:data2send,
+			type:"get",
+			dataType:"json",
+			success:function(rsp){
+				if(rsp.status == 0){
+					alert(rsp.message);
+					alert(rsp.val);
+				}else if(rsp.status == 1){
+					$('#acuslist').html(rsp.nhtml);
+				}
+			},
+			error:function(err){ console.log(err); }
+			});
+	}
+}
+
+
+function admin_cus_searchbooking(){
+	var data= $('#cusbooksearch').val()
+	var custid= $('#cid').text();
+	if (data == ""){
+		alert("Please fill the input field before searching.");
+	}else{
+		data2send= {'cusbooksearch':data, 'custid':custid};
+		$.ajax({
+			url:"/admin/ajax/customerbooksearch/",
+			data:data2send,
+			type:"get",
+			dataType:"json",
+			success:function(rsp){
+				if(rsp.status == 0){
+					alert(rsp.message);
+					alert(rsp.val);
+				}else if(rsp.status == 1 && rsp.nhtml != ""){
+					$('#admincusbookinfo').html(rsp.nhtml);
+				}
+			},
+			error:function(err){ console.log(err); }
+			});
+	}
+}
+
+
+
+function admin_getveninfo(a){
+	$('.user_information').show();
+	data2send= {'vendid':a};
+
+	$.ajax({
+		url:"/admin/ajax/getveninfo/",
+		type:"get",
+		dataType:"json",
+		data:data2send,
+		success:function(rsp){
+			if(rsp.status == 2){
+				$('#adminvenbookinfo').text(rsp.message);
+				$('#vid').text(rsp.vendid);
+				$('#vusername').text(rsp.username);
+				$('#vname').text(rsp.fname + " " + rsp.lname);
+				$('#vphone1').text(rsp.phone1);
+				$('#vphone2').text(rsp.phone2);
+				$('#vemail').text(rsp.email);
+				$('#vaddr').text(rsp.address);
+				$('#vcity').text(rsp.city);
+				$('#vlga').text(rsp.lga);
+				$('#vstate').text(rsp.state);
+				$('#vregdate').text(rsp.regis);
+				$('#vbusname').text(rsp.busname);
+				$('#avendesc').text(rsp.fname + " " + rsp.lname + "'s Booking Information")
+			}else if(rsp.status == 1){
+				$('#adminvenbookinfo').html(rsp.nhtml);
+				$('#vid').text(rsp.vendid);
+				$('#vusername').text(rsp.username);
+				$('#vname').text(rsp.fname + " " + rsp.lname);
+				$('#vphone1').text(rsp.phone1);
+				$('#vphone2').text(rsp.phone2);
+				$('#vemail').text(rsp.email);
+				$('#vaddr').text(rsp.address);
+				$('#vcity').text(rsp.city);
+				$('#vlga').text(rsp.lga);
+				$('#vstate').text(rsp.state);
+				$('#vregdate').text(rsp.regis);
+				$('#vbusname').text(rsp.busname);
+				$('#avendesc').text(rsp.fname + " " + rsp.lname + "'s Booking Information");
+				$('#avendesc2').text(rsp.fname + " " + rsp.lname + "'s Services Information");
+			}
+		},
+		error:function(err){ console.log(err); }
+	});
+}
+
+
+
+function admin_getvenbookinfo(a){
+	$('.user_booking_information').show();
+	data2send= {'bookid':a};
+
+	$.ajax({
+		url:"/admin/ajax/getbookveninfo/",
+		type:"get",
+		dataType:"json",
+		data:data2send,
+		success:function(rsp){
+			$('#avbid').text(rsp.bkid);
+			$('#avcname').text(rsp.fname + " " + rsp.lname);
+			$('#avbservice').text(rsp.service);
+			$('#avbregdate').text(rsp.bookdate);
+			$('#avbdate').text(rsp.datebook);
+			$('#avbtime').text(rsp.tbook + " - " + rsp.tebook);
+			$('#avblocation').text(rsp.location);
+			$('#avbstatus').text(rsp.status);
+			$('#avbssdesc').text(rsp.sdesc);
+			$('#avbsldesc').text(rsp.ldesc);
+		},
+		error:function(err){ console.log(err); }
+	});
+}
+
+
+function admin_vendorsearch(){
+	var data= $('#ventosearch').val()
+	if (data == ""){
+		alert("Please fill the input field before searching.");
+	}else{
+		data2send= {'ventosearch':data};
+		$.ajax({
+			url:"/admin/ajax/vendorsearch/",
+			data:data2send,
+			type:"get",
+			dataType:"json",
+			success:function(rsp){
+				if(rsp.status == 0){
+					alert(rsp.message);
+					alert(rsp.val);
+				}else if(rsp.status == 1){
+					$('#avenlist').html(rsp.nhtml);
+				}
+			},
+			error:function(err){ console.log(err); }
+			});
+	}
+}
+
+
+function admin_ven_searchbooking(){
+	var data= $('#venbooksearch').val()
+	var vendid= $('#vid').text();
+	if (data == ""){
+		alert("Please fill the input field before searching.");
+	}else{
+		data2send= {'venbooksearch':data, 'vendid':vendid};
+		$.ajax({
+			url:"/admin/ajax/vendorbooksearch/",
+			data:data2send,
+			type:"get",
+			dataType:"json",
+			success:function(rsp){
+				if(rsp.status == 0){
+					alert(rsp.message);
+					alert(rsp.val);
+				}else if(rsp.status == 1 && rsp.nhtml != ""){
+					$('#adminvenbookinfo').html(rsp.nhtml);
+				}
+			},
+			error:function(err){ console.log(err); }
+			});
+	}
+}
+
+
+function admin_getvenservices(a){
+	var data2send= {'vendid':a};
+
+	$.ajax({
+		url:"/admin/ajax/getvenservices/",
+		type:"get",
+		dataType:"json",
+		data:data2send,
+		success:function(rsp){
+			if (rsp.status == 1){
+				$('#adminvenserviceinfo').html(rsp.nhtml);
+			}else if(rsp.status == 0){
+				$('#adminvenserviceinfo').text(rsp.message);
+			}
+		},
+		error:function(err){ console.log(err); }
+	});
+}
+
+
+function admin_getvenserviceinfo(a){
+	$('.vendor_service_information').show();
+	data2send= {'vensevid':a};
+
+	$.ajax({
+		url:"/admin/ajax/getvenserviceinfo/",
+		type:"get",
+		dataType:"json",
+		data:data2send,
+		success:function(rsp){
+			$('#avsid').text(rsp.serid);
+			$('#avsservice').text(rsp.service);
+			$('#avsprice').text(rsp.price);
+			$('#avsmin').text(rsp.avsmin);
+			$('#avsavg').text(rsp.avsavg);
+			$('#avsmax').text(rsp.avsmax);
+			$('#avswork').text(rsp.work);
+			$('#avsstatus').text(rsp.sstatus);
+			$('#avbsssdesc').text(rsp.sdesc);
+			$('#avssldesc').text(rsp.ldesc);
+		},
+		error:function(err){ console.log(err); }
+	});
+}
+
+
+function cus_suspend_account(){
+	if(confirm("Are you sure you want to suspend this account?")){
+		var custid= $('#cid').text();
+		var token= $('#csrf_token').val()
+		data2send= {'custid':custid, 'csrf_token':token}
+
+		$.ajax({
+			url:"/admin/ajax/cussuspendaccount/",
+			type:"post",
+			dataType:"json",
+			data:data2send,
+			success:function(rsp){
+				if (rsp.status == 1){
+					alert(rsp.message);
+				}else if (rsp.status == 0){
+					alert(rsp.message);
+				}
+			},
+			error:function(err){ console.log(err); }
+		});
+	}
+	
+}
+
+
+function cus_reactivate_account(){
+	if(confirm("Are you sure you want to reactivate this account?")){
+		var custid= $('#cid').text();
+		var token= $('#csrf_token').val()
+		data2send= {'custid':custid, 'csrf_token':token}
+
+		$.ajax({
+			url:"/admin/ajax/cusreactivateaccount/",
+			type:"post",
+			dataType:"json",
+			data:data2send,
+			success:function(rsp){
+				if (rsp.status == 1){
+					alert(rsp.message);
+				}else if (rsp.status == 0){
+					alert(rsp.message);
+				}
+			},
+			error:function(err){ console.log(err); }
+		});
+	}
+	
+}
+
+
+function ven_suspend_account(){
+	if(confirm("Are you sure you want to suspend this account?")){
+		var vendid= $('#vid').text();
+		var token= $('#csrf_token').val()
+		data2send= {'vendid':vendid, 'csrf_token':token}
+
+		$.ajax({
+			url:"/admin/ajax/vensuspendaccount/",
+			type:"post",
+			dataType:"json",
+			data:data2send,
+			success:function(rsp){
+				if (rsp.status == 1){
+					alert(rsp.message);
+				}else if (rsp.status == 0){
+					alert(rsp.message);
+				}
+			},
+			error:function(err){ console.log(err); }
+		});
+	}
+	
+}
+
+
+function ven_reactivate_account(){
+	if(confirm("Are you sure you want to reactivate this account?")){
+		var vendid= $('#vid').text();
+		var token= $('#csrf_token').val()
+		data2send= {'vendid':vendid, 'csrf_token':token}
+
+		$.ajax({
+			url:"/admin/ajax/venreactivateaccount/",
+			type:"post",
+			dataType:"json",
+			data:data2send,
+			success:function(rsp){
+				if (rsp.status == 1){
+					alert(rsp.message);
+				}else if (rsp.status == 0){
+					alert(rsp.message);
+				}
+			},
+			error:function(err){ console.log(err); }
+		});
+	}
+	
+}
+
+
+function add_category(){
+	if(confirm("Are you sure you want to add this category?")){
+		form= document.getElementById('adminaddcategory');
+		formdata= new FormData(form);
+
+		$.ajax({
+			url:"/admin/ajax/addcategory/",
+			type:"post",
+			dataType:"json",
+			data:formdata,
+			success:function(rsp){
+				if(rsp.status == 0){
+					alert(rsp.message);
+				}else if(rsp.status == 1){
+					$('#categorylist').html(rsp.nhtml);
+					$('#catselect').html(rsp.nhtml2);
+					$('#categorymess').html(`<span class= "alert alert-success">${rsp.message}</span>`);
+				}
+			},
+			error:function(err){ console.log(err); },
+			cache:false,
+			contentType:false,
+			processData:false
+		});
+	}
+}
+
+
+function admin_add_service(){
+	if (confirm("Confirm adding this service?")){
+		form= document.getElementById('adminaddservice');
+		formdata= new FormData(form);
+
+		$.ajax({
+			url:"/admin/ajax/addservice/",
+			type:"post",
+			dataType:"json",
+			data:formdata,
+			success:function(rsp){
+				if(rsp.status == 0){
+					alert(rsp.message);
+				}else if(rsp.status == 1){
+					$('#servicelist').html(rsp.nhtml);
+					$('#servicemess').html(`<span class= "alert alert-success">${rsp.message}</span>`);
+				}
+			},
+			error:function(err){ console.log(err); },
+			cache:false,
+			contentType:false,
+			processData:false
+		});
+	}
+}
+
+
+function show_booking_information(a){
+	var data2send= {"bookid":a};
+	$('#adminbookinginfo_modal').modal('toggle');
+
+	$.ajax({
+		url:"/admin/ajax/showbookinginfo/",
+		type:"get",
+		data:data2send,
+		dataType:"json",
+		success:function(rsp){
+			if(rsp.status == 0){
+				alert(rsp.message);
+			}else if (rsp.status == 1){
+				$('#adbkid').text(rsp.bookid);
+				$('#adbkvenname').text(rsp.vendor);
+				$('#adbkcusname').text(rsp.cusfname + " " + rsp.cuslname);
+				$('#adbksername').text(rsp.service);
+				$('#adbkserlocate').text(rsp.slocation);
+				$('#adbkdt').text(rsp.dobook);
+				$('#adbkbdate').text(rsp.bdate);
+				$('#adbkbtime').text(rsp.tbook + " - " +rsp.tebook);
+				$('#adbksershort').text(rsp.sshort);
+				$('#adbkserlong').text(rsp.slong);
+				$('#adbkstatus').text(rsp.bstatus);
+			}
+		},
+		error:function(err){ console.log(err); }
+	});
+}
+
+
+function admin_bookingsearch(){
+	var data= $('#adminbooksearch').val()
+	if (data == ""){
+		alert("Please fill the input field before searching.");
+	}else{
+		data2send= {'sbook':data};
+		$.ajax({
+			url:"/admin/ajax/adminbookingsearch/",
+			data:data2send,
+			type:"get",
+			dataType:"json",
+			success:function(rsp){
+				if(rsp.status == 0){
+					alert(rsp.message);
+					alert(rsp.val);
+				}else if(rsp.status == 1){
+					$('#abookinglist').html(rsp.nhtml);
+				}
+			},
+			error:function(err){ console.log(err); }
+			});
+	}
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -295,3 +788,69 @@ function ven_show_info(a){
 	});
 }
 
+
+
+/* This code quickly validates and checks if the search field when searching for services is empty on the make booking modal found on both the customer home and customer booking history */
+function check_empty(){
+	if($('#cbmsearch').val() == ""){
+		alert("Your search field cannot be empty");
+		return false
+	}else{
+		return true
+	}
+}
+
+
+
+/* This code is used for deleting reviews for the specified vendor by the customer */
+function delete_review(custid, vendid){
+	var conf= confirm("Are you sure you want to delete this review?")
+
+	if (conf){
+		var data2send= {"custid":custid, "vendid":vendid};
+
+		$.ajax({
+			url:"/cus/ajax/deletereview/",
+			data:data2send,
+			type:"get",
+			dataType:"json",
+			success:function(rsp){
+				if(rsp.status == 1){
+					alert(rsp.message);
+					$('#cusrevarea').html(rsp.nhtml);
+				}else if(rsp.status == 0){
+					alert(rsp.message);
+				}
+			},
+			error:function(err){ console.log(err); }
+		});
+	}
+}
+
+
+
+/* This code is used for checking the booking details of a particular customer */
+function get_date(a){
+	var date= $('#cvseadate').val();
+	if (date == ""){
+		alert("You have to select a date");
+	}else{
+		data2send= {'bdate':date, 'vendid':a}
+
+		$.ajax({
+			url:"/cus/ajax/getdate/",
+			data:data2send,
+			type:"get",
+			dataType:"json",
+			success:function(rsp){
+				if(rsp.status == 0){
+					alert(rsp.message);
+				}else if(rsp.status == 1){
+					$('#dateinfo_modal').modal('toggle');
+					$('#dateinfo_body').html(rsp.nhtml);
+				}
+			},
+			error:function(err){ console.log(err); }
+		});
+	}
+}
