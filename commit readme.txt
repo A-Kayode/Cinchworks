@@ -29,3 +29,7 @@ Version 0.3
 1. Added validation to enforce unique Business names
 2. Added Pagenation to most tables using DataTables library
 3. Added feedback to customers if there are no search results for services or customers
+
+
+Version 0.3.1
+1. Added Database migration functionality
