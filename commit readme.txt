@@ -23,3 +23,9 @@ Version 0.2.5
 1. Added full admin section to the app
 2. Admin can view information, suspend and reactivate user, and add services and categories.
 3. Did some work regarding responsiveness.
+
+
+Version 0.3
+1. Added validation to enforce unique Business names
+2. Added Pagenation to most tables using DataTables library
+3. Added feedback to customers if there are no search results for services or customers

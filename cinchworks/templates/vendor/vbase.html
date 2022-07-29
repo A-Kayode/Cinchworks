@@ -1,12 +1,13 @@
 <!doctype html>
 <html>
 <head>
-<title></title>
+<title>{% block title %}{% endblock title %}</title>
 <meta charset= "UTF-8">
 <meta name= "viewport" content= "width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel= "stylesheet" type= "text/css" href= "{{url_for('static', filename='libraries/bootstrap/css/bootstrap.css')}}">
 <link rel= "stylesheet" type= "text/css" href= "{{url_for('static', filename='libraries/fontawesome/css/all.css')}}">
 <link rel= "stylesheet" type= "text/css" href= "{{url_for('static', filename='external_files/stylesheet.css')}}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='libraries/datatables/datatables.min.css')}}">
 {% block internal_styles %}
 {% endblock internal_styles %}
 </head>
@@ -93,6 +94,13 @@
 <script type= "text/javascript" src= "{{url_for('static', filename='libraries/jquery.js')}}"></script>
 <script type= "text/javascript" src= "{{url_for('static', filename='libraries/bootstrap/js/bootstrap.bundle.js')}}"></script>
 <script type= "text/javascript" src= "{{ url_for('static', filename= 'external_files/javascript.js') }}"></script>
+<script type="text/javascript" charset="utf8" src="{{url_for('static', filename='libraries/datatables/datatables.min.js')}}"></script>
+<script type= "text/javascript">
+$(document).ready(function(){
+	$('.mytable').DataTable();
+});	
+
+</script>
 {% block internal_script %}
 {% endblock internal_script %}
 </body>

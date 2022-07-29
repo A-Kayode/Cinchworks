@@ -7,14 +7,17 @@
 <link rel= "stylesheet" type= "text/css" href= "{{url_for('static', filename='libraries/bootstrap/css/bootstrap.css')}}">
 <link rel= "stylesheet" type= "text/css" href= "{{url_for('static', filename='libraries/fontawesome/css/all.css')}}">
 <link rel= "stylesheet" type= "text/css" href= "{{url_for('static', filename='external_files/stylesheet.css')}}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='libraries/datatables/datatables.min.css')}}">
 <style type= "text/css">
 	div{ border: 0px solid red }
 	.main_col{ min-height: 93vh; }
-	.navig{ border-bottom: 1px solid blue }
+	.navig{ border-bottom: 1px solid blue; }
+	.adlink{ color: #eee; }
 	#banner{ background-color: #04002C; color: #EEE}
 	#panel{ background-color: #05003D; color: #EEE}
 	#content{ background-color: #EDEBFF; }
 	.navig:hover{ background-color: #EDEBFF; }
+	.adlink:hover{ color:#05003D }
 	.stickler{ position: sticky; top:0vh }
 </style>
 {% block internal_styles %}
@@ -41,22 +44,22 @@
 				<div class= "col">
 					<ul class= "nav flex-column nav-fill">
 						<li class= "nav-item navig mb-1">
-							<a href="/admin/" class= "nav-link">Dashboard</a>
+							<a href="/admin/" class= "nav-link adlink">Dashboard</a>
 						</li>
 						<li class= "nav-item navig mb-1">
-							<a href="/admin/customers" class= "nav-link">Customers</a>
+							<a href="/admin/customers" class= "nav-link adlink">Customers</a>
 						</li>
 						<li class= "nav-item navig mb-1">
-							<a href="/admin/vendors" class= "nav-link">Vendors</a>
+							<a href="/admin/vendors" class= "nav-link adlink">Vendors</a>
 						</li>
 						<li class= "nav-item navig mb-1">
-							<a href="/admin/bookings" class= "nav-link">Bookings</a>
+							<a href="/admin/bookings" class= "nav-link adlink">Bookings</a>
 						</li>
 						<li class= "nav-item navig mb-1">
-							<a href="/admin/services" class= "nav-link">Services</a>
+							<a href="/admin/services" class= "nav-link adlink">Services</a>
 						</li>
 						<li class= "nav-item navig mb-1">
-							<a href="/admin/logout" class= "nav-link" onclick= "return confirm('Are you sure you want to logout?');">Logout</a>
+							<a href="/admin/logout" class= "nav-link adlink" onclick= "return confirm('Are you sure you want to logout?');">Logout</a>
 						</li>
 					</ul>
 				</div>
@@ -122,5 +125,12 @@
 <script type= "text/javascript" src= "{{url_for('static', filename='libraries/jquery.js')}}"></script>
 <script type= "text/javascript" src= "{{url_for('static', filename='libraries/bootstrap/js/bootstrap.bundle.js')}}"></script>
 <script type= "text/javascript" src= "{{ url_for('static', filename= 'external_files/javascript.js') }}"></script>
+<script type="text/javascript" charset="utf8" src="{{url_for('static', filename='libraries/datatables/datatables.min.js')}}"></script>
+<script type= "text/javascript">
+$(document).ready(function(){
+	$('.mytable').DataTable();
+});	
+
+</script>
 </body>
 </html>

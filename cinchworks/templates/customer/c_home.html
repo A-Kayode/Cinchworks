@@ -1,5 +1,9 @@
 {% extends 'customer/cbase.html' %}
 
+{% block title %}
+Home | {{ c.cus_fname }} {{ c.cus_lname }}
+{% endblock title %}
+
 {% block internal_styles %}
 <style type= "text/css">
 div{ border: 0px solid red; }

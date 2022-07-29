@@ -6,6 +6,15 @@
 
 {% block body %}
 
+{% if vs == [] and vb == [] %}
+
+<div class= "row mt-5">
+	<div class= "col text-center">
+		<p style= "font-size: 1.15em;"><b><i>There are no results for this service or vendor</i></b></p>
+	</div>
+</div>
+
+{% else %}
 {% for i in vs %}
 <div class= "row mb-3">
 	<div class= "col">
@@ -44,5 +53,6 @@
 	</div>
 </div>
 {% endfor %}
+{% endif %}
 
 {% endblock body %}

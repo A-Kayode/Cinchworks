@@ -1,4 +1,9 @@
 {% extends 'vendor/vbase.html' %}
+
+{% block title %}
+Booking | {{v.ven_busname}}
+{% endblock title %}
+
 {% block body %}
 
 
@@ -21,7 +26,7 @@
 			<div class= "row">
 				<div class= "col">
 					{% if pbook != [] %}
-					<table class= "table">
+					<table class= "table mytable p-2">
 						<thead>
 							<th>S/N</th>
 							<th class= "hidesm">Customer Name</th>
@@ -70,7 +75,7 @@
 			<div class= "row">
 				<div class= "col">
 					{% if abook != [] %}
-					<table class= "table">
+					<table class= "table mytable p-2">
 						<thead>
 							<th>S/N</th>
 							<th>Customer Name</th>
@@ -114,7 +119,7 @@
 			<div class= "row">
 				<div class= "col">
 					{% if hbook != [] %}
-					<table class= "table">
+					<table class= "table mytable p-2">
 						<thead>
 							<th>S/N</th>
 							<th class= "hidesm">Customer Name</th>
@@ -138,7 +143,7 @@
 								</td>
 								<td class= "hidesm">{{ i.calender_date.strftime('%a, %d %B %Y') }}</td>
 								<td>{{ i.confirmation_status.name }}</td>
-							<tr>
+							</tr>
 							{% endfor %}
 						</tbody>
 					</table>

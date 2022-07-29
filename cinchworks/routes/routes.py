@@ -7,13 +7,33 @@ from ..forms import Signup
 
 @app.errorhandler(404)
 def error404(error):
-    content= make_response(render_template('general/error_404.html'),404)
+    c= ""
+    v= ""
+    if session.get('cust_id') != None:
+        custid= session.get('cust_id')
+        c= Customer.query.get(custid)
+    
+    if session.get('vend_id') != None:
+        vendid= session.get('vend_id')
+        v= Vendor.query.get(vendid)
+
+    content= make_response(render_template('general/error_404.html', c=c, v=v),404)
     return content
 
 
 @app.errorhandler(500)
 def error500(error):
-    content= make_response(render_template('general/error_500.html'),500)
+    c= ""
+    v= ""
+    if session.get('cust_id') != None:
+        custid= session.get('cust_id')
+        c= Customer.query.get(custid)
+    
+    if session.get('vend_id') != None:
+        vendid= session.get('vend_id')
+        v= Vendor.query.get(vendid)
+
+    content= make_response(render_template('general/error_500.html', c=c, v=v),500)
     return content
 
 

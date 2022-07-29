@@ -1,21 +1,21 @@
+{% if session.get('cust_id') == None and session.get('vend_id') == None %}
 {% extends 'general/base_home.html' %}
-{% block home_internal_styles %}
-<style type= "text/css">
-	div{ border: 0px solid red; }
-	#error404{ height: 500px; }
+{% elif session.get('cust_id') != None %}
+{% extends 'customer/cbase.html' %}
+{% elif session.get('vend_id') != None %}
+{% extends 'vendor/vbase.html' %}
+{% endif %}
 
-</style>
-{% endblock home_internal_styles %}
 
-{% block home_inside_content %}
+{% block body %}
 <div container-fluid>
 <div class= "row p-5">
 	<div class= "col-6 text-center d-flex align-items-center">
 		<p><b>Oops! It seems that this page does not exist. Don't worry though, we got you. Just click on any of our navigation links and we'll get you back on track.</b></p>
 	</div>
 	<div class= "col-6 ">
-		<img src= "{{url_for('static', filename='images/detective.png')}}" alt= "detective photo" id= "error404">
+		<img src= "{{url_for('static', filename='images/detective.png')}}" alt= "detective photo" id= "error404" class= "img-fluid">
 	</div>
 </div>
 </div>
-{% endblock home_inside_content %}
+{% endblock body %}

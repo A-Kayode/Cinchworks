@@ -1,5 +1,9 @@
 {%  extends 'customer/cbase.html' %}
 
+{% block title %}
+Booking | {{ c.cus_fname }} {{ c.cus_lname }}
+{% endblock title %}
+
 {% block internal_styles %}
 <style type= "text/css">
 .catsearch{ color:black; }
@@ -25,7 +29,7 @@
 		<div class= "col">
 			<h3 class= "text-center mb-3" id= "pending">Pending Bookings</h3>
 			{% if pbook != [] %}
-			<table class= "table">
+			<table class= "table mytable p-3">
 				<thead>
 					<th>S/N</th>
 					<th class= "hidesm">Vendor</th>
@@ -52,7 +56,10 @@
 			{% else %}
 			<p class= "text-center"><i>No pending bookings</i></p>
 			{% endif %}
-			<button data-bs-toggle= "modal" data-bs-target= "#book_modal" class= "btn brownbutton offset-5 offset-sm-9 offset-lg-10" type= "button">Make new booking</button>
+			<div class= "text-end">
+				<button data-bs-toggle= "modal" data-bs-target= "#book_modal" class= "btn brownbutton mt-2" type= "button">Make new booking</button>
+			</div>
+			
 		</div>
 	</div>
 
@@ -63,7 +70,7 @@
 		<div class= "col">
 			<h3 class= "text-center mb-3" id= "pending">Active Bookings</h3>
 			{% if abook != [] %}
-			<table class= "table">
+			<table class= "table mytable p-3">
 				<thead>
 					<th>S/N</th>
 					<th class= "hidesm">Vendor</th>
@@ -90,7 +97,9 @@
 			{% else %}
 			<p class= "text-center"><i>No active bookings</i></p>
 			{% endif %}
-			<button data-bs-toggle= "modal" data-bs-target= "#book_modal" class= "btn brownbutton offset-5 offset-sm-9 offset-lg-10" type= "button">Make new booking</button>
+			<div class= "text-end">
+				<button data-bs-toggle= "modal" data-bs-target= "#book_modal" class= "btn brownbutton mt-2" type= "button">Make new booking</button>
+			</div>
 		</div>
 	</div>
 
@@ -100,7 +109,7 @@
 		<div class= "col">
 			<h3 class= "text-center mb-3" id= "booking_history">Booking History</h3>
 			{% if rcbook != [] %}
-			<table class= "table">
+			<table class= "table mytable p-3">
 				<thead>
 					<th>S/N</th>
 					<th>Vendor</th>

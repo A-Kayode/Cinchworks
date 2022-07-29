@@ -148,7 +148,7 @@ def vendor_ajax_displaybooking():
 
 
 
-#Codes for vendor service
+#Codes for vendor settings
 @app.route('/ven/settings/')
 @venvalidation
 def ven_settings():
@@ -349,6 +349,21 @@ def vendor_ajax_addoffday():
                 except:
                     db.rollback()
                     return jsonify(status=0, message="An error occurred. Setting of offdays was unsucessful, please try again.")
+
+
+@app.route('/ven/ajax/checkbusname/')
+@venvalidation
+def vendor_ajax_checkbusname():
+    bname= request.args.get('bname')
+    vendid= request.args.get('vendid')
+    vb= Vendor.query.filter(Vendor.ven_busname == bname).count()
+
+    if vb > 0:
+        return jsonify(status=0, message="Business name already take")
+    else:
+        return jsonify(status=1, message="")
+
+
 
 
 

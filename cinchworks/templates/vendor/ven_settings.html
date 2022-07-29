@@ -1,4 +1,9 @@
 {% extends 'vendor/vbase.html' %}
+
+{% block title %}
+Settings | {{v.ven_busname}}
+{% endblock title %}
+
 {% block body %}
 
 <div class= "container-fluid blueback">
@@ -52,7 +57,8 @@
 				<div class= "row mb-3">
 					<label class= "form-label col-md-2">Business Name:</label>
 					<div class= "col">
-						<input type= "text" class= "form-control ven_personal" name= "bname" value= "{{ v.ven_busname }}" disabled>
+						<input type= "text" class= "form-control ven_personal" name= "bname" value= "{{ v.ven_busname }}" id= "vbname" onchange= "check_busname({{v.ven_id}})" disabled>
+						<p id= "vbname_error"></p>
 					</div>
 				</div>
 
@@ -124,13 +130,15 @@
 					<div class= "col text-end">
 						<button type= "button" class= "btn btn-danger" id= "cancel_venpersonal">Cancel</button>
 						<button type= "button" class= "btn brownbutton" id= "edit_venpersonal">Edit</button>
-						<button class= "btn btn-primary ven_personal" onclick= "return confirm('Confirm profile update?')" disabled>Submit</button>
+						<button class= "btn btn-primary ven_personal" id= "submit_venpersonal" onclick= "return confirm('Confirm profile update?')" disabled>Submit</button>
 					</div>
 				</div>
 				<input type= "hidden" name= "csrf_token" id= "csrf_token" value= "{{csrf_token()}}">
 			</form>
 		</div>
 	</div>
+
+
 
 
 
@@ -213,10 +221,11 @@
 				</div>
 			</div>
 
-			<div class= "row">
+			<div class= "row my-5">
 				<div class= "col">
+					<h4 class= "text-center mb-2">Services</h4>
 					<div id= "servicemessage"></div>
-					<table class= "table">
+					<table class= "table mytable p-2">
 						<thead>
 							<th>S/N</th>
 							<th>Service</th>
@@ -381,6 +390,32 @@ function depreciate_service(a,b){
 	}else{
 		return false
 	}
+}
+
+
+//This function is used to check whether a business name has already been taken
+function check_busname(a){
+	var vbname= $('#vbname').val();
+	var data2send= {'vendid':a, 'bname':vbname};
+
+	$.ajax({
+		url:"/ven/ajax/checkbusname/",
+		data:data2send,
+		dataType:'json',
+		type:'get',
+		success:function(rsp){
+			if(rsp.status == 1){
+				$('#submit_venpersonal').prop('disabled', false);
+				msg= ""
+				$('#vbname_error').html(msg);
+			}else{
+				$('#submit_venpersonal').prop('disabled', true);
+				msg= `<span style= "color:red;">${rsp.message}</span>`
+				$('#vbname_error').html(msg);
+			}
+		},
+		error:function(err){ console.log(err); }
+	});
 }
 
 
